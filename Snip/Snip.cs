@@ -44,7 +44,7 @@ namespace Snip
 
         private readonly string company = "David Rudie";
         private readonly string application = "Snip";
-        private readonly string version = "2.0";
+        private readonly string version = "2.0.1";
 
         /// <summary>
         /// This key will be used to switch to the next track.  Default: ]
@@ -614,16 +614,23 @@ namespace Snip
                                     string windowTitleFull = winampTitle.Replace("- Winamp", string.Empty);
                                     string[] windowTitle = windowTitleFull.Split('–');
 
-                                    string artist = windowTitle[0].Trim();
-                                    string songTitle = windowTitle[1].Trim();
-
                                     // Album artwork not supported by Winamp
                                     if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                     {
                                         File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
                                     }
 
-                                    this.UpdateText(songTitle, artist);
+                                    if (windowTitle.Length > 1)
+                                    {
+                                        string artist = windowTitle[0].Trim();
+                                        string songTitle = windowTitle[1].Trim();
+
+                                        this.UpdateText(songTitle, artist);
+                                    }
+                                    else
+                                    {
+                                        this.UpdateText(windowTitle[0].Trim());
+                                    }
                                 }
 
                                 this.lastTitle = winampTitle;

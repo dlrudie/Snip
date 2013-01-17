@@ -34,7 +34,7 @@ namespace Snip
     {
         private readonly string company = "David Rudie";
         private readonly string application = "Snip";
-        private readonly string version = "2.0";
+        private readonly string version = "2.0.1";
 
         private string trackFormat = "“$t”";
         private string separatorFormat = " ― ";

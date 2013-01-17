@@ -1,4 +1,4 @@
-SNIP V2.0
+SNIP V2.0.1
 =========
 Copyright 2012, 2013 David Rudie (d.rudie@gmail.com)
 
@@ -7,7 +7,7 @@ ABOUT
 This is a small application that sits in the system tray and updates a text
 file with the currently playing audio track.
 
-It supports Spotify, iTunes, and WinAmp.
+It supports Spotify, iTunes, and Winamp.
 
 If you choose to use iTunes then Snip will automatically launch iTunes.  This
 is the behavior of the COM API and there's nothing I can do about it.  If you
@@ -60,10 +60,13 @@ HOTKEYS
 
 Note
 ----
-Not all hotkeys work between Spotify, iTunes, and WinAmp.
+Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v2.0.1 (2013-Jan-17):
+* Fixed streams in Winamp causing Snip to crash.
 
 v2.0 (2013-Jan-17):
 * Prior change in v1.6.5 that I forgot to mention:
