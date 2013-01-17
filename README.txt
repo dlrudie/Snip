@@ -65,13 +65,14 @@ Not all hotkeys work between Spotify, iTunes, and WinAmp.
 CHANGES
 =======
 
-v2.0 (2013-xxx-xx):
+v2.0 (2013-Jan-17):
 * Prior change in v1.6.5 that I forgot to mention:
     Snip now defaults to have most options disabled by default.
-* WinAmp support added.
+* Winamp support added.
 * Added the ability to save album information (currently only iTunes supports
     this).
 * Volume up/down hotkeys now work for iTunes.
+* The separator now has spaces and the code no longer inserts its own spaces.
 
 v1.6.5 (2013-Jan-4):
 * Fixed a bug preventing output format working with iTunes.
