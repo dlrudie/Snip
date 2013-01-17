@@ -1,0 +1,4 @@
+Snip/bin/
+Snip/obj/
+*.pfx
+*.Cache
