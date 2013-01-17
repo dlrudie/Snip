@@ -1,6 +1,9 @@
-Snip v2.0
-by David Rudie (d.rudie@gmail.com)
+SNIP V2.0
+=========
+Copyright 2012, 2013 David Rudie (d.rudie@gmail.com)
 
+ABOUT
+=====
 This is a small application that sits in the system tray and updates a text
 file with the currently playing audio track.
 
@@ -30,9 +33,10 @@ Stop Track: Ctrl, Alt, Backspace
 Not all hotkeys work between Spotify, iTunes, and WinAmp.
 
 
-Changes
+CHANGES
+=======
 
-v2.0 (2013-Jan-17):
+v2.0 (2013-xxx-xx):
 * Prior change in v1.6.5 that I forgot to mention:
     Snip now defaults to have most options disabled by default.
 * WinAmp support added.

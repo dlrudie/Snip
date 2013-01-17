@@ -2,3 +2,4 @@ Snip/bin/
 Snip/obj/
 *.pfx
 *.Cache
+*.swp
