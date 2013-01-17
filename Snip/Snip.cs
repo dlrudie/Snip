@@ -199,7 +199,7 @@ namespace Snip
         /// <summary>
         /// The default separator output format.
         /// </summary>
-        private string separatorFormat = "―";
+        private string separatorFormat = " ― ";
 
         /// <summary>
         /// The default artist output format.
@@ -269,9 +269,9 @@ namespace Snip
         }
 
         /// <summary>
-        /// This enum contains the commands to send to Spotify.
+        /// This enum contains the commands to send to Spotify or Winamp.
         /// </summary>
-        private enum SpotifyCommand : long
+        private enum MediaCommands : long
         {
             /// <summary>
             /// Plays or pauses the current track.
@@ -307,47 +307,6 @@ namespace Snip
             /// Switches to the next track.
             /// </summary>
             NextTrack = 0xB0000
-        }
-
-        /// <summary>
-        /// This enum contains the commands to send to Winamp.
-        /// </summary>
-        private enum WinampCommand : long
-        {
-            /// <summary>
-            /// Switches to the previous track.
-            /// </summary>
-            PreviousTrack = 40044,
-
-            /// <summary>
-            /// Plays the current track.
-            /// </summary>
-            PlayTrack = 40045,
-
-            /// <summary>
-            /// Pauses the current track.
-            /// </summary>
-            PauseTrack = 40046,
-
-            /// <summary>
-            /// Stops the current track.
-            /// </summary>
-            StopTrack = 40047,
-
-            /// <summary>
-            /// Switches to the next track.
-            /// </summary>
-            NextTrack = 40048,
-
-            /// <summary>
-            /// Raises the volume.
-            /// </summary>
-            VolumeUp = 40058,
-
-            /// <summary>
-            /// Lowers the volume.
-            /// </summary>
-            VolumeDown = 40059,
         }
 
         #endregion
@@ -482,7 +441,7 @@ namespace Snip
         }
 
         /// <summary>
-        /// This method will be used to scan for Spotify title updates.
+        /// This method will be used to scan for Spotify/Winamp title updates.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event arguments.</param>
@@ -580,12 +539,7 @@ namespace Snip
                                         }
                                     }
 
-                                    string outputFormat = this.trackFormat + " " + this.separatorFormat + " " + this.artistFormat;
-
-                                    outputFormat = outputFormat.Replace("$t", songTitle);
-                                    outputFormat = outputFormat.Replace("$a", artist);
-
-                                    this.UpdateText(outputFormat);
+                                    this.UpdateText(songTitle, artist);
                                 }
 
                                 this.lastTitle = spotifyTitle;
@@ -648,6 +602,30 @@ namespace Snip
                             // Only update the system tray text and text file text if the title changes.
                             if (winampTitle != this.lastTitle)
                             {
+                                if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
+                                {
+                                    this.UpdateText("No track playing");
+                                }
+                                else
+                                {
+                                    // Winamp window titles look like "#. Artist - Track - Winamp".
+                                    // Require that the user use ATF and replace the format with something like:
+                                    // %artist% – %title%
+                                    string windowTitleFull = winampTitle.Replace("- Winamp", string.Empty);
+                                    string[] windowTitle = windowTitleFull.Split('–');
+
+                                    string artist = windowTitle[0].Trim();
+                                    string songTitle = windowTitle[1].Trim();
+
+                                    // Album artwork not supported by Winamp
+                                    if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
+                                    {
+                                        File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                    }
+
+                                    this.UpdateText(songTitle, artist);
+                                }
+
                                 this.lastTitle = winampTitle;
                             }
                         }
@@ -694,20 +672,20 @@ namespace Snip
             int keyControl = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.ControlKey);
             int keyAlt = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.Menu);
 
-            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyNextTrack) & 0x8000;           // S/I
-            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPreviousTrack) & 0x8000;   // S/I
-            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeUp) & 0x8000;             // S
-            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeDown) & 0x8000;         // S
-            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyMuteTrack) & 0x8000;           // S
-            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPlayPauseTrack) & 0x8000; // S/I
-            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPauseTrack) & 0x8000;         // I
-            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyStopTrack) & 0x8000;           // S/I
+            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyNextTrack) & 0x8000;           // S I W
+            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPreviousTrack) & 0x8000;   // S I W
+            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeUp) & 0x8000;             // S I W
+            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeDown) & 0x8000;         // S I W
+            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyMuteTrack) & 0x8000;           // S   W
+            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPlayPauseTrack) & 0x8000; // S I W
+            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPauseTrack) & 0x8000;         //   I
+            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyStopTrack) & 0x8000;           // S I W
 
             if (keyControl != 0 && keyAlt != 0 && keyStateNextTrack > 0 && keyStateNextTrack != this.lastKeyStateNextTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.NextTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -715,7 +693,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.NextTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
                 }
             }
 
@@ -723,7 +701,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.PreviousTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -731,7 +709,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.PreviousTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
                 }
             }
 
@@ -739,7 +717,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.VolumeUp));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -747,7 +725,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.VolumeUp));
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
                 }
             }
 
@@ -755,7 +733,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.VolumeDown));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -763,7 +741,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.VolumeDown));
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
                 }
             }
 
@@ -771,7 +749,11 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.MuteTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
+                }
+                else if (this.toolStripMenuItemWinamp.Checked)
+                {
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
                 }
             }
 
@@ -779,7 +761,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.PlayPauseTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -787,7 +769,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.PlayTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
                 }
             }
 
@@ -797,25 +779,21 @@ namespace Snip
                 {
                     this.iTunes.Pause();
                 }
-                else if (this.toolStripMenuItemWinamp.Checked)
-                {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.PauseTrack));
-                }
             }
 
             if (keyControl != 0 && keyAlt != 0 && keyStateStopTrack > 0 && keyStateStopTrack != this.lastKeyStateStopTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyCommand.StopTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
                 }
-                else if (this.toolStripMenuItemWinamp.Checked)
+                else if (this.toolStripMenuItemItunes.Checked)
                 {
                     this.iTunes.Stop();
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)WinampCommand.StopTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
                 }
             }
 
@@ -917,12 +895,7 @@ namespace Snip
                     }
                 }
 
-                string outputFormat = this.trackFormat + " " + this.separatorFormat + " " + this.artistFormat;
-
-                outputFormat = outputFormat.Replace("$t", track.Name);
-                outputFormat = outputFormat.Replace("$a", track.Artist);
-
-                this.UpdateText(outputFormat);
+                this.UpdateText(track.Name, track.Artist, track.Album);
             }
             else if (!string.IsNullOrEmpty(this.iTunes.CurrentStreamTitle))
             {
@@ -955,12 +928,7 @@ namespace Snip
                     }
                 }
 
-                string outputFormat = this.trackFormat + " " + this.separatorFormat + " " + this.artistFormat;
-
-                outputFormat = outputFormat.Replace("$t", track.Name);
-                outputFormat = outputFormat.Replace("$a", track.Artist);
-
-                this.UpdateText(outputFormat);
+                this.UpdateText(track.Name, track.Artist, track.Album);
             }
             else if (!string.IsNullOrEmpty(this.iTunes.CurrentStreamTitle))
             {
@@ -1030,47 +998,52 @@ namespace Snip
         /// <param name="text">The text to update the notify icon and text file with.</param>
         private void UpdateText(string text)
         {
-            //// TODO:
-            //// Make this take multiple arguments for track, separator, and artist.
-
             // Set the text that appears on the notify icon.
             this.SetNotifyIconText(this.notifyIcon, text);
 
             // Write the song title and artist to a text file.
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
+        }
+
+        private void UpdateText(string title, string artist)
+        {
+            this.UpdateText(title, artist, string.Empty);
+        }
+
+        private void UpdateText(string title, string artist, string album)
+        {
+            string output = this.trackFormat + this.separatorFormat + this.artistFormat;
+
+            output = output.Replace("$t", title);
+            output = output.Replace("$a", artist);
+
+            if (!string.IsNullOrEmpty(album))
+            {
+                output = output.Replace("$l", album);
+            }
+
+            // Set the text that appears on the notify icon.
+            this.SetNotifyIconText(this.notifyIcon, output);
+
+            // Write the song title and artist to a text file.
+            File.WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
 
             // Check if we want to save artist and track to separate files.
-            if (this.toolStripMenuItemSaveSeparateFiles.Checked
-                    && text != "iTunes is not currently running"
-                    && text != "Spotify is not currently running"
-                    && text != "Winamp is not currently running"
-                    && text != "No track playing"
-                    && text != "Switched to iTunes"
-                    && text != "Switched to Spotify"
-                    && text != "Switched to Winamp")
+            if (this.toolStripMenuItemSaveSeparateFiles.Checked)
             {
-                string[] songTitleAndArtist = text.Split(new string[] { this.separatorFormat }, StringSplitOptions.None);
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", this.artistFormat.Replace("$a", artist));
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", this.trackFormat.Replace("$t", title));
 
-                string songTitle = songTitleAndArtist[0];
-                string artist = songTitleAndArtist[1];
-
-                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", artist);
-                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", songTitle);
+                if (!string.IsNullOrEmpty(album))
+                {
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", this.albumFormat.Replace("$l", album));
+                }
             }
 
             // If saving track history is enabled, append that information to a separate file.
             if (this.toolStripMenuItemSaveHistory.Checked)
             {
-                if (text != "iTunes is not currently running"
-                    && text != "Spotify is not currently running"
-                    && text != "Winamp is not currently running"
-                    && text != "No track playing"
-                    && text != "Switched to iTunes"
-                    && text != "Switched to Spotify"
-                    && text != "Switched to Winamp")
-                {
-                    File.AppendAllText(@Application.StartupPath + @"\Snip_History.txt", text + Environment.NewLine);
-                }
+                File.AppendAllText(@Application.StartupPath + @"\Snip_History.txt", output + Environment.NewLine);
             }
         }
 
@@ -1090,7 +1063,7 @@ namespace Snip
             {
                 this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"));
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", "―"));
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "));
 
                 this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"));
 
@@ -1190,7 +1163,7 @@ namespace Snip
 
                 this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"));
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", "―"));
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "));
 
                 this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"));
 

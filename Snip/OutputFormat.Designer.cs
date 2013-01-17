@@ -74,7 +74,7 @@ namespace Snip
             this.textBoxSeparatorFormat.Name = "textBoxSeparatorFormat";
             this.textBoxSeparatorFormat.Size = new System.Drawing.Size(156, 20);
             this.textBoxSeparatorFormat.TabIndex = 3;
-            this.textBoxSeparatorFormat.Text = "―";
+            this.textBoxSeparatorFormat.Text = " ― ";
             // 
             // labelArtistFormat
             // 

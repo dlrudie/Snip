@@ -21,6 +21,33 @@ then the files will be called Snip_Arist.txt, Snip_Track.txt, Snip_Album.txt,
 and if you choose to save track history then it will be saved to a file
 called Snip_History.txt.
 
+WINAMP
+======
+For Winamp support to work properly you must change some options.
+
+Make sure that when you install Winamp you enable "Global Hotkey Support"
+under "User Interface Extensions" or hotkeys will not work.
+
+Inside Winamp open up the options window.
+
+* Under General Preferences make sure "Show the playlist number in the Windows
+    taskbar" is disabled.
+
+* Under General Preferences->Global Hotkeys make sure "Enable default
+    multimedia key support" is enabled.
+
+* Under General Preferences->Titles make sure "Use advanced title formatting
+    when possible" is enabled.
+
+Then you need to edit the formatting to look like this:
+%title% – %artist%
+
+Note
+----
+The hyphen used is an En Dash character!  Snip uses this character internally
+to split the text apart so make sure you use this En Dash character or Snip
+will not read it correctly!
+
 HOTKEYS
 =======
 * Next Track: Ctrl, Alt, ]

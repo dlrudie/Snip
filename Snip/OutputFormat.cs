@@ -37,7 +37,7 @@ namespace Snip
         private readonly string version = "2.0";
 
         private string trackFormat = "“$t”";
-        private string separatorFormat = "―";
+        private string separatorFormat = " ― ";
         private string artistFormat = "$a";
         private string albumFormat = "$l";
 
@@ -85,7 +85,7 @@ namespace Snip
             {
                 this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"));
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", "―"));
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "));
 
                 this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"));
 
@@ -120,7 +120,7 @@ namespace Snip
             this.trackFormat = "“$t”";
             this.textBoxTrackFormat.Text = this.trackFormat;
 
-            this.separatorFormat = "―";
+            this.separatorFormat = " ― ";
             this.textBoxSeparatorFormat.Text = this.separatorFormat;
 
             this.artistFormat = "$a";
