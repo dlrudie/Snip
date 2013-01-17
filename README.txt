@@ -21,17 +21,19 @@ then the files will be called Snip_Arist.txt, Snip_Track.txt, Snip_Album.txt,
 and if you choose to save track history then it will be saved to a file
 called Snip_History.txt.
 
-There are also some hotkeys implemented that can be used to do various things:
-Next Track: Ctrl, Alt, ]
-Previous Track: Ctrl, Alt, [
-Volume Up: Ctrl, Alt, +
-Volume Down: Ctrl, Alt, -
-Mute Track: Ctrl, Alt, M
-Play/Pause Track: Ctrl, Alt, Enter
-Stop Track: Ctrl, Alt, Backspace
+HOTKEYS
+=======
+* Next Track: Ctrl, Alt, ]
+* Previous Track: Ctrl, Alt, [
+* Volume Up: Ctrl, Alt, +
+* Volume Down: Ctrl, Alt, -
+* Mute Track: Ctrl, Alt, M
+* Play/Pause Track: Ctrl, Alt, Enter
+* Stop Track: Ctrl, Alt, Backspace
 
+Note
+----
 Not all hotkeys work between Spotify, iTunes, and WinAmp.
-
 
 CHANGES
 =======
@@ -40,7 +42,9 @@ v2.0 (2013-xxx-xx):
 * Prior change in v1.6.5 that I forgot to mention:
     Snip now defaults to have most options disabled by default.
 * WinAmp support added.
-* Added the ability to save album information.
+* Added the ability to save album information (currently only iTunes supports
+    this).
+* Volume up/down hotkeys now work for iTunes.
 
 v1.6.5 (2013-Jan-4):
 * Fixed a bug preventing output format working with iTunes.

@@ -108,7 +108,7 @@ namespace Snip
             // 
             this.toolStripMenuItemWinamp.Name = "toolStripMenuItemWinamp";
             this.toolStripMenuItemWinamp.Size = new System.Drawing.Size(221, 22);
-            this.toolStripMenuItemWinamp.Text = "WinAmp";
+            this.toolStripMenuItemWinamp.Text = "Winamp";
             this.toolStripMenuItemWinamp.Click += new System.EventHandler(this.ToolStripMenuItemWinamp_Click);
             // 
             // toolStripSeparator

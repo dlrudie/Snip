@@ -47,9 +47,9 @@ namespace Snip
             this.labelTrackFormat.AutoSize = true;
             this.labelTrackFormat.Location = new System.Drawing.Point(12, 9);
             this.labelTrackFormat.Name = "labelTrackFormat";
-            this.labelTrackFormat.Size = new System.Drawing.Size(92, 13);
+            this.labelTrackFormat.Size = new System.Drawing.Size(110, 13);
             this.labelTrackFormat.TabIndex = 0;
-            this.labelTrackFormat.Text = "Set Track Format:";
+            this.labelTrackFormat.Text = "Set Track Format ($t):";
             // 
             // textBoxTrackFormat
             // 
@@ -81,9 +81,9 @@ namespace Snip
             this.labelArtistFormat.AutoSize = true;
             this.labelArtistFormat.Location = new System.Drawing.Point(12, 107);
             this.labelArtistFormat.Name = "labelArtistFormat";
-            this.labelArtistFormat.Size = new System.Drawing.Size(87, 13);
+            this.labelArtistFormat.Size = new System.Drawing.Size(108, 13);
             this.labelArtistFormat.TabIndex = 4;
-            this.labelArtistFormat.Text = "Set Artist Format:";
+            this.labelArtistFormat.Text = "Set Artist Format ($a):";
             // 
             // textBoxArtistFormat
             // 
@@ -118,9 +118,9 @@ namespace Snip
             this.labelAlbumFormat.AutoSize = true;
             this.labelAlbumFormat.Location = new System.Drawing.Point(12, 155);
             this.labelAlbumFormat.Name = "labelAlbumFormat";
-            this.labelAlbumFormat.Size = new System.Drawing.Size(93, 13);
+            this.labelAlbumFormat.Size = new System.Drawing.Size(110, 13);
             this.labelAlbumFormat.TabIndex = 6;
-            this.labelAlbumFormat.Text = "Set Album Format:";
+            this.labelAlbumFormat.Text = "Set Album Format ($l):";
             // 
             // textBoxAlbumFormat
             // 
