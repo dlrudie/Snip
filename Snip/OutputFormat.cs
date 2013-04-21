@@ -32,9 +32,9 @@ namespace Snip
     /// </summary>
     public partial class OutputFormat : Form
     {
-        private readonly string company = "David Rudie";
-        private readonly string application = "Snip";
-        private readonly string version = "2.0.1";
+        private const string AuthorName = "David Rudie";
+        private const string ApplicationName = "Snip";
+        private const string ApplicationVersion = "2.5.0";
 
         private string trackFormat = "“$t”";
         private string separatorFormat = " ― ";
@@ -77,9 +77,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.company,
-                    this.application,
-                    this.version));
+                    AuthorName,
+                    ApplicationName,
+                    ApplicationVersion));
 
             if (registryKey != null)
             {
@@ -100,9 +100,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.company,
-                    this.application,
-                    this.version));
+                    AuthorName,
+                    ApplicationName,
+                    ApplicationVersion));
 
             registryKey.SetValue("Track Format", this.textBoxTrackFormat.Text, RegistryValueKind.String);
 

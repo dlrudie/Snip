@@ -1,4 +1,4 @@
-SNIP V2.0.1
+SNIP V2.5.0
 =========
 Copyright 2012, 2013 David Rudie (d.rudie@gmail.com)
 
@@ -64,6 +64,17 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v2.5.0 (2013-Apr-20):
+* Changed the readonly values to consts and renamed them.
+* Embedded the blank image as a byte array instead of having a separate
+    Snip_Blank.jpg.
+* Created a SaveBlankImage() method that saves the blank image in case of any
+    error.
+* Changed the way I get Spotify album artwork.  It now uses the regular
+    Spotify HTML page instead of the embed page.  This provides a lower
+    resolution image than previously but it works.
+* Added a ImageFromByteArray() method that converts a byte array to an Image.
 
 v2.0.1 (2013-Jan-17):
 * Fixed streams in Winamp causing Snip to crash.

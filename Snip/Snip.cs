@@ -30,6 +30,7 @@ namespace Snip
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Web;
     using System.Windows.Forms;
     using iTunesLib;
@@ -42,9 +43,26 @@ namespace Snip
     {
         #region Fields
 
-        private readonly string company = "David Rudie";
-        private readonly string application = "Snip";
-        private readonly string version = "2.0.1";
+        private const string AuthorName = "David Rudie";
+        private const string ApplicationName = "Snip";
+        private const string ApplicationVersion = "2.5.0";
+
+        /// <summary>
+        /// This is a alpha transparent 1x1 PNG image.
+        /// </summary>
+        private readonly byte[] blankImage = new byte[]
+        {
+            0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+            0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
+            0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+            0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4,
+            0x89, 0x00, 0x00, 0x00, 0x14, 0x49, 0x44, 0x41,
+            0x54, 0x78, 0x5E, 0x15, 0xC0, 0x01, 0x09, 0x00,
+            0x00, 0x00, 0x80, 0xA0, 0xFE, 0xAF, 0x0E, 0x8D,
+            0x01, 0x00, 0x05, 0x00, 0x01, 0x83, 0xC3, 0xE1,
+            0xDD, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E,
+            0x44, 0xAE, 0x42, 0x60, 0x82
+        };
 
         /// <summary>
         /// This key will be used to switch to the next track.  Default: ]
@@ -477,7 +495,7 @@ namespace Snip
                                 {
                                     if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                     {
-                                        File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                        this.SaveBlankImage();
                                     }
 
                                     this.UpdateText("No track playing");
@@ -516,13 +534,19 @@ namespace Snip
 
                                                 using (WebClient webClient = new WebClient())
                                                 {
-                                                    string html = webClient.DownloadString(string.Format("https://embed.spotify.com/?uri=spotify:track:{0}", trackId));
+                                                    string html = webClient.DownloadString(string.Format("http://open.spotify.com/track/{0}", trackId));
 
-                                                    string dataCa = "data-ca=\"";
-                                                    int imageUrlStart = html.IndexOf(dataCa);
-                                                    string imageUrl = html.Substring(imageUrlStart + dataCa.Length, 81);
+                                                    Regex regex = new Regex("img src=\"(.*)\" border=\"0\" alt=\".*\" id=\"big-cover\"", RegexOptions.Compiled);
+                                                    Match match = regex.Match(html);
 
-                                                    webClient.DownloadFile(new Uri(imageUrl), @"Snip_Artwork.jpg");
+                                                    try
+                                                    {
+                                                        webClient.DownloadFile(new Uri(match.Groups[1].Value), @"Snip_Artwork.jpg");
+                                                    }
+                                                    catch
+                                                    {
+                                                        this.SaveBlankImage();
+                                                    }
                                                 }
 
                                                 UnsafeNativeMethods.CloseHandle(processHandle);
@@ -535,7 +559,7 @@ namespace Snip
                                         }
                                         else
                                         {
-                                            File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                            this.SaveBlankImage();
                                         }
                                     }
 
@@ -551,7 +575,7 @@ namespace Snip
                             {
                                 if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                 {
-                                    File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                    this.SaveBlankImage();
                                 }
 
                                 this.UpdateText("Spotify is not currently running");
@@ -566,7 +590,7 @@ namespace Snip
                         {
                             if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                             {
-                                File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                this.SaveBlankImage();
                             }
 
                             this.UpdateText("Spotify is not currently running");
@@ -617,7 +641,7 @@ namespace Snip
                                     // Album artwork not supported by Winamp
                                     if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                     {
-                                        File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                        this.SaveBlankImage();
                                     }
 
                                     if (windowTitle.Length > 1)
@@ -642,7 +666,7 @@ namespace Snip
                             {
                                 if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                 {
-                                    File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                    this.SaveBlankImage();
                                 }
 
                                 this.UpdateText("Winamp is not currently running");
@@ -657,7 +681,7 @@ namespace Snip
                         {
                             if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                             {
-                                File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                                this.SaveBlankImage();
                             }
 
                             this.UpdateText("Winamp is not currently running");
@@ -679,14 +703,14 @@ namespace Snip
             int keyControl = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.ControlKey);
             int keyAlt = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.Menu);
 
-            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyNextTrack) & 0x8000;           // S I W
-            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPreviousTrack) & 0x8000;   // S I W
-            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeUp) & 0x8000;             // S I W
-            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeDown) & 0x8000;         // S I W
-            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyMuteTrack) & 0x8000;           // S   W
-            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPlayPauseTrack) & 0x8000; // S I W
-            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPauseTrack) & 0x8000;         //   I
-            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyStopTrack) & 0x8000;           // S I W
+            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyNextTrack) & 0x8000;           //// S I W
+            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPreviousTrack) & 0x8000;   //// S I W
+            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeUp) & 0x8000;             //// S I W
+            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeDown) & 0x8000;         //// S I W
+            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyMuteTrack) & 0x8000;           //// S   W
+            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPlayPauseTrack) & 0x8000; //// S I W
+            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPauseTrack) & 0x8000;         ////   I
+            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyStopTrack) & 0x8000;           //// S I W
 
             if (keyControl != 0 && keyAlt != 0 && keyStateNextTrack > 0 && keyStateNextTrack != this.lastKeyStateNextTrack)
             {
@@ -898,7 +922,7 @@ namespace Snip
                     }
                     catch
                     {
-                        File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                        this.SaveBlankImage();
                     }
                 }
 
@@ -931,7 +955,7 @@ namespace Snip
                     }
                     catch
                     {
-                        File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                        this.SaveBlankImage();
                     }
                 }
 
@@ -951,7 +975,7 @@ namespace Snip
         {
             if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
             {
-                File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                this.SaveBlankImage();
             }
 
             this.UpdateText("No track playing");
@@ -964,7 +988,7 @@ namespace Snip
         {
             if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
             {
-                File.Copy(@Application.StartupPath + @"\Snip_Blank.jpg", @Application.StartupPath + @"\Snip_Artwork.jpg", true);
+                this.SaveBlankImage();
             }
 
             this.UpdateText("iTunes is not currently running");
@@ -1062,9 +1086,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.company,
-                    this.application,
-                    this.version));
+                    AuthorName,
+                    ApplicationName,
+                    ApplicationVersion));
 
             if (registryKey != null)
             {
@@ -1085,9 +1109,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.company,
-                    this.application,
-                    this.version));
+                    AuthorName,
+                    ApplicationName,
+                    ApplicationVersion));
 
             if (registryKey != null)
             {
@@ -1185,9 +1209,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.company,
-                    this.application,
-                    this.version));
+                    AuthorName,
+                    ApplicationName,
+                    ApplicationVersion));
 
             if (this.toolStripMenuItemSpotify.Checked)
             {
@@ -1294,6 +1318,24 @@ namespace Snip
             {
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Converts a byte array of an image into an Image.
+        /// </summary>
+        /// <param name="imageByteArray">The byte array containing the image.</param>
+        /// <returns>An Image created from a byte array.</returns>
+        private Image ImageFromByteArray(byte[] imageByteArray)
+        {
+            MemoryStream memoryStream = new MemoryStream(imageByteArray);
+            Image image = Image.FromStream(memoryStream);
+            return image;
+        }
+
+        private void SaveBlankImage()
+        {
+            Image image = this.ImageFromByteArray(this.blankImage);
+            image.Save(@Application.StartupPath + @"\Snip_Artwork.jpg");
         }
 
         #endregion
