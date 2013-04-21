@@ -1,4 +1,4 @@
-SNIP V2.5.0
+SNIP V2.6.0
 =========
 Copyright 2012, 2013 David Rudie (d.rudie@gmail.com)
 
@@ -64,6 +64,19 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v2.6.0 (2013-Apr-20):
+* Added SimpleJson as a way to parse json easily.
+* Changed project from .Net Framework 4 Client Profile to .Net Framework 4.
+* Added a reference to System.Web so HttpUtility.UrlEncode() could be used.
+* Changed the way album artwork and track information are discovered with
+    Spotify.  It no longer tries to get the exact track ID within Spotify's
+    memory.  It will now query the Spotify API on the web using the artist
+    name and track title.  If a match is found it will pull the track ID from
+    there and then query the regular Spotify HTML page for artwork.
+* The change above allowed me to remove a lot of unnecessary code, including
+    ReadProcessMemory(), GetWindowThreadProcessId(), and FindInMemory().
+* Removed some unused WindowMessage commands.
 
 v2.5.0 (2013-Apr-20):
 * Changed the readonly values to consts and renamed them.

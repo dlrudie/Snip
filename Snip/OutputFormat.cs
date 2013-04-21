@@ -34,7 +34,7 @@ namespace Snip
     {
         private const string AuthorName = "David Rudie";
         private const string ApplicationName = "Snip";
-        private const string ApplicationVersion = "2.5.0";
+        private const string ApplicationVersion = "2.6.0";
 
         private string trackFormat = "“$t”";
         private string separatorFormat = " ― ";

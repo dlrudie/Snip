@@ -35,6 +35,7 @@ namespace Snip
     using System.Windows.Forms;
     using iTunesLib;
     using Microsoft.Win32;
+    using SimpleJson;
 
     /// <summary>
     /// This class is used for reading the playing track title and artist from either iTunes or Spotify.
@@ -45,7 +46,7 @@ namespace Snip
 
         private const string AuthorName = "David Rudie";
         private const string ApplicationName = "Snip";
-        private const string ApplicationVersion = "2.5.0";
+        private const string ApplicationVersion = "2.6.0";
 
         /// <summary>
         /// This is a alpha transparent 1x1 PNG image.
@@ -511,53 +512,40 @@ namespace Snip
 
                                     if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                     {
-                                        string searchString = string.Format("\"name\":\"{0}\",\"uri\":\"spotify:track:", songTitle);
+                                        string trackId = string.Empty;
 
-                                        int addressResult = this.FindInMemory(this.spotifyHandle, searchString);
-
-                                        if (addressResult > 0)
+                                        try
                                         {
-                                            addressResult += searchString.Length;
+                                            var json = new WebClient().DownloadString(
+                                                string.Format(
+                                                    "http://ws.spotify.com/search/1/track.json?q={0}+{1}",
+                                                    HttpUtility.UrlEncode(artist),
+                                                    HttpUtility.UrlEncode(songTitle)));
 
-                                            int trackIdSize = 0x16;
+                                            dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
-                                            byte[] byteBuffer = new byte[trackIdSize];
-                                            string trackId = string.Empty;
-
-                                            int processId = 0;
-                                            UnsafeNativeMethods.GetWindowThreadProcessId(this.spotifyHandle, out processId);
-                                            IntPtr processHandle = UnsafeNativeMethods.OpenProcess(0x10, false, processId);
-
-                                            if (UnsafeNativeMethods.ReadProcessMemory(processHandle, (IntPtr)addressResult, byteBuffer, trackIdSize, IntPtr.Zero))
+                                            if (jsonSummary != null)
                                             {
-                                                trackId = System.Text.Encoding.ASCII.GetString(byteBuffer);
+                                                jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"][0].ToString());
 
-                                                using (WebClient webClient = new WebClient())
+                                                if (jsonSummary != null)
                                                 {
-                                                    string html = webClient.DownloadString(string.Format("http://open.spotify.com/track/{0}", trackId));
+                                                    trackId = jsonSummary.href.ToString();
+                                                    trackId = trackId.Substring(trackId.LastIndexOf(':') + 1);
 
-                                                    Regex regex = new Regex("img src=\"(.*)\" border=\"0\" alt=\".*\" id=\"big-cover\"", RegexOptions.Compiled);
-                                                    Match match = regex.Match(html);
-
-                                                    try
+                                                    using (WebClient webClient = new WebClient())
                                                     {
+                                                        string html = webClient.DownloadString(string.Format("http://open.spotify.com/track/{0}", trackId));
+
+                                                        Regex regex = new Regex("img src=\"(.*)\" border=\"0\" alt=\".*\" id=\"big-cover\"", RegexOptions.Compiled);
+                                                        Match match = regex.Match(html);
+
                                                         webClient.DownloadFile(new Uri(match.Groups[1].Value), @"Snip_Artwork.jpg");
                                                     }
-                                                    catch
-                                                    {
-                                                        this.SaveBlankImage();
-                                                    }
                                                 }
-
-                                                UnsafeNativeMethods.CloseHandle(processHandle);
-                                            }
-                                            else
-                                            {
-                                                UnsafeNativeMethods.CloseHandle(processHandle);
-                                                throw new System.ComponentModel.Win32Exception();
                                             }
                                         }
-                                        else
+                                        catch
                                         {
                                             this.SaveBlankImage();
                                         }
@@ -1255,71 +1243,7 @@ namespace Snip
 
             registryKey.Close();
         }
-
-        /// <summary>
-        /// Finds a byte array within the memory of a process.
-        /// </summary>
-        /// <param name="processHandle">The process handle of the process you're going to search within.</param>
-        /// <param name="searchString">The string to search for.</param>
-        /// <returns>The address in memory where the match was found.</returns>
-        private int FindInMemory(IntPtr processHandle, string searchString)
-        {
-            int processId = 0;
-
-            UnsafeNativeMethods.GetWindowThreadProcessId(processHandle, out processId);
-
-            System.Diagnostics.Process process = System.Diagnostics.Process.GetProcessById(processId);
-
-            if (process != null)
-            {
-                int foundAddress = 0;
-
-                int readSize = 1024 * 64;
-
-                byte[] search = System.Text.Encoding.ASCII.GetBytes(searchString);
-
-                for (int j = 0x20000000; j < 0x30000000; j += readSize)
-                {
-                    ManagedWinapi.ProcessMemoryChunk memoryChunk = new ManagedWinapi.ProcessMemoryChunk(process, (IntPtr)j, readSize + search.Length);
-
-                    byte[] chunk = memoryChunk.Read();
-
-                    for (int k = 0; k < chunk.Length - search.Length; k++)
-                    {
-                        bool foundOffset = true;
-
-                        for (int l = 0; l < search.Length; l++)
-                        {
-                            if (chunk[k + l] != search[l])
-                            {
-                                foundOffset = false;
-
-                                break;
-                            }
-                        }
-
-                        if (foundOffset)
-                        {
-                            foundAddress = k + j;
-
-                            break;
-                        }
-                    }
-
-                    if (foundAddress != 0)
-                    {
-                        break;
-                    }
-                }
-
-                return foundAddress;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
+        
         /// <summary>
         /// Converts a byte array of an image into an Image.
         /// </summary>
@@ -1364,11 +1288,6 @@ namespace Snip
             [Out] StringBuilder windowText,
             [In] int maxCount);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        internal static extern int GetWindowThreadProcessId(
-            [In] IntPtr windowHandle,
-            [Out] out int processId);
-
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern IntPtr SendMessage(
             [In] IntPtr windowHandle,
@@ -1386,15 +1305,6 @@ namespace Snip
             [In] uint desiredAccess,
             [In] bool inheritHandle,
             [In] int processId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool ReadProcessMemory(
-            [In] IntPtr process,
-            [In] IntPtr baseAddress,
-            [Out] byte[] buffer,
-            [In] int size,
-            [Out] IntPtr bytesRead);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -1427,19 +1337,9 @@ namespace Snip
         internal class WindowMessage
         {
             /// <summary>
-            /// Sent when the user selects a command item from a menu, when a control sends a notification message to its parent window, or when an accelerator keystroke is translated.
-            /// </summary>
-            internal const uint WM_COMMAND = 0x111;
-
-            /// <summary>
             /// Notifies a window that the user generated an application command event, for example, by clicking an application command button using the mouse or typing an application command key on the keyboard.
             /// </summary>
             internal const uint WM_APPCOMMAND = 0x319;
-
-            /// <summary>
-            /// Used to define private messages for use by private window classes, usually of the form WM_USER+x, where x is an integer value.
-            /// </summary>
-            internal const uint WM_USER = 0x400;
         }
     }
 
