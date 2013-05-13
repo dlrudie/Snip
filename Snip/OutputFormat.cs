@@ -32,15 +32,44 @@ namespace Snip
     /// </summary>
     public partial class OutputFormat : Form
     {
-        private const string AuthorName = "David Rudie";
-        private const string ApplicationName = "Snip";
-        private const string ApplicationVersion = "2.6.0";
+        /// <summary>
+        /// The name of this program.
+        /// </summary>
+        private readonly string assemblyTitle = AssemblyInformation.AssemblyTitle;
 
+        /// <summary>
+        /// The author of this program.
+        /// </summary>
+        private readonly string assemblyAuthor = AssemblyInformation.AssemblyAuthor;
+
+        /// <summary>
+        /// The version number of this program.
+        /// </summary>
+        private readonly string assemblyVersion = AssemblyInformation.AssemblyVersion;
+
+        /// <summary>
+        /// The default track output format.
+        /// </summary>
         private string trackFormat = "“$t”";
+
+        /// <summary>
+        /// The default separator output format.
+        /// </summary>
         private string separatorFormat = " ― ";
+
+        /// <summary>
+        /// The default artist output format.
+        /// </summary>
         private string artistFormat = "$a";
+
+        /// <summary>
+        /// The default album output format.
+        /// </summary>
         private string albumFormat = "$l";
 
+        /// <summary>
+        /// Initializes a new instance of the OutputFormat class.
+        /// </summary>
         public OutputFormat()
         {
             this.InitializeComponent();
@@ -60,11 +89,21 @@ namespace Snip
             }
         }
 
+        /// <summary>
+        /// When the Default button is depressed, this method is called and the default values are restored.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         private void ButtonDefaults_Click(object sender, EventArgs e)
         {
             this.SetDefaults();
         }
 
+        /// <summary>
+        /// When the Save button is depressed, this method is called and the current values are saved to the registry.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             this.SaveSettings();
@@ -72,14 +111,17 @@ namespace Snip
             this.Close();
         }
 
+        /// <summary>
+        /// When the Load button is depressed, this method is called and the saved values in the registry are loaded.
+        /// </summary>
         private void LoadSettings()
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    AuthorName,
-                    ApplicationName,
-                    ApplicationVersion));
+                    this.assemblyAuthor,
+                    this.assemblyTitle,
+                    this.assemblyVersion));
 
             if (registryKey != null)
             {
@@ -95,14 +137,17 @@ namespace Snip
             }
         }
 
+        /// <summary>
+        /// Saves current settings to the registry.
+        /// </summary>
         private void SaveSettings()
         {
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    AuthorName,
-                    ApplicationName,
-                    ApplicationVersion));
+                    this.assemblyAuthor,
+                    this.assemblyTitle,
+                    this.assemblyVersion));
 
             registryKey.SetValue("Track Format", this.textBoxTrackFormat.Text, RegistryValueKind.String);
 
@@ -115,6 +160,9 @@ namespace Snip
             registryKey.Close();
         }
 
+        /// <summary>
+        /// Restores the default values.
+        /// </summary>
         private void SetDefaults()
         {
             this.trackFormat = "“$t”";

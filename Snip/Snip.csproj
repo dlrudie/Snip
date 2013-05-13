@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="AssemblyInformation.cs" />
     <Compile Include="OutputFormat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +107,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnsafeNativeMethods.cs" />
     <EmbeddedResource Include="OutputFormat.resx">
       <DependentUpon>OutputFormat.cs</DependentUpon>
     </EmbeddedResource>

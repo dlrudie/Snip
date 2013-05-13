@@ -27,8 +27,6 @@ namespace Snip
     using System.IO;
     using System.Net;
     using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Security;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
@@ -43,10 +41,6 @@ namespace Snip
     public partial class Snip : Form
     {
         #region Fields
-
-        private const string AuthorName = "David Rudie";
-        private const string ApplicationName = "Snip";
-        private const string ApplicationVersion = "2.6.0";
 
         /// <summary>
         /// This is a alpha transparent 1x1 PNG image.
@@ -66,144 +60,49 @@ namespace Snip
         };
 
         /// <summary>
-        /// This key will be used to switch to the next track.  Default: ]
+        /// The name of this program.
         /// </summary>
-        private int keyNextTrack = (int)Keys.OemCloseBrackets;
+        private readonly string assemblyTitle = AssemblyInformation.AssemblyTitle;
 
         /// <summary>
-        /// This will hold the last key state.
+        /// The author of this program.
         /// </summary>
-        private int lastKeyStateNextTrack = 0;
+        private readonly string assemblyAuthor = AssemblyInformation.AssemblyAuthor;
 
         /// <summary>
-        /// This key will be used to switch to the previous track.  Default: [
+        /// The version number of this program.
         /// </summary>
-        private int keyPreviousTrack = (int)Keys.OemOpenBrackets;
+        private readonly string assemblyVersion = AssemblyInformation.AssemblyVersion;
 
         /// <summary>
-        /// This will hold the last key state.
+        /// Used to store key states as they are depressed or released.
         /// </summary>
-        private int lastKeyStatePreviousTrack = 0;
+        private KeyState keyState;
 
         /// <summary>
-        /// This key will be used to raise the volume.  Default: +
+        /// Contains the default key binds used for hotkeys.
         /// </summary>
-        private int keyVolumeUp = (int)Keys.Oemplus;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStateVolumeUp = 0;
-
-        /// <summary>
-        /// This key will be used to lower the volume.  Default: -
-        /// </summary>
-        private int keyVolumeDown = (int)Keys.OemMinus;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStateVolumeDown = 0;
-
-        /// <summary>
-        /// This key will be used to play and pause the track.  Default: Enter
-        /// </summary>
-        private int keyPlayPauseTrack = (int)Keys.Enter;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStatePlayPauseTrack = 0;
-
-        /// <summary>
-        /// This key will be used to stop the track.  Default: Backspace
-        /// </summary>
-        private int keyStopTrack = (int)Keys.Back;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStateStopTrack = 0;
-
-        /// <summary>
-        /// This key will be used to mute the track.  Default: M
-        /// </summary>
-        private int keyMuteTrack = (int)Keys.M;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStateMuteTrack = 0;
-
-        /// <summary>
-        /// This key will be used to play the track.  Default: Enter
-        /// </summary>
-        private int keyPlayTrack = (int)Keys.Enter;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStatePlayTrack = 0;
-
-        /// <summary>
-        /// This key will be used to pause the track.  Default: P
-        /// </summary>
-        private int keyPauseTrack = (int)Keys.P;
-
-        /// <summary>
-        /// This will hold the last key state.
-        /// </summary>
-        private int lastKeyStatePauseTrack = 0;
+        private KeyBinds keyBinds;
 
         /// <summary>
         /// This will be used to do everything and anything with iTunes.
         /// </summary>
-        private iTunesApp iTunes = null;
+        private iTunesApp itunes = null;
 
         /// <summary>
         /// This can be used to check if a new iTunesApp() has been created and set up.
         /// </summary>
-        private bool iTunesSetup = false;
+        private bool itunesSetup = false;
 
         /// <summary>
-        /// We will continuously scan for the Spotify process and set this to true if found so no more checks are needed.
+        /// Used to store information about Spotify.
         /// </summary>
-        private bool spotifyFound = false;
+        private MediaPlayer spotifyApp;
 
         /// <summary>
-        /// Used to limit the amount of text writing if Spotify is not running.
+        /// Used to store information about Winamp;
         /// </summary>
-        private bool spotifyNotRunning = true;
-
-        /// <summary>
-        /// Once we have found Spotify we can set the process here.
-        /// </summary>
-        private IntPtr spotifyHandle = IntPtr.Zero;
-
-        /// <summary>
-        /// This will hold the window title of Spotify.
-        /// </summary>
-        private StringBuilder spotifyTitle = new StringBuilder(256);
-
-        /// <summary>
-        /// We will continuously scan for the Winamp process and set this to true if found so no more checks are needed.
-        /// </summary>
-        private bool winampFound = false;
-
-        /// <summary>
-        /// Used to limit the amount of text writing if Winamp is not running.
-        /// </summary>
-        private bool winampNotRunning = true;
-
-        /// <summary>
-        /// Once we have found Winamp we can set the process here.
-        /// </summary>
-        private IntPtr winampHandle = IntPtr.Zero;
-
-        /// <summary>
-        /// This will hold the window title of Winamp.
-        /// </summary>
-        private StringBuilder winampTitle = new StringBuilder(256);
+        private MediaPlayer winampApp;
 
         /// <summary>
         /// This will hold the last title that was checked.  If it is different than before we can update the text file and system tray text.
@@ -250,6 +149,13 @@ namespace Snip
 
             // Load settings from the registry.
             this.LoadSettings();
+
+            this.keyState = new KeyState();
+
+            this.keyBinds = new KeyBinds();
+
+            this.spotifyApp = new MediaPlayer();
+            this.winampApp = new MediaPlayer();
         }
 
         #endregion
@@ -343,16 +249,31 @@ namespace Snip
             this.Hide();
         }
 
+        /// <summary>
+        /// AUTOBOTS...ROLL OUT!
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void ToolStripMenuItemSpotify_Click(object sender, EventArgs e)
         {
             this.UpdatePlayer(PlayerSelection.Spotify);
         }
 
+        /// <summary>
+        /// Tells the program that we only want to look for iTunes.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         private void ToolStripMenuItemItunes_Click(object sender, EventArgs e)
         {
             this.UpdatePlayer(PlayerSelection.iTunes);
         }
 
+        /// <summary>
+        /// Tells the program that we only want to look for Winamp.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
         private void ToolStripMenuItemWinamp_Click(object sender, EventArgs e)
         {
             this.UpdatePlayer(PlayerSelection.Winamp);
@@ -367,10 +288,10 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = false;
 
-                    this.UpdateText("Switched to Spotify");
+                    this.UpdateTextAndEmptyFile("Switched to Spotify");
 
-                    this.iTunes = null;
-                    this.iTunesSetup = false;
+                    this.itunes = null;
+                    this.itunesSetup = false;
 
                     break;
 
@@ -379,9 +300,9 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = true;
                     this.toolStripMenuItemWinamp.Checked = false;
 
-                    this.UpdateText("Switched to iTunes");
+                    this.UpdateTextAndEmptyFile("Switched to iTunes");
 
-                    if (this.iTunes == null && !this.iTunesSetup)
+                    if (this.itunes == null && !this.itunesSetup)
                     {
                         this.SetUpItunes();
                     }
@@ -393,10 +314,10 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = true;
 
-                    this.UpdateText("Switched to Winamp");
+                    this.UpdateTextAndEmptyFile("Switched to Winamp");
 
-                    this.iTunes = null;
-                    this.iTunesSetup = false;
+                    this.itunes = null;
+                    this.itunesSetup = false;
 
                     break;
 
@@ -405,10 +326,10 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = false;
 
-                    this.UpdateText("Switched to Spotify");
+                    this.UpdateTextAndEmptyFile("Switched to Spotify");
 
-                    this.iTunes = null;
-                    this.iTunesSetup = false;
+                    this.itunes = null;
+                    this.itunesSetup = false;
 
                     break;
             }
@@ -468,23 +389,23 @@ namespace Snip
         {
             if (this.toolStripMenuItemSpotify.Checked)
             {
-                if (!this.spotifyFound)
+                if (!this.spotifyApp.Found)
                 {
-                    this.spotifyHandle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
+                    this.spotifyApp.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
 
-                    this.spotifyFound = true;
-                    this.spotifyNotRunning = false;
+                    this.spotifyApp.Found = true;
+                    this.spotifyApp.NotRunning = false;
                 }
                 else
                 {
                     // Make sure the process is still valid.
-                    if (this.spotifyHandle != IntPtr.Zero && this.spotifyHandle != null)
+                    if (this.spotifyApp.Handle != IntPtr.Zero && this.spotifyApp.Handle != null)
                     {
-                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.spotifyHandle, this.spotifyTitle, this.spotifyTitle.Capacity);
+                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.spotifyApp.Handle, this.spotifyApp.Title, this.spotifyApp.Title.Capacity);
 
-                        string spotifyTitle = this.spotifyTitle.ToString();
+                        string spotifyTitle = this.spotifyApp.Title.ToString();
 
-                        this.spotifyTitle.Clear();
+                        this.spotifyApp.Title.Clear();
 
                         // If the window title length is 0 then the process handle is not valid.
                         if (windowTextLength > 0)
@@ -499,7 +420,7 @@ namespace Snip
                                         this.SaveBlankImage();
                                     }
 
-                                    this.UpdateText("No track playing");
+                                    this.UpdateTextAndEmptyFile("No track playing");
                                 }
                                 else
                                 {
@@ -559,54 +480,54 @@ namespace Snip
                         }
                         else
                         {
-                            if (!this.spotifyNotRunning)
+                            if (!this.spotifyApp.NotRunning)
                             {
                                 if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                 {
                                     this.SaveBlankImage();
                                 }
 
-                                this.UpdateText("Spotify is not currently running");
-                                this.spotifyFound = false;
-                                this.spotifyNotRunning = true;
+                                this.UpdateTextAndEmptyFile("Spotify is not currently running");
+                                this.spotifyApp.Found = false;
+                                this.spotifyApp.NotRunning = true;
                             }
                         }
                     }
                     else
                     {
-                        if (!this.spotifyNotRunning)
+                        if (!this.spotifyApp.NotRunning)
                         {
                             if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                             {
                                 this.SaveBlankImage();
                             }
 
-                            this.UpdateText("Spotify is not currently running");
-                            this.spotifyFound = false;
-                            this.spotifyNotRunning = true;
+                            this.UpdateTextAndEmptyFile("Spotify is not currently running");
+                            this.spotifyApp.Found = false;
+                            this.spotifyApp.NotRunning = true;
                         }
                     }
                 }
             }
             else if (this.toolStripMenuItemWinamp.Checked)
             {
-                if (!this.winampFound)
+                if (!this.winampApp.Found)
                 {
-                    this.winampHandle = UnsafeNativeMethods.FindWindow("Winamp v1.x", null);
+                    this.winampApp.Handle = UnsafeNativeMethods.FindWindow("Winamp v1.x", null);
 
-                    this.winampFound = true;
-                    this.winampNotRunning = false;
+                    this.winampApp.Found = true;
+                    this.winampApp.NotRunning = false;
                 }
                 else
                 {
                     // Make sure the process is still valid.
-                    if (this.winampHandle != IntPtr.Zero && this.winampHandle != null)
+                    if (this.winampApp.Handle != IntPtr.Zero && this.winampApp.Handle != null)
                     {
-                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.winampHandle, this.winampTitle, this.winampTitle.Capacity);
+                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.winampApp.Handle, this.winampApp.Title, this.winampApp.Title.Capacity);
 
-                        string winampTitle = this.winampTitle.ToString();
+                        string winampTitle = this.winampApp.Title.ToString();
 
-                        this.winampTitle.Clear();
+                        this.winampApp.Title.Clear();
 
                         // If the window title length is 0 then the process handle is not valid.
                         if (windowTextLength > 0)
@@ -616,7 +537,7 @@ namespace Snip
                             {
                                 if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                                 {
-                                    this.UpdateText("No track playing");
+                                    this.UpdateTextAndEmptyFile("No track playing");
                                 }
                                 else
                                 {
@@ -650,31 +571,31 @@ namespace Snip
                         }
                         else
                         {
-                            if (!this.winampNotRunning)
+                            if (!this.winampApp.NotRunning)
                             {
                                 if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                 {
                                     this.SaveBlankImage();
                                 }
 
-                                this.UpdateText("Winamp is not currently running");
-                                this.winampFound = false;
-                                this.winampNotRunning = true;
+                                this.UpdateTextAndEmptyFile("Winamp is not currently running");
+                                this.winampApp.Found = false;
+                                this.winampApp.NotRunning = true;
                             }
                         }
                     }
                     else
                     {
-                        if (!this.winampNotRunning)
+                        if (!this.winampApp.NotRunning)
                         {
                             if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                             {
                                 this.SaveBlankImage();
                             }
 
-                            this.UpdateText("Winamp is not currently running");
-                            this.winampFound = false;
-                            this.winampNotRunning = true;
+                            this.UpdateTextAndEmptyFile("Winamp is not currently running");
+                            this.winampApp.Found = false;
+                            this.winampApp.NotRunning = true;
                         }
                     }
                 }
@@ -691,139 +612,139 @@ namespace Snip
             int keyControl = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.ControlKey);
             int keyAlt = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.Menu);
 
-            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyNextTrack) & 0x8000;           //// S I W
-            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPreviousTrack) & 0x8000;   //// S I W
-            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeUp) & 0x8000;             //// S I W
-            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeDown) & 0x8000;         //// S I W
-            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyMuteTrack) & 0x8000;           //// S   W
-            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPlayPauseTrack) & 0x8000; //// S I W
-            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPauseTrack) & 0x8000;         ////   I
-            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyStopTrack) & 0x8000;           //// S I W
+            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.NextTrack) & 0x8000;           //// S I W
+            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PreviousTrack) & 0x8000;   //// S I W
+            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.VolumeUp) & 0x8000;             //// S I W
+            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.VolumeDown) & 0x8000;         //// S I W
+            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.MuteTrack) & 0x8000;           //// S   W
+            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PlayPauseTrack) & 0x8000; //// S I W
+            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PauseTrack) & 0x8000;         ////   I
+            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.StopTrack) & 0x8000;           //// S I W
 
-            if (keyControl != 0 && keyAlt != 0 && keyStateNextTrack > 0 && keyStateNextTrack != this.lastKeyStateNextTrack)
+            if (keyControl != 0 && keyAlt != 0 && keyStateNextTrack > 0 && keyStateNextTrack != this.keyState.NextTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.NextTrack();
+                    this.itunes.NextTrack();
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStatePreviousTrack > 0 && keyStatePreviousTrack != this.lastKeyStatePreviousTrack)
+            if (keyControl != 0 && keyAlt != 0 && keyStatePreviousTrack > 0 && keyStatePreviousTrack != this.keyState.PreviousTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.PreviousTrack();
+                    this.itunes.PreviousTrack();
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStateVolumeUp > 0 && keyStateVolumeUp != this.lastKeyStateVolumeUp)
+            if (keyControl != 0 && keyAlt != 0 && keyStateVolumeUp > 0 && keyStateVolumeUp != this.keyState.VolumeUp)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.SoundVolume++;
+                    this.itunes.SoundVolume++;
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStateVolumeDown > 0 && keyStateVolumeDown != this.lastKeyStateVolumeDown)
+            if (keyControl != 0 && keyAlt != 0 && keyStateVolumeDown > 0 && keyStateVolumeDown != this.keyState.VolumeDown)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.SoundVolume--;
+                    this.itunes.SoundVolume--;
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStateMuteTrack > 0 && keyStateMuteTrack != this.lastKeyStateMuteTrack)
+            if (keyControl != 0 && keyAlt != 0 && keyStateMuteTrack > 0 && keyStateMuteTrack != this.keyState.MuteTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStatePlayPauseTrack > 0 && keyStatePlayPauseTrack != this.lastKeyStatePlayTrack)
+            if (keyControl != 0 && keyAlt != 0 && keyStatePlayPauseTrack > 0 && keyStatePlayPauseTrack != this.keyState.PlayPauseTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.Play();
+                    this.itunes.Play();
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStatePauseTrack > 0 && keyStatePauseTrack != this.lastKeyStatePauseTrack)
+            if (keyControl != 0 && keyAlt != 0 && keyStatePauseTrack > 0 && keyStatePauseTrack != this.keyState.PauseTrack)
             {
                 if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.Pause();
+                    this.itunes.Pause();
                 }
             }
 
-            if (keyControl != 0 && keyAlt != 0 && keyStateStopTrack > 0 && keyStateStopTrack != this.lastKeyStateStopTrack)
+            if (keyControl != 0 && keyAlt != 0 && keyStateStopTrack > 0 && keyStateStopTrack != this.keyState.StopTrack)
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
-                    this.iTunes.Stop();
+                    this.itunes.Stop();
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampHandle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
                 }
             }
 
-            this.lastKeyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyNextTrack) & 0x8000;
-            this.lastKeyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPreviousTrack) & 0x8000;
-            this.lastKeyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeUp) & 0x8000;
-            this.lastKeyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyVolumeDown) & 0x8000;
-            this.lastKeyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyMuteTrack) & 0x8000;
-            this.lastKeyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPlayTrack) & 0x8000;
-            this.lastKeyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyPauseTrack) & 0x8000;
-            this.lastKeyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyStopTrack) & 0x8000;
+            this.keyState.NextTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.NextTrack) & 0x8000;
+            this.keyState.PreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PreviousTrack) & 0x8000;
+            this.keyState.VolumeUp = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.VolumeUp) & 0x8000;
+            this.keyState.VolumeDown = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.VolumeDown) & 0x8000;
+            this.keyState.MuteTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.MuteTrack) & 0x8000;
+            this.keyState.PlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PlayPauseTrack) & 0x8000;
+            this.keyState.PauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PauseTrack) & 0x8000;
+            this.keyState.StopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.StopTrack) & 0x8000;
         }
 
         /// <summary>
@@ -860,32 +781,32 @@ namespace Snip
 
         private void SetUpItunes()
         {
-            if (!this.iTunesSetup)
+            if (!this.itunesSetup)
             {
-                this.iTunes = new iTunesApp();
+                this.itunes = new iTunesApp();
 
                 // This will call App_OnPlayerPlayEvent when a track is played for the first time.
-                this.iTunes.OnPlayerPlayEvent += new _IiTunesEvents_OnPlayerPlayEventEventHandler(delegate(object o)
+                this.itunes.OnPlayerPlayEvent += new _IiTunesEvents_OnPlayerPlayEventEventHandler(delegate(object o)
                 {
                     this.Invoke(new Router(this.App_OnPlayerPlayEvent), o);
                 });
 
                 // This will call App_OnPlayerPlayingTrackChangedEvent when a playing track changes to another track.
-                this.iTunes.OnPlayerPlayingTrackChangedEvent += new _IiTunesEvents_OnPlayerPlayingTrackChangedEventEventHandler(delegate(object o)
+                this.itunes.OnPlayerPlayingTrackChangedEvent += new _IiTunesEvents_OnPlayerPlayingTrackChangedEventEventHandler(delegate(object o)
                 {
                     this.Invoke(new Router(this.App_OnPlayerPlayingTrackChangedEvent), o);
                 });
 
                 // This will call App_OnPlayerStopEvent when a playing track is stopped.
-                this.iTunes.OnPlayerStopEvent += new _IiTunesEvents_OnPlayerStopEventEventHandler(delegate(object o)
+                this.itunes.OnPlayerStopEvent += new _IiTunesEvents_OnPlayerStopEventEventHandler(delegate(object o)
                 {
                     this.Invoke(new Router(this.App_OnPlayerStopEvent), o);
                 });
 
                 // This will call App_OnPlayerQuittingEvent when iTunes is terminated.
-                this.iTunes.OnQuittingEvent += new _IiTunesEvents_OnQuittingEventEventHandler(this.App_OnPlayerQuittingEvent);
+                this.itunes.OnQuittingEvent += new _IiTunesEvents_OnQuittingEventEventHandler(this.App_OnPlayerQuittingEvent);
 
-                this.iTunesSetup = true;
+                this.itunesSetup = true;
             }
         }
 
@@ -895,9 +816,9 @@ namespace Snip
         /// <param name="sender">The sender.</param>
         private void App_OnPlayerPlayEvent(object sender)
         {
-            IITTrack track = this.iTunes.CurrentTrack;
+            IITTrack track = this.itunes.CurrentTrack;
 
-            if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.iTunes.CurrentStreamTitle))
+            if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.itunes.CurrentStreamTitle))
             {
                 if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                 {
@@ -916,9 +837,9 @@ namespace Snip
 
                 this.UpdateText(track.Name, track.Artist, track.Album);
             }
-            else if (!string.IsNullOrEmpty(this.iTunes.CurrentStreamTitle))
+            else if (!string.IsNullOrEmpty(this.itunes.CurrentStreamTitle))
             {
-                this.UpdateText(this.iTunes.CurrentStreamTitle);
+                this.UpdateText(this.itunes.CurrentStreamTitle);
             }
         }
 
@@ -928,9 +849,9 @@ namespace Snip
         /// <param name="sender">The sender.</param>
         private void App_OnPlayerPlayingTrackChangedEvent(object sender)
         {
-            IITTrack track = this.iTunes.CurrentTrack;
+            IITTrack track = this.itunes.CurrentTrack;
 
-            if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.iTunes.CurrentStreamTitle))
+            if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.itunes.CurrentStreamTitle))
             {
                 if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                 {
@@ -949,9 +870,9 @@ namespace Snip
 
                 this.UpdateText(track.Name, track.Artist, track.Album);
             }
-            else if (!string.IsNullOrEmpty(this.iTunes.CurrentStreamTitle))
+            else if (!string.IsNullOrEmpty(this.itunes.CurrentStreamTitle))
             {
-                this.UpdateText(this.iTunes.CurrentStreamTitle);
+                this.UpdateText(this.itunes.CurrentStreamTitle);
             }
         }
 
@@ -966,7 +887,7 @@ namespace Snip
                 this.SaveBlankImage();
             }
 
-            this.UpdateText("No track playing");
+            this.UpdateTextAndEmptyFile("No track playing");
         }
 
         /// <summary>
@@ -979,7 +900,7 @@ namespace Snip
                 this.SaveBlankImage();
             }
 
-            this.UpdateText("iTunes is not currently running");
+            this.UpdateTextAndEmptyFile("iTunes is not currently running");
             //// Application.Exit();
         }
 
@@ -1009,6 +930,13 @@ namespace Snip
             {
                 t.GetMethod("UpdateIcon", hidden).Invoke(notifyIcon, new object[] { true });
             }
+        }
+
+        private void UpdateTextAndEmptyFile(string text)
+        {
+            this.SetNotifyIconText(this.notifyIcon, text);
+
+            File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
         }
 
         /// <summary>
@@ -1074,9 +1002,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    AuthorName,
-                    ApplicationName,
-                    ApplicationVersion));
+                    this.assemblyAuthor,
+                    this.assemblyTitle,
+                    this.assemblyVersion));
 
             if (registryKey != null)
             {
@@ -1097,9 +1025,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    AuthorName,
-                    ApplicationName,
-                    ApplicationVersion));
+                    this.assemblyAuthor,
+                    this.assemblyTitle,
+                    this.assemblyVersion));
 
             if (registryKey != null)
             {
@@ -1197,9 +1125,9 @@ namespace Snip
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
                     "SOFTWARE\\{0}\\{1}\\{2}",
-                    AuthorName,
-                    ApplicationName,
-                    ApplicationVersion));
+                    this.assemblyAuthor,
+                    this.assemblyTitle,
+                    this.assemblyVersion));
 
             if (this.toolStripMenuItemSpotify.Checked)
             {
@@ -1263,85 +1191,213 @@ namespace Snip
         }
 
         #endregion
-    }
-
-    #region UnsafeNativeMethods
-
-    /// <summary>
-    /// This class holds unsafe native methods.
-    /// </summary>
-    [SuppressUnmanagedCodeSecurity]
-    internal static class UnsafeNativeMethods
-    {
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern short GetAsyncKeyState(
-            [In] int keyInt);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr FindWindow(
-            [In] string className,
-            [In] string windowName);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern int GetWindowText(
-            [In] IntPtr windowHandle,
-            [Out] StringBuilder windowText,
-            [In] int maxCount);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern IntPtr SendMessage(
-            [In] IntPtr windowHandle,
-            [In] uint message,
-            [In] IntPtr wParam,
-            [In] IntPtr lParam);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool CloseHandle(
-            [In] IntPtr handle);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr OpenProcess(
-            [In] uint desiredAccess,
-            [In] bool inheritHandle,
-            [In] int processId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetProcessWorkingSetSize(
-            [In] IntPtr process,
-            [In] UIntPtr minimumWorkingSetSize,
-            [In] UIntPtr maximumWorkingSetSize);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr GetProcessHeap();
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool HeapLock(
-            [In] IntPtr heap);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern uint HeapCompact(
-            [In] IntPtr heap,
-            [In] uint flags);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool HeapUnlock(
-            [In] IntPtr heap);
 
         /// <summary>
-        /// Contains a list of window messages to be used with SendMessage().
+        /// This structure will hold the last key state of a hotkey.
         /// </summary>
-        internal class WindowMessage
+        public struct KeyState
+        {
+            public int NextTrack;
+            public int PreviousTrack;
+            public int VolumeUp;
+            public int VolumeDown;
+            public int PlayPauseTrack;
+            public int StopTrack;
+            public int MuteTrack;
+            public int PauseTrack;
+        }
+
+        /// <summary>
+        /// Holds key binds for the hotkeys.
+        /// </summary>
+        public class KeyBinds
+        {
+            private int nextTrack = (int)Keys.OemCloseBrackets;      // Default: ]
+            private int previousTrack = (int)Keys.OemOpenBrackets;   // Default: [
+            private int volumeUp = (int)Keys.Oemplus;                // Default: +
+            private int volumeDown = (int)Keys.OemMinus;             // Default: -
+            private int playPauseTrack = (int)Keys.Enter;            // Default: Enter
+            private int stopTrack = (int)Keys.Back;                  // Default: Backspace
+            private int muteTrack = (int)Keys.M;                     // Default: M
+            private int pauseTrack = (int)Keys.P;                    // Default: P
+
+            /// <summary>
+            /// Gets the key bind used for switching to the next track.
+            /// </summary>
+            public int NextTrack
+            {
+                get
+                {
+                    return this.nextTrack;
+                }
+            }
+
+            /// <summary>
+            /// Gets the keybind used for switching to the previous track.
+            /// </summary>
+            public int PreviousTrack
+            {
+                get
+                {
+                    return this.previousTrack;
+                }
+            }
+
+            /// <summary>
+            /// Gets the key bind used for raising the volume.
+            /// </summary>
+            public int VolumeUp
+            {
+                get
+                {
+                    return this.volumeUp;
+                }
+            }
+
+            /// <summary>
+            /// Gets the key bind used for lowering the volume.
+            /// </summary>
+            public int VolumeDown
+            {
+                get
+                {
+                    return this.volumeDown;
+                }
+            }
+
+            /// <summary>
+            /// Gets the key bind used to play or pause the track.
+            /// </summary>
+            public int PlayPauseTrack
+            {
+                get
+                {
+                    return this.playPauseTrack;
+                }
+            }
+
+            /// <summary>
+            /// Gets the key used to stop playing the currently playing track.
+            /// </summary>
+            public int StopTrack
+            {
+                get
+                {
+                    return this.stopTrack;
+                }
+            }
+
+            /// <summary>
+            /// Gets the key bind used to mute the currently playing track.
+            /// </summary>
+            public int MuteTrack
+            {
+                get
+                {
+                    return this.muteTrack;
+                }
+            }
+
+            /// <summary>
+            /// Gets the key used to pause playback of the currently playing track.
+            /// </summary>
+            public int PauseTrack
+            {
+                get
+                {
+                    return this.pauseTrack;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// This class is meant t... I'm sleepy.
+        /// </summary>
+        public class MediaPlayer
         {
             /// <summary>
-            /// Notifies a window that the user generated an application command event, for example, by clicking an application command button using the mouse or typing an application command key on the keyboard.
+            /// Whether the program was even found.
             /// </summary>
-            internal const uint WM_APPCOMMAND = 0x319;
+            private bool found = false;
+
+            /// <summary>
+            /// Whether the program is running or not.
+            /// </summary>
+            private bool notRunning = true;
+
+            /// <summary>
+            /// The handle of the main window.
+            /// </summary>
+            private IntPtr handle = IntPtr.Zero;
+
+            /// <summary>
+            /// Used for the title of the main window handle.
+            /// </summary>
+            private StringBuilder title = new StringBuilder(256);
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the media player was found in memory.
+            /// </summary>
+            public bool Found
+            {
+                get
+                {
+                    return this.found;
+                }
+
+                set
+                {
+                    this.found = value;
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the media player is an actively running process.
+            /// </summary>
+            public bool NotRunning
+            {
+                get
+                {
+                    return this.notRunning;
+                }
+
+                set
+                {
+                    this.notRunning = value;
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets the pointer to the handle of the media player.
+            /// </summary>
+            public IntPtr Handle
+            {
+                get
+                {
+                    return this.handle;
+                }
+
+                set
+                {
+                    this.handle = value;
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets the window title of the media player.
+            /// </summary>
+            public StringBuilder Title
+            {
+                get
+                {
+                    return this.title;
+                }
+
+                set
+                {
+                    this.title = value;
+                }
+            }
         }
     }
-
-    #endregion
 }

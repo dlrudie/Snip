@@ -26,6 +26,9 @@ namespace Snip
     using System.Threading;
     using System.Windows.Forms;
 
+    /// <summary>
+    /// Because StyleCop.
+    /// </summary>
     public static class Program
     {
         /// <summary>
