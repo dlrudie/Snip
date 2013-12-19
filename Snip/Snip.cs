@@ -456,12 +456,10 @@ namespace Snip
 
                                                     using (WebClient webClient = new WebClient())
                                                     {
-                                                        string html = webClient.DownloadString(string.Format("http://open.spotify.com/track/{0}", trackId));
-
-                                                        Regex regex = new Regex("img src=\"(.*)\" border=\"0\" alt=\".*\" id=\"big-cover\"", RegexOptions.Compiled);
-                                                        Match match = regex.Match(html);
-
-                                                        webClient.DownloadFile(new Uri(match.Groups[1].Value), @"Snip_Artwork.jpg");
+                                                        string json1 = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+                                                        jsonSummary1 = SimpleJson.DeserializeObject(json1);
+                                                        string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("canvas", "640");
+                                                        webClient.DownloadFile(new Uri(imageUrl), @"Snip_Artwork.jpg");
                                                     }
                                                 }
                                             }
