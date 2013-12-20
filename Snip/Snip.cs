@@ -28,7 +28,6 @@ namespace Snip
     using System.Net;
     using System.Reflection;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Web;
     using System.Windows.Forms;
     using iTunesLib;
@@ -456,12 +455,13 @@ namespace Snip
 
                                                     using (WebClient webClient = new WebClient())
                                                     {
-                                                        string html = webClient.DownloadString(string.Format("http://open.spotify.com/track/{0}", trackId));
+                                                        string json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
 
-                                                        Regex regex = new Regex("img src=\"(.*)\" border=\"0\" alt=\".*\" id=\"big-cover\"", RegexOptions.Compiled);
-                                                        Match match = regex.Match(html);
+                                                        jsonSummary = SimpleJson.DeserializeObject(json);
 
-                                                        webClient.DownloadFile(new Uri(match.Groups[1].Value), @"Snip_Artwork.jpg");
+                                                        string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", "640");
+
+                                                        webClient.DownloadFile(new Uri(imageUrl), @"Snip_Artwork.jpg");
                                                     }
                                                 }
                                             }
