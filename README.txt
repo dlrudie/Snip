@@ -1,6 +1,6 @@
-SNIP V2.6.0
+SNIP V2.8.0
 =========
-Copyright 2012, 2013 David Rudie (d.rudie@gmail.com)
+Copyright 2012, 2013 David Rudie <d.rudie@gmail.com>
 
 ABOUT
 =====
@@ -64,6 +64,29 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v2.8.0 (2013-Dec-21):
+* Snip will download higher resolution album artwork using a more efficient
+    method.  This patch was provided by Kailan Blanks.  Thank you.
+* Added an option to cache Spotify album artwork locally.  If this option is
+    enabled then it will download and save the artwork locally to a separate
+    directory, and then each time that track is played it will use the saved
+    artwork instead of redownloading it.
+* Due to the contribution I added an AUTHORS.txt file.
+* Split structs and classes into regions.
+* I forced the download timeout to 5 seconds so that there's not too much of a
+    wait between the time the album artwork starts downloading and the text
+    file is updated.
+
+v2.7.0 (Unreleased):
+* Moved program information to its own class.
+* Moved unsafe native methods to their own class.
+* Made StyleCop mostly happy.
+* Moved key binds to their own class.
+* Moved key states to their own class.
+* Moved media player fields to their own class.
+* Snip.txt empties when no track is playing or other generic information is
+    shown.
 
 v2.6.0 (2013-Apr-20):
 * Added SimpleJson as a way to parse json easily.

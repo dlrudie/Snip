@@ -56,6 +56,7 @@ namespace Snip
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSaveSeparateFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveAlbumArtwork = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveHistory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,82 +83,92 @@ namespace Snip
             this.toolStripSeparator2,
             this.toolStripMenuItemSaveSeparateFiles,
             this.toolStripMenuItemSaveAlbumArtwork,
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork,
             this.toolStripMenuItemSaveHistory,
             this.toolStripSeparator1,
             this.toolStripMenuItemExit});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(222, 220);
+            this.contextMenuStrip.Size = new System.Drawing.Size(232, 242);
             // 
             // toolStripMenuItemSpotify
             // 
             this.toolStripMenuItemSpotify.Checked = true;
             this.toolStripMenuItemSpotify.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemSpotify.Name = "toolStripMenuItemSpotify";
-            this.toolStripMenuItemSpotify.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemSpotify.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemSpotify.Text = "Spotify";
             this.toolStripMenuItemSpotify.Click += new System.EventHandler(this.ToolStripMenuItemSpotify_Click);
             // 
             // toolStripMenuItemItunes
             // 
             this.toolStripMenuItemItunes.Name = "toolStripMenuItemItunes";
-            this.toolStripMenuItemItunes.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemItunes.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemItunes.Text = "iTunes";
             this.toolStripMenuItemItunes.Click += new System.EventHandler(this.ToolStripMenuItemItunes_Click);
             // 
             // toolStripMenuItemWinamp
             // 
             this.toolStripMenuItemWinamp.Name = "toolStripMenuItemWinamp";
-            this.toolStripMenuItemWinamp.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemWinamp.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemWinamp.Text = "Winamp";
             this.toolStripMenuItemWinamp.Click += new System.EventHandler(this.ToolStripMenuItemWinamp_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(228, 6);
             // 
             // toolStripMenuItemSetFormat
             // 
             this.toolStripMenuItemSetFormat.Name = "toolStripMenuItemSetFormat";
-            this.toolStripMenuItemSetFormat.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemSetFormat.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemSetFormat.Text = "Set Output Format";
             this.toolStripMenuItemSetFormat.Click += new System.EventHandler(this.ToolStripMenuItemSetFormat_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(228, 6);
             // 
             // toolStripMenuItemSaveSeparateFiles
             // 
             this.toolStripMenuItemSaveSeparateFiles.Name = "toolStripMenuItemSaveSeparateFiles";
-            this.toolStripMenuItemSaveSeparateFiles.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemSaveSeparateFiles.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemSaveSeparateFiles.Text = "Save Information Separately";
             this.toolStripMenuItemSaveSeparateFiles.Click += new System.EventHandler(this.ToolStripMenuItemSaveSeparateFiles_Click);
             // 
             // toolStripMenuItemSaveAlbumArtwork
             // 
             this.toolStripMenuItemSaveAlbumArtwork.Name = "toolStripMenuItemSaveAlbumArtwork";
-            this.toolStripMenuItemSaveAlbumArtwork.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemSaveAlbumArtwork.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemSaveAlbumArtwork.Text = "Save Album Artwork";
             this.toolStripMenuItemSaveAlbumArtwork.Click += new System.EventHandler(this.ToolStripMenuItemSaveAlbumArtwork_Click);
+            // 
+            // toolStripMenuItemCacheSpotifyAlbumArtwork
+            // 
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = true;
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork.Name = "toolStripMenuItemCacheSpotifyAlbumArtwork";
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork.Size = new System.Drawing.Size(231, 22);
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork.Text = "Cache Spotify Album Artwork";
+            this.toolStripMenuItemCacheSpotifyAlbumArtwork.Click += new System.EventHandler(this.ToolStripMenuItemCacheSpotifyAlbumArtwork_Click);
             // 
             // toolStripMenuItemSaveHistory
             // 
             this.toolStripMenuItemSaveHistory.Name = "toolStripMenuItemSaveHistory";
-            this.toolStripMenuItemSaveHistory.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemSaveHistory.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemSaveHistory.Text = "Save Track History";
             this.toolStripMenuItemSaveHistory.Click += new System.EventHandler(this.ToolStripMenuItemSaveHistory_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(228, 6);
             // 
             // toolStripMenuItemExit
             // 
             this.toolStripMenuItemExit.Name = "toolStripMenuItemExit";
-            this.toolStripMenuItemExit.Size = new System.Drawing.Size(221, 22);
+            this.toolStripMenuItemExit.Size = new System.Drawing.Size(231, 22);
             this.toolStripMenuItemExit.Text = "Exit";
             this.toolStripMenuItemExit.Click += new System.EventHandler(this.ToolStripMenuItemExit_Click);
             // 
@@ -195,6 +206,7 @@ namespace Snip
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWinamp;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCacheSpotifyAlbumArtwork;
 
     }
 }

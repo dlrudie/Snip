@@ -42,6 +42,11 @@ namespace Snip
         #region Fields
 
         /// <summary>
+        /// This is the path to the default artwork file.
+        /// </summary>
+        private readonly string defaultArtworkFile = @Application.StartupPath + @"\Snip_Artwork.jpg";
+
+        /// <summary>
         /// This is a alpha transparent 1x1 PNG image.
         /// </summary>
         private readonly byte[] blankImage = new byte[]
@@ -358,6 +363,18 @@ namespace Snip
             }
         }
 
+        private void ToolStripMenuItemCacheSpotifyAlbumArtwork_Click(object sender, EventArgs e)
+        {
+            if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
+            {
+                this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = false;
+            }
+            else
+            {
+                this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = true;
+            }
+        }
+
         private void ToolStripMenuItemSaveHistory_Click(object sender, EventArgs e)
         {
             if (this.toolStripMenuItemSaveHistory.Checked)
@@ -453,15 +470,53 @@ namespace Snip
                                                     trackId = jsonSummary.href.ToString();
                                                     trackId = trackId.Substring(trackId.LastIndexOf(':') + 1);
 
-                                                    using (WebClient webClient = new WebClient())
+                                                    string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
+                                                    string artworkImagePath = string.Format(@"{0}\{1}.jpg", artworkDirectory, trackId);
+
+                                                    if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
                                                     {
+                                                        FileInfo fileInfo = new FileInfo(artworkImagePath);
+
+                                                        if (!Directory.Exists(artworkDirectory))
+                                                        {
+                                                            Directory.CreateDirectory(artworkDirectory);
+                                                        }
+
+                                                        if (fileInfo.Exists && fileInfo.Length > 0)
+                                                        {
+                                                            fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                                        }
+                                                        else
+                                                        {
+                                                            using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
+                                                            {
+                                                                json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+
+                                                                jsonSummary = SimpleJson.DeserializeObject(json);
+
+                                                                string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", "640");
+
+                                                                webClient.DownloadFile(new Uri(imageUrl), artworkImagePath);
+                                                                fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+<<<<<<< HEAD
                                                         json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+=======
+                                                        using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
+                                                        {
+                                                            json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+>>>>>>> Snip v2.8.0
 
-                                                        jsonSummary = SimpleJson.DeserializeObject(json);
+                                                            jsonSummary = SimpleJson.DeserializeObject(json);
 
-                                                        string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", "640");
+                                                            string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", "640");
 
-                                                        webClient.DownloadFile(new Uri(imageUrl), @"Snip_Artwork.jpg");
+                                                            webClient.DownloadFile(new Uri(imageUrl), this.defaultArtworkFile);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -827,7 +882,7 @@ namespace Snip
                         IITArtworkCollection artworkCollection = track.Artwork;
                         IITArtwork artwork = artworkCollection[1];
 
-                        artwork.SaveArtworkToFile(@Application.StartupPath + @"\Snip_Artwork.jpg");
+                        artwork.SaveArtworkToFile(this.defaultArtworkFile);
                     }
                     catch
                     {
@@ -860,7 +915,7 @@ namespace Snip
                         IITArtworkCollection artworkCollection = track.Artwork;
                         IITArtwork artwork = artworkCollection[1];
 
-                        artwork.SaveArtworkToFile(@Application.StartupPath + @"\Snip_Artwork.jpg");
+                        artwork.SaveArtworkToFile(this.defaultArtworkFile);
                     }
                     catch
                     {
@@ -1097,6 +1152,17 @@ namespace Snip
                     this.toolStripMenuItemSaveAlbumArtwork.Checked = false;
                 }
 
+                bool cacheSpotifyAlbumArtwork = Convert.ToBoolean(registryKey.GetValue("Cache Spotify Album Artwork", false));
+
+                if (cacheSpotifyAlbumArtwork)
+                {
+                    this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = true;
+                }
+                else
+                {
+                    this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = false;
+                }
+
                 bool saveHistoryChecked = Convert.ToBoolean(registryKey.GetValue("Save History", false));
 
                 if (saveHistoryChecked)
@@ -1160,6 +1226,15 @@ namespace Snip
                 registryKey.SetValue("Save Album Artwork", "false");
             }
 
+            if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
+            {
+                registryKey.SetValue("Cache Spotify Album Artwork", "true");
+            }
+            else
+            {
+                registryKey.SetValue("Cache Spotify Album Artwork", "false");
+            }
+
             if (this.toolStripMenuItemSaveHistory.Checked)
             {
                 registryKey.SetValue("Save History", "true");
@@ -1187,10 +1262,12 @@ namespace Snip
         private void SaveBlankImage()
         {
             Image image = this.ImageFromByteArray(this.blankImage);
-            image.Save(@Application.StartupPath + @"\Snip_Artwork.jpg");
+            image.Save(this.defaultArtworkFile);
         }
 
         #endregion
+
+        #region Structs
 
         /// <summary>
         /// This structure will hold the last key state of a hotkey.
@@ -1206,6 +1283,10 @@ namespace Snip
             public int MuteTrack;
             public int PauseTrack;
         }
+
+        #endregion
+
+        #region Classes
 
         /// <summary>
         /// Holds key binds for the hotkeys.
@@ -1399,5 +1480,25 @@ namespace Snip
                 }
             }
         }
+
+        /// <summary>
+        /// This replaces the default WebClient class with a 10 second timeout instead of the default 100 second timeout.
+        /// </summary>
+        public class WebClientWithShortTimeout : WebClient
+        {
+            /// <summary>
+            /// How many seconds before webclient times out and moves on.
+            /// </summary>
+            private const int WebClientTimeoutSeconds = 5;
+
+            protected override WebRequest GetWebRequest(Uri uri)
+            {
+                WebRequest webRequest = base.GetWebRequest(uri);
+                webRequest.Timeout = WebClientTimeoutSeconds * 60 * 1000;
+                return webRequest;
+            }
+        }
+
+        #endregion
     }
 }
