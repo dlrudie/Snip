@@ -503,13 +503,9 @@ namespace Snip
                                                     }
                                                     else
                                                     {
-<<<<<<< HEAD
-                                                        json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
-=======
                                                         using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
                                                         {
                                                             json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
->>>>>>> Snip v2.8.0
 
                                                             jsonSummary = SimpleJson.DeserializeObject(json);
 
