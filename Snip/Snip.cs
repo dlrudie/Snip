@@ -455,7 +455,7 @@ namespace Snip
 
                                                     using (WebClient webClient = new WebClient())
                                                     {
-                                                        string json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+                                                        json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
 
                                                         jsonSummary = SimpleJson.DeserializeObject(json);
 
