@@ -1,0 +1,56 @@
+# Snip Form
+; Main application name
+SnipForm=Snip
+
+; Support media players
+Spotify=Spotify
+iTunes=iTunes
+Winamp=Winamp
+
+SwitchedToSpotify=Switched to Spotify
+SwitchedToiTunes=Switched to iTunes
+SwitchedToWinamp=Switched to Winamp
+
+SpotifyIsNotRunning=Spotify is not currently running
+WinampIsNotRunning=Winamp is not currently running
+iTunesNotRunning=iTunes is not currently running
+
+; Everything else
+NoTrackPlaying=No Track Playing
+
+SetOutputFormat=Set Output Format
+
+SaveInformationSeparately=Save Information Separately
+
+SaveAlbumArtwork=Save Album Artwork
+
+CacheSpotifyAlbumArtwork=Cache Spotify Album Artwork
+
+ImageResolutionTiny=Tiny
+ImageResolutionSmall=Small
+ImageResolutionMedium=Medium
+ImageResolutionLarge=Large
+
+SaveTrackHistory=Save Track History
+
+ExitApplication=Exit
+
+# Output Format Form
+; Title
+SetOutputFormatForm=Set Output Format
+
+; Default label text
+SetTrackFormat=Set Track Format ($t):
+SetSeparatorFormat=Set Separator Format:
+SetArtistFormat=Set Artist Format ($a):
+SetAlbumFormat=Set Album Format ($l):
+
+; Buttons
+ButtonDefaults=Defaults
+ButtonSave=Save
+
+; Default output formats
+TrackFormat=“$t”
+SeparatorFormat= ― 
+ArtistFormat=$a
+AlbumFormat=$l

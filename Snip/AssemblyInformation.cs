@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace Snip
+namespace Winter
 {
     using System;
     using System.Reflection;

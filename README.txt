@@ -1,4 +1,4 @@
-SNIP V2.8.0
+SNIP V3.0.0
 =========
 Copyright 2012, 2013 David Rudie <d.rudie@gmail.com>
 
@@ -64,6 +64,30 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v3.0.0 (2013-Dec-22):
+* Added the ability to select album artwork resolution for Spotify.  The
+    default size is Tiny since you really shouldn't need much larger for
+    displaying the image on your stream.  However, the choice is there.
+    Tiny = 60x60
+    Small = 120x120
+    Medium = 300x300
+    Large = 640x640
+* Strip " - Explicit Album Version" from song titles as it messes up the
+    search results.
+* Rather than take the first result provided from the search with Spotify it
+    will now loop through the results until it finds a title that matches
+    what's playing.  Results are still not 100% because the song title shown
+    inside Spotify isn't always the result you get with their search.
+* StyleCop dropped in favor of Code Analysis built in to MSVC.
+* Unused code removed.
+* Memory leaks fixed.
+* Globalization support added to make it easy to translate and use in
+    languages other than English.  (Feel free to e-mail me about this).
+* Removed warning about the application already running.  It will just not do
+    anything now.
+* Updated SimpleJson to the latest version.
+* Removed user csproj file from repository.
 
 v2.8.0 (2013-Dec-21):
 * Snip will download higher resolution album artwork using a more efficient

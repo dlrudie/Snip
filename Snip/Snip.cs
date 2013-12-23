@@ -20,13 +20,15 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace Snip
+namespace Winter
 {
     using System;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Net;
     using System.Reflection;
+    using System.Resources;
     using System.Text;
     using System.Web;
     using System.Windows.Forms;
@@ -40,6 +42,8 @@ namespace Snip
     public partial class Snip : Form
     {
         #region Fields
+
+        public const uint WindowMessageAppCommand = 0x319;
 
         /// <summary>
         /// This is the path to the default artwork file.
@@ -133,6 +137,8 @@ namespace Snip
         /// </summary>
         private string albumFormat = "$l";
 
+        private ResourceManager resourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
+
         #endregion
 
         #region Constructor
@@ -195,6 +201,32 @@ namespace Snip
             /// Winamp identification.
             /// </summary>
             Winamp = 2
+        }
+
+        /// <summary>
+        /// This enum contains the album artwork resolution sizes that the user can choose from.
+        /// </summary>
+        private enum AlbumArtworkResolution : int
+        {
+            /// <summary>
+            /// A tiny thumbnail with the size of 60x60.
+            /// </summary>
+            Tiny = 60,
+            
+            /// <summary>
+            /// A small thumbnail with the size of 120x120.
+            /// </summary>
+            Small = 120,
+
+            /// <summary>
+            /// A medium thumbnail with the size of 300x300.
+            /// </summary>
+            Medium = 300,
+
+            /// <summary>
+            /// A large thumbnail with the size of 640x640.
+            /// </summary>
+            Large = 640
         }
 
         /// <summary>
@@ -283,6 +315,10 @@ namespace Snip
             this.UpdatePlayer(PlayerSelection.Winamp);
         }
 
+        /// <summary>
+        /// This updates the menu item checkboxes to reflect what the user chose as well as prepares anything else necessary.
+        /// </summary>
+        /// <param name="playerSelection">The chosen media player.</param>
         private void UpdatePlayer(PlayerSelection playerSelection)
         {
             switch (playerSelection)
@@ -292,7 +328,7 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = false;
 
-                    this.UpdateTextAndEmptyFile("Switched to Spotify");
+                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToSpotify"));
 
                     this.itunes = null;
                     this.itunesSetup = false;
@@ -304,7 +340,7 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = true;
                     this.toolStripMenuItemWinamp.Checked = false;
 
-                    this.UpdateTextAndEmptyFile("Switched to iTunes");
+                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToiTunes"));
 
                     if (this.itunes == null && !this.itunesSetup)
                     {
@@ -318,7 +354,7 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = true;
 
-                    this.UpdateTextAndEmptyFile("Switched to Winamp");
+                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToWinamp"));
 
                     this.itunes = null;
                     this.itunesSetup = false;
@@ -330,7 +366,7 @@ namespace Snip
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = false;
 
-                    this.UpdateTextAndEmptyFile("Switched to Spotify");
+                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToSpotify"));
 
                     this.itunes = null;
                     this.itunesSetup = false;
@@ -436,7 +472,7 @@ namespace Snip
                                         this.SaveBlankImage();
                                     }
 
-                                    this.UpdateTextAndEmptyFile("No track playing");
+                                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("NoTrackPlaying"));
                                 }
                                 else
                                 {
@@ -446,6 +482,7 @@ namespace Snip
 
                                     string artist = windowTitle[0].Trim();
                                     string songTitle = windowTitle[1].Trim();
+                                    songTitle = songTitle.Replace(" - Explicit Album Version", string.Empty);
 
                                     if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
                                     {
@@ -453,65 +490,82 @@ namespace Snip
 
                                         try
                                         {
-                                            var json = new WebClient().DownloadString(
-                                                string.Format(
-                                                    "http://ws.spotify.com/search/1/track.json?q={0}+{1}",
-                                                    HttpUtility.UrlEncode(artist),
-                                                    HttpUtility.UrlEncode(songTitle)));
-
-                                            dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-                                            if (jsonSummary != null)
+                                            using (WebClient jsonWebClient = new WebClient())
                                             {
-                                                jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"][0].ToString());
+                                                var json = jsonWebClient.DownloadString(
+                                                    string.Format(
+                                                        CultureInfo.InvariantCulture,
+                                                        "http://ws.spotify.com/search/1/track.json?q={0}+{1}",
+                                                        HttpUtility.UrlEncode(artist),
+                                                        HttpUtility.UrlEncode(songTitle.Replace(":", string.Empty))));
+
+                                                dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
                                                 if (jsonSummary != null)
                                                 {
-                                                    trackId = jsonSummary.href.ToString();
-                                                    trackId = trackId.Substring(trackId.LastIndexOf(':') + 1);
+                                                    jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
 
-                                                    string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
-                                                    string artworkImagePath = string.Format(@"{0}\{1}.jpg", artworkDirectory, trackId);
-
-                                                    if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
+                                                    foreach (dynamic jsonAlbum in jsonSummary)
                                                     {
-                                                        FileInfo fileInfo = new FileInfo(artworkImagePath);
+                                                        string modifiedTitle = UnifyTitles(songTitle);
+                                                        string foundTitle = UnifyTitles(jsonAlbum.name.ToString());
 
-                                                        if (!Directory.Exists(artworkDirectory))
+                                                        if (foundTitle == modifiedTitle)
                                                         {
-                                                            Directory.CreateDirectory(artworkDirectory);
+                                                            trackId = jsonAlbum.href.ToString();
+                                                            break;
                                                         }
+                                                    }
 
-                                                        if (fileInfo.Exists && fileInfo.Length > 0)
+                                                    if (!string.IsNullOrEmpty(trackId))
+                                                    {
+                                                        trackId = trackId.Substring(trackId.LastIndexOf(':') + 1);
+
+                                                        string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
+                                                        string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, trackId);
+
+                                                        AlbumArtworkResolution albumArtworkResolution = this.GetAlbumArtworkResolution();
+
+                                                        if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
                                                         {
-                                                            fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                                            FileInfo fileInfo = new FileInfo(artworkImagePath);
+
+                                                            if (!Directory.Exists(artworkDirectory))
+                                                            {
+                                                                Directory.CreateDirectory(artworkDirectory);
+                                                            }
+
+                                                            if (fileInfo.Exists && fileInfo.Length > 0)
+                                                            {
+                                                                fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                                            }
+                                                            else
+                                                            {
+                                                                using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
+                                                                {
+                                                                    json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+
+                                                                    jsonSummary = SimpleJson.DeserializeObject(json);
+
+                                                                    string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", (int)albumArtworkResolution));
+
+                                                                    webClient.DownloadFile(new Uri(imageUrl), artworkImagePath);
+                                                                    fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                                                }
+                                                            }
                                                         }
                                                         else
                                                         {
                                                             using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
                                                             {
-                                                                json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+                                                                json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
 
                                                                 jsonSummary = SimpleJson.DeserializeObject(json);
 
-                                                                string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", "640");
+                                                                string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", (int)albumArtworkResolution));
 
-                                                                webClient.DownloadFile(new Uri(imageUrl), artworkImagePath);
-                                                                fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                                                webClient.DownloadFile(new Uri(imageUrl), this.defaultArtworkFile);
                                                             }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
-                                                        {
-                                                            json = webClient.DownloadString(string.Format("https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
-
-                                                            jsonSummary = SimpleJson.DeserializeObject(json);
-
-                                                            string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", "640");
-
-                                                            webClient.DownloadFile(new Uri(imageUrl), this.defaultArtworkFile);
                                                         }
                                                     }
                                                 }
@@ -538,7 +592,7 @@ namespace Snip
                                     this.SaveBlankImage();
                                 }
 
-                                this.UpdateTextAndEmptyFile("Spotify is not currently running");
+                                this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SpotifyIsNotRunning"));
                                 this.spotifyApp.Found = false;
                                 this.spotifyApp.NotRunning = true;
                             }
@@ -553,7 +607,7 @@ namespace Snip
                                 this.SaveBlankImage();
                             }
 
-                            this.UpdateTextAndEmptyFile("Spotify is not currently running");
+                            this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SpotifyIsNotRunning"));
                             this.spotifyApp.Found = false;
                             this.spotifyApp.NotRunning = true;
                         }
@@ -588,7 +642,7 @@ namespace Snip
                             {
                                 if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                                 {
-                                    this.UpdateTextAndEmptyFile("No track playing");
+                                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("NoTrackPlaying"));
                                 }
                                 else
                                 {
@@ -629,7 +683,7 @@ namespace Snip
                                     this.SaveBlankImage();
                                 }
 
-                                this.UpdateTextAndEmptyFile("Winamp is not currently running");
+                                this.UpdateTextAndEmptyFile(this.resourceManager.GetString("WinampIsNotRunning"));
                                 this.winampApp.Found = false;
                                 this.winampApp.NotRunning = true;
                             }
@@ -644,7 +698,7 @@ namespace Snip
                                 this.SaveBlankImage();
                             }
 
-                            this.UpdateTextAndEmptyFile("Winamp is not currently running");
+                            this.UpdateTextAndEmptyFile(this.resourceManager.GetString("WinampIsNotRunning"));
                             this.winampApp.Found = false;
                             this.winampApp.NotRunning = true;
                         }
@@ -676,7 +730,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -684,7 +738,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
                 }
             }
 
@@ -692,7 +746,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -700,7 +754,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
                 }
             }
 
@@ -708,7 +762,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -716,7 +770,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
                 }
             }
 
@@ -724,7 +778,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -732,7 +786,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
                 }
             }
 
@@ -740,11 +794,11 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
                 }
             }
 
@@ -752,7 +806,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -760,7 +814,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
                 }
             }
 
@@ -776,7 +830,7 @@ namespace Snip
             {
                 if (this.toolStripMenuItemSpotify.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
+                    UnsafeNativeMethods.SendMessage(this.spotifyApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
                 }
                 else if (this.toolStripMenuItemItunes.Checked)
                 {
@@ -784,7 +838,7 @@ namespace Snip
                 }
                 else if (this.toolStripMenuItemWinamp.Checked)
                 {
-                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, UnsafeNativeMethods.WindowMessage.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
+                    UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
                 }
             }
 
@@ -796,38 +850,6 @@ namespace Snip
             this.keyState.PlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PlayPauseTrack) & 0x8000;
             this.keyState.PauseTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.PauseTrack) & 0x8000;
             this.keyState.StopTrack = UnsafeNativeMethods.GetAsyncKeyState(this.keyBinds.StopTrack) & 0x8000;
-        }
-
-        /// <summary>
-        /// This will do garbage collection, trim the process working size, and then compact the process's heap.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void TimerMinimizeMemory_Tick(object sender, EventArgs e)
-        {
-            GC.Collect(GC.MaxGeneration);
-            GC.WaitForPendingFinalizers();
-            UnsafeNativeMethods.SetProcessWorkingSetSize(
-                System.Diagnostics.Process.GetCurrentProcess().Handle,
-                (UIntPtr)0xFFFFFFFF,
-                (UIntPtr)0xFFFFFFFF);
-
-            IntPtr heap = UnsafeNativeMethods.GetProcessHeap();
-
-            if (UnsafeNativeMethods.HeapLock(heap))
-            {
-                try
-                {
-                    if (UnsafeNativeMethods.HeapCompact(heap, 0) == 0)
-                    {
-                        // Error condition ignored.
-                    }
-                }
-                finally
-                {
-                    UnsafeNativeMethods.HeapUnlock(heap);
-                }
-            }
         }
 
         private void SetUpItunes()
@@ -938,7 +960,7 @@ namespace Snip
                 this.SaveBlankImage();
             }
 
-            this.UpdateTextAndEmptyFile("No track playing");
+            this.UpdateTextAndEmptyFile(this.resourceManager.GetString("NoTrackPlaying"));
         }
 
         /// <summary>
@@ -951,7 +973,7 @@ namespace Snip
                 this.SaveBlankImage();
             }
 
-            this.UpdateTextAndEmptyFile("iTunes is not currently running");
+            this.UpdateTextAndEmptyFile(this.resourceManager.GetString("iTunesNotRunning"));
             //// Application.Exit();
         }
 
@@ -960,7 +982,7 @@ namespace Snip
         /// </summary>
         /// <param name="notifyIcon">The notify icon we're going to set the text for.</param>
         /// <param name="text">The text to set on the notify icon.</param>
-        private void SetNotifyIconText(NotifyIcon notifyIcon, string text)
+        private static void SetNotifyIconText(NotifyIcon notifyIcon, string text)
         {
             int maxLength = 127; // 128 max length minus 1
 
@@ -968,7 +990,7 @@ namespace Snip
             {
                 int nextSpace = text.LastIndexOf(' ', maxLength);
 
-                text = string.Format("{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength).Trim());
+                text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength).Trim());
             }
 
             Type t = typeof(NotifyIcon);
@@ -985,7 +1007,7 @@ namespace Snip
 
         private void UpdateTextAndEmptyFile(string text)
         {
-            this.SetNotifyIconText(this.notifyIcon, text);
+            SetNotifyIconText(this.notifyIcon, text);
 
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
         }
@@ -997,7 +1019,7 @@ namespace Snip
         private void UpdateText(string text)
         {
             // Set the text that appears on the notify icon.
-            this.SetNotifyIconText(this.notifyIcon, text);
+            SetNotifyIconText(this.notifyIcon, text);
 
             // Write the song title and artist to a text file.
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
@@ -1021,7 +1043,7 @@ namespace Snip
             }
 
             // Set the text that appears on the notify icon.
-            this.SetNotifyIconText(this.notifyIcon, output);
+            SetNotifyIconText(this.notifyIcon, output);
 
             // Write the song title and artist to a text file.
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
@@ -1047,11 +1069,24 @@ namespace Snip
 
         private void ToolStripMenuItemSetFormat_Click(object sender, EventArgs e)
         {
-            OutputFormat outputFormat = new OutputFormat();
-            outputFormat.ShowDialog();
+            OutputFormat outputFormat = null;
+
+            try
+            {
+                outputFormat = new OutputFormat();
+                outputFormat.ShowDialog();
+            }
+            finally
+            {
+                if (outputFormat != null)
+                {
+                    outputFormat.Dispose();
+                }
+            }
 
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     "SOFTWARE\\{0}\\{1}\\{2}",
                     this.assemblyAuthor,
                     this.assemblyTitle,
@@ -1059,13 +1094,13 @@ namespace Snip
 
             if (registryKey != null)
             {
-                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"));
+                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"), CultureInfo.CurrentCulture);
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "));
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "), CultureInfo.CurrentCulture);
 
-                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"));
+                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"), CultureInfo.CurrentCulture);
 
-                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"));
+                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"), CultureInfo.CurrentCulture);
 
                 registryKey.Close();
             }
@@ -1075,6 +1110,7 @@ namespace Snip
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     "SOFTWARE\\{0}\\{1}\\{2}",
                     this.assemblyAuthor,
                     this.assemblyTitle,
@@ -1126,7 +1162,7 @@ namespace Snip
                         break;
                 }
 
-                bool saveSeparateFilesChecked = Convert.ToBoolean(registryKey.GetValue("Save Separate Files", false));
+                bool saveSeparateFilesChecked = Convert.ToBoolean(registryKey.GetValue("Save Separate Files", false), CultureInfo.InvariantCulture);
 
                 if (saveSeparateFilesChecked)
                 {
@@ -1137,7 +1173,7 @@ namespace Snip
                     this.toolStripMenuItemSaveSeparateFiles.Checked = false;
                 }
 
-                bool saveAlbumArtworkChecked = Convert.ToBoolean(registryKey.GetValue("Save Album Artwork", false));
+                bool saveAlbumArtworkChecked = Convert.ToBoolean(registryKey.GetValue("Save Album Artwork", false), CultureInfo.InvariantCulture);
 
                 if (saveAlbumArtworkChecked)
                 {
@@ -1148,7 +1184,7 @@ namespace Snip
                     this.toolStripMenuItemSaveAlbumArtwork.Checked = false;
                 }
 
-                bool cacheSpotifyAlbumArtwork = Convert.ToBoolean(registryKey.GetValue("Cache Spotify Album Artwork", false));
+                bool cacheSpotifyAlbumArtwork = Convert.ToBoolean(registryKey.GetValue("Cache Spotify Album Artwork", false), CultureInfo.InvariantCulture);
 
                 if (cacheSpotifyAlbumArtwork)
                 {
@@ -1159,7 +1195,61 @@ namespace Snip
                     this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = false;
                 }
 
-                bool saveHistoryChecked = Convert.ToBoolean(registryKey.GetValue("Save History", false));
+                AlbumArtworkResolution albumArtworkResolution = AlbumArtworkResolution.Tiny;
+
+                try
+                {
+                    albumArtworkResolution = (AlbumArtworkResolution)registryKey.GetValue("Album Artwork Resolution", AlbumArtworkResolution.Tiny);
+                }
+                catch
+                {
+                    albumArtworkResolution = AlbumArtworkResolution.Tiny;
+                }
+
+                switch (albumArtworkResolution)
+                {
+                    case AlbumArtworkResolution.Tiny:
+                        this.toolStripMenuItemTiny.Checked = true;
+                        this.toolStripMenuItemSmall.Checked = false;
+                        this.toolStripMenuItemMedium.Checked = false;
+                        this.toolStripMenuItemLarge.Checked = false;
+
+                        break;
+
+                    case AlbumArtworkResolution.Small:
+                        this.toolStripMenuItemTiny.Checked = false;
+                        this.toolStripMenuItemSmall.Checked = true;
+                        this.toolStripMenuItemMedium.Checked = false;
+                        this.toolStripMenuItemLarge.Checked = false;
+
+                        break;
+
+                    case AlbumArtworkResolution.Medium:
+                        this.toolStripMenuItemTiny.Checked = false;
+                        this.toolStripMenuItemSmall.Checked = false;
+                        this.toolStripMenuItemMedium.Checked = true;
+                        this.toolStripMenuItemLarge.Checked = false;
+
+                        break;
+
+                    case AlbumArtworkResolution.Large:
+                        this.toolStripMenuItemTiny.Checked = false;
+                        this.toolStripMenuItemSmall.Checked = false;
+                        this.toolStripMenuItemMedium.Checked = false;
+                        this.toolStripMenuItemLarge.Checked = true;
+
+                        break;
+
+                    default:
+                        this.toolStripMenuItemTiny.Checked = true;
+                        this.toolStripMenuItemSmall.Checked = false;
+                        this.toolStripMenuItemMedium.Checked = false;
+                        this.toolStripMenuItemLarge.Checked = false;
+
+                        break;
+                }
+
+                bool saveHistoryChecked = Convert.ToBoolean(registryKey.GetValue("Save History", false), CultureInfo.InvariantCulture);
 
                 if (saveHistoryChecked)
                 {
@@ -1170,13 +1260,13 @@ namespace Snip
                     this.toolStripMenuItemSaveHistory.Checked = false;
                 }
 
-                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"));
+                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"), CultureInfo.CurrentCulture);
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "));
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "), CultureInfo.CurrentCulture);
 
-                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"));
+                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"), CultureInfo.CurrentCulture);
 
-                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"));
+                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"), CultureInfo.CurrentCulture);
 
                 registryKey.Close();
             }
@@ -1186,6 +1276,7 @@ namespace Snip
         {
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     "SOFTWARE\\{0}\\{1}\\{2}",
                     this.assemblyAuthor,
                     this.assemblyTitle,
@@ -1231,6 +1322,23 @@ namespace Snip
                 registryKey.SetValue("Cache Spotify Album Artwork", "false");
             }
 
+            if (this.toolStripMenuItemTiny.Checked)
+            {
+                registryKey.SetValue("Album Artwork Resolution", (int)AlbumArtworkResolution.Tiny);
+            }
+            else if (this.toolStripMenuItemSmall.Checked)
+            {
+                registryKey.SetValue("Album Artwork Resolution", (int)AlbumArtworkResolution.Small);
+            }
+            else if (this.toolStripMenuItemMedium.Checked)
+            {
+                registryKey.SetValue("Album Artwork Resolution", (int)AlbumArtworkResolution.Medium);
+            }
+            else if (this.toolStripMenuItemLarge.Checked)
+            {
+                registryKey.SetValue("Album Artwork Resolution", (int)AlbumArtworkResolution.Large);
+            }
+
             if (this.toolStripMenuItemSaveHistory.Checked)
             {
                 registryKey.SetValue("Save History", "true");
@@ -1248,36 +1356,179 @@ namespace Snip
         /// </summary>
         /// <param name="imageByteArray">The byte array containing the image.</param>
         /// <returns>An Image created from a byte array.</returns>
-        private Image ImageFromByteArray(byte[] imageByteArray)
+        private static Image ImageFromByteArray(byte[] imageByteArray)
         {
-            MemoryStream memoryStream = new MemoryStream(imageByteArray);
-            Image image = Image.FromStream(memoryStream);
+            Image image = null;
+
+            using (MemoryStream memoryStream = new MemoryStream(imageByteArray))
+            {
+                image = Image.FromStream(memoryStream);
+            }
+
             return image;
         }
 
         private void SaveBlankImage()
         {
-            Image image = this.ImageFromByteArray(this.blankImage);
+            Image image = ImageFromByteArray(this.blankImage);
             image.Save(this.defaultArtworkFile);
         }
 
-        #endregion
-
-        #region Structs
-
-        /// <summary>
-        /// This structure will hold the last key state of a hotkey.
-        /// </summary>
-        public struct KeyState
+        private void AlbumArtworkResolutionCheck(object sender, EventArgs e)
         {
-            public int NextTrack;
-            public int PreviousTrack;
-            public int VolumeUp;
-            public int VolumeDown;
-            public int PlayPauseTrack;
-            public int StopTrack;
-            public int MuteTrack;
-            public int PauseTrack;
+            if (sender == this.toolStripMenuItemTiny)
+            {
+                this.toolStripMenuItemTiny.Checked = true;
+                this.toolStripMenuItemSmall.Checked = false;
+                this.toolStripMenuItemMedium.Checked = false;
+                this.toolStripMenuItemLarge.Checked = false;
+            }
+            else if (sender == this.toolStripMenuItemSmall)
+            {
+                this.toolStripMenuItemTiny.Checked = false;
+                this.toolStripMenuItemSmall.Checked = true;
+                this.toolStripMenuItemMedium.Checked = false;
+                this.toolStripMenuItemLarge.Checked = false;
+            }
+            else if (sender == this.toolStripMenuItemMedium)
+            {
+                this.toolStripMenuItemTiny.Checked = false;
+                this.toolStripMenuItemSmall.Checked = false;
+                this.toolStripMenuItemMedium.Checked = true;
+                this.toolStripMenuItemLarge.Checked = false;
+            }
+            else if (sender == this.toolStripMenuItemLarge)
+            {
+                this.toolStripMenuItemTiny.Checked = false;
+                this.toolStripMenuItemSmall.Checked = false;
+                this.toolStripMenuItemMedium.Checked = false;
+                this.toolStripMenuItemLarge.Checked = true;
+            }
+        }
+
+        private AlbumArtworkResolution GetAlbumArtworkResolution()
+        {
+            if (this.toolStripMenuItemTiny.Checked)
+            {
+                return AlbumArtworkResolution.Tiny;
+            }
+            else if (this.toolStripMenuItemSmall.Checked)
+            {
+                return AlbumArtworkResolution.Small;
+            }
+            else if (this.toolStripMenuItemMedium.Checked)
+            {
+                return AlbumArtworkResolution.Medium;
+            }
+            else if (this.toolStripMenuItemLarge.Checked)
+            {
+                return AlbumArtworkResolution.Large;
+            }
+            else
+            {
+                return AlbumArtworkResolution.Tiny;
+            }
+        }
+
+        private static string UnifyTitles(string title)
+        {
+            title = title.ToUpper(CultureInfo.InvariantCulture);
+
+            title = title.Replace(@".", string.Empty);
+            title = title.Replace(@"/", string.Empty);
+            title = title.Replace(@"\", string.Empty);
+            title = title.Replace(@",", string.Empty);
+            title = title.Replace(@"'", string.Empty);
+            title = title.Replace(@"(", string.Empty);
+            title = title.Replace(@")", string.Empty);
+            title = title.Replace(@"[", string.Empty);
+            title = title.Replace(@"]", string.Empty);
+            title = title.Replace(@"!", string.Empty);
+            title = title.Replace(@"$", string.Empty);
+            title = title.Replace(@"%", string.Empty);
+            title = title.Replace(@"&", string.Empty);
+            title = title.Replace(@"?", string.Empty);
+            title = title.Replace(@":", string.Empty);
+
+            title = CompactWhitespace(title);
+
+            return title;
+        }
+
+        // http://stackoverflow.com/a/16652252
+        private static string CompactWhitespace(string text)
+        {
+            StringBuilder stringBuilder = new StringBuilder(text);
+
+            CompactWhitespace(stringBuilder);
+
+            return stringBuilder.ToString();
+        }
+
+        private static void CompactWhitespace(StringBuilder stringBuilder)
+        {
+            if (stringBuilder.Length == 0)
+            {
+                return;
+            }
+
+            int start = 0;
+
+            while (start < stringBuilder.Length)
+            {
+                if (char.IsWhiteSpace(stringBuilder[start]))
+                {
+                    start++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (start == stringBuilder.Length)
+            {
+                stringBuilder.Length = 0;
+                return;
+            }
+
+            int end = stringBuilder.Length - 1;
+
+            while (end >= 0)
+            {
+                if (char.IsWhiteSpace(stringBuilder[end]))
+                {
+                    end--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            int destination = 0;
+            bool previousCharIsWhitespace = false;
+
+            for (int i = start; i <= end; i++)
+            {
+                if (char.IsWhiteSpace(stringBuilder[i]))
+                {
+                    if (!previousCharIsWhitespace)
+                    {
+                        previousCharIsWhitespace = true;
+                        stringBuilder[destination] = ' ';
+                        destination++;
+                    }
+                }
+                else
+                {
+                    previousCharIsWhitespace = false;
+                    stringBuilder[destination] = stringBuilder[i];
+                    destination++;
+                }
+            }
+
+            stringBuilder.Length = destination;
         }
 
         #endregion
@@ -1285,9 +1536,128 @@ namespace Snip
         #region Classes
 
         /// <summary>
+        /// This structure will hold the last key state of a hotkey.
+        /// </summary>
+        private class KeyState
+        {
+            private int nextTrack;
+            private int previousTrack;
+            private int volumeUp;
+            private int volumeDown;
+            private int playPauseTrack;
+            private int stopTrack;
+            private int muteTrack;
+            private int pauseTrack;
+
+            public int NextTrack
+            {
+                get
+                {
+                    return this.nextTrack;
+                }
+
+                set
+                {
+                    this.nextTrack = value;
+                }
+            }
+
+            public int PreviousTrack
+            {
+                get
+                {
+                    return this.previousTrack;
+                }
+
+                set
+                {
+                    this.previousTrack = value;
+                }
+            }
+
+            public int VolumeUp
+            {
+                get
+                {
+                    return this.volumeUp;
+                }
+
+                set
+                {
+                    this.volumeUp = value;
+                }
+            }
+
+            public int VolumeDown
+            {
+                get
+                {
+                    return this.volumeDown;
+                }
+
+                set
+                {
+                    this.volumeDown = value;
+                }
+            }
+
+            public int PlayPauseTrack
+            {
+                get
+                {
+                    return this.playPauseTrack;
+                }
+
+                set
+                {
+                    this.playPauseTrack = value;
+                }
+            }
+
+            public int StopTrack
+            {
+                get
+                {
+                    return this.stopTrack;
+                }
+
+                set
+                {
+                    this.stopTrack = value;
+                }
+            }
+
+            public int MuteTrack
+            {
+                get
+                {
+                    return this.muteTrack;
+                }
+
+                set
+                {
+                    this.muteTrack = value;
+                }
+            }
+
+            public int PauseTrack
+            {
+                get
+                {
+                    return this.pauseTrack;
+                }
+
+                set
+                {
+                    this.pauseTrack = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Holds key binds for the hotkeys.
         /// </summary>
-        public class KeyBinds
+        private class KeyBinds
         {
             private int nextTrack = (int)Keys.OemCloseBrackets;      // Default: ]
             private int previousTrack = (int)Keys.OemOpenBrackets;   // Default: [
@@ -1390,7 +1760,7 @@ namespace Snip
         /// <summary>
         /// This class is meant t... I'm sleepy.
         /// </summary>
-        public class MediaPlayer
+        private class MediaPlayer
         {
             /// <summary>
             /// Whether the program was even found.
@@ -1469,27 +1839,27 @@ namespace Snip
                 {
                     return this.title;
                 }
-
-                set
-                {
-                    this.title = value;
-                }
             }
         }
 
         /// <summary>
         /// This replaces the default WebClient class with a 10 second timeout instead of the default 100 second timeout.
         /// </summary>
-        public class WebClientWithShortTimeout : WebClient
+        private class WebClientWithShortTimeout : WebClient
         {
             /// <summary>
             /// How many seconds before webclient times out and moves on.
             /// </summary>
             private const int WebClientTimeoutSeconds = 5;
 
-            protected override WebRequest GetWebRequest(Uri uri)
+            /// <summary>
+            /// And this is where we override the timeout.
+            /// </summary>
+            /// <param name="address">The destination address.</param>
+            /// <returns>The web request with the specified timeout.</returns>
+            protected override WebRequest GetWebRequest(Uri address)
             {
-                WebRequest webRequest = base.GetWebRequest(uri);
+                WebRequest webRequest = base.GetWebRequest(address);
                 webRequest.Timeout = WebClientTimeoutSeconds * 60 * 1000;
                 return webRequest;
             }

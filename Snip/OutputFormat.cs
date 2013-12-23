@@ -20,9 +20,11 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace Snip
+namespace Winter
 {
     using System;
+    using System.Globalization;
+    using System.Resources;
     using System.Text;
     using System.Windows.Forms;
     using Microsoft.Win32;
@@ -50,22 +52,24 @@ namespace Snip
         /// <summary>
         /// The default track output format.
         /// </summary>
-        private string trackFormat = "“$t”";
+        private string trackFormat;
 
         /// <summary>
         /// The default separator output format.
         /// </summary>
-        private string separatorFormat = " ― ";
+        private string separatorFormat;
 
         /// <summary>
         /// The default artist output format.
         /// </summary>
-        private string artistFormat = "$a";
+        private string artistFormat;
 
         /// <summary>
         /// The default album output format.
         /// </summary>
-        private string albumFormat = "$l";
+        private string albumFormat;
+
+        private ResourceManager resourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
 
         /// <summary>
         /// Initializes a new instance of the OutputFormat class.
@@ -118,6 +122,7 @@ namespace Snip
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     "SOFTWARE\\{0}\\{1}\\{2}",
                     this.assemblyAuthor,
                     this.assemblyTitle,
@@ -125,13 +130,13 @@ namespace Snip
 
             if (registryKey != null)
             {
-                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"));
+                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", this.resourceManager.GetString("TrackFormat")), CultureInfo.CurrentCulture);
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "));
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", this.resourceManager.GetString("SeparatorFormat")), CultureInfo.CurrentCulture);
 
-                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"));
+                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", this.resourceManager.GetString("ArtistFormat")), CultureInfo.CurrentCulture);
 
-                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"));
+                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", this.resourceManager.GetString("AlbumFormat")), CultureInfo.CurrentCulture);
 
                 registryKey.Close();
             }
@@ -144,6 +149,7 @@ namespace Snip
         {
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     "SOFTWARE\\{0}\\{1}\\{2}",
                     this.assemblyAuthor,
                     this.assemblyTitle,
@@ -165,16 +171,16 @@ namespace Snip
         /// </summary>
         private void SetDefaults()
         {
-            this.trackFormat = "“$t”";
+            this.trackFormat = this.resourceManager.GetString("TrackFormat");
             this.textBoxTrackFormat.Text = this.trackFormat;
 
-            this.separatorFormat = " ― ";
+            this.separatorFormat = this.resourceManager.GetString("SeparatorFormat");
             this.textBoxSeparatorFormat.Text = this.separatorFormat;
 
-            this.artistFormat = "$a";
+            this.artistFormat = this.resourceManager.GetString("ArtistFormat");
             this.textBoxArtistFormat.Text = this.artistFormat;
 
-            this.albumFormat = "$l";
+            this.albumFormat = this.resourceManager.GetString("AlbumFormat");
             this.textBoxAlbumFormat.Text = this.albumFormat;
         }
     }

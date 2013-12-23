@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace Snip
+namespace Winter
 {
     using System;
     using System.Threading;
@@ -41,17 +41,30 @@ namespace Snip
             Application.SetCompatibleTextRenderingDefault(false);
 
             bool isNewProcess = false;
-            Mutex mutex = new Mutex(true, Application.ProductName, out isNewProcess);
 
-            if (isNewProcess)
+            Mutex mutex = null;
+
+            try
             {
-                Application.Run(new Snip());
-                mutex.ReleaseMutex();
+                mutex = new Mutex(true, Application.ProductName, out isNewProcess);
+
+                if (isNewProcess)
+                {
+                    Application.Run(new Snip());
+                    mutex.ReleaseMutex();
+                }
             }
-            else
+            finally
             {
-                MessageBox.Show("Another instance of " + Application.ProductName + " is already running.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (mutex != null)
+                {
+                    mutex.Close();
+                }
             }
+            // else
+            // {
+            //     MessageBox.Show("Another instance of " + Application.ProductName + " is already running.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            // }
         }
     }
 }

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-namespace Snip
+namespace Winter
 {
     using System;
     using System.Runtime.InteropServices;
@@ -54,52 +54,5 @@ namespace Snip
             [In] uint message,
             [In] IntPtr wParam,
             [In] IntPtr lParam);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool CloseHandle(
-            [In] IntPtr handle);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr OpenProcess(
-            [In] uint desiredAccess,
-            [In] bool inheritHandle,
-            [In] int processId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetProcessWorkingSetSize(
-            [In] IntPtr process,
-            [In] UIntPtr minimumWorkingSetSize,
-            [In] UIntPtr maximumWorkingSetSize);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr GetProcessHeap();
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool HeapLock(
-            [In] IntPtr heap);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern uint HeapCompact(
-            [In] IntPtr heap,
-            [In] uint flags);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool HeapUnlock(
-            [In] IntPtr heap);
-
-        /// <summary>
-        /// Contains a list of window messages to be used with SendMessage().
-        /// </summary>
-        internal class WindowMessage
-        {
-            /// <summary>
-            /// Notifies a window that the user generated an application command event, for example, by clicking an application command button using the mouse or typing an application command key on the keyboard.
-            /// </summary>
-            internal const uint WM_APPCOMMAND = 0x319;
-        }
     }
 }
