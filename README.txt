@@ -1,6 +1,7 @@
-SNIP V3.0.0
+SNIP V3.0.1
 =========
 Copyright 2012, 2013 David Rudie <d.rudie@gmail.com>
+Project Page: https://github.com/dlrudie/Snip
 
 ABOUT
 =====
@@ -64,6 +65,12 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v3.0.1 (2013-Dec-30):
+* Manifest file modified to require Administrator rights.
+* Added a link to the project on GitHub to the README.txt file.
+* Updated the strings file with detailed descriptions to hopefully help
+    translators understand what everything is for.
 
 v3.0.0 (2013-Dec-22):
 * Added the ability to select album artwork resolution for Spotify.  The
