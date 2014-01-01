@@ -1,7 +1,7 @@
 ﻿#region File Information
 //-----------------------------------------------------------------------------
 // <copyright file="Snip.cs" company="David Rudie">
-//     Copyright (C) 2012, 2013 David Rudie
+//     Copyright (C) 2012, 2013, 2014 David Rudie
 //
 //     This program is free software; you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -399,15 +399,15 @@ namespace Winter
             }
         }
 
-        private void ToolStripMenuItemCacheSpotifyAlbumArtwork_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemKeepSpotifyAlbumArtwork_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
+            if (this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked)
             {
-                this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = false;
+                this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = false;
             }
             else
             {
-                this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = true;
+                this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = true;
             }
         }
 
@@ -526,7 +526,7 @@ namespace Winter
 
                                                         AlbumArtworkResolution albumArtworkResolution = this.GetAlbumArtworkResolution();
 
-                                                        if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
+                                                        if (this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked)
                                                         {
                                                             FileInfo fileInfo = new FileInfo(artworkImagePath);
 
@@ -1184,15 +1184,15 @@ namespace Winter
                     this.toolStripMenuItemSaveAlbumArtwork.Checked = false;
                 }
 
-                bool cacheSpotifyAlbumArtwork = Convert.ToBoolean(registryKey.GetValue("Cache Spotify Album Artwork", false), CultureInfo.InvariantCulture);
+                bool keepSpotifyAlbumArtwork = Convert.ToBoolean(registryKey.GetValue("Keep Spotify Album Artwork", false), CultureInfo.InvariantCulture);
 
-                if (cacheSpotifyAlbumArtwork)
+                if (keepSpotifyAlbumArtwork)
                 {
-                    this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = true;
+                    this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = true;
                 }
                 else
                 {
-                    this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked = false;
+                    this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = false;
                 }
 
                 AlbumArtworkResolution albumArtworkResolution = AlbumArtworkResolution.Tiny;
@@ -1313,13 +1313,13 @@ namespace Winter
                 registryKey.SetValue("Save Album Artwork", "false");
             }
 
-            if (this.toolStripMenuItemCacheSpotifyAlbumArtwork.Checked)
+            if (this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked)
             {
-                registryKey.SetValue("Cache Spotify Album Artwork", "true");
+                registryKey.SetValue("Keep Spotify Album Artwork", "true");
             }
             else
             {
-                registryKey.SetValue("Cache Spotify Album Artwork", "false");
+                registryKey.SetValue("Keep Spotify Album Artwork", "false");
             }
 
             if (this.toolStripMenuItemTiny.Checked)

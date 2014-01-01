@@ -42,10 +42,9 @@
             // 
             // labelTrackFormat
             // 
-            this.labelTrackFormat.AutoSize = true;
             this.labelTrackFormat.Location = new System.Drawing.Point(12, 9);
             this.labelTrackFormat.Name = "labelTrackFormat";
-            this.labelTrackFormat.Size = new System.Drawing.Size(110, 13);
+            this.labelTrackFormat.Size = new System.Drawing.Size(254, 13);
             this.labelTrackFormat.TabIndex = 0;
             this.labelTrackFormat.Text = this.resourceManager.GetString("SetTrackFormat");
             // 
@@ -53,16 +52,15 @@
             // 
             this.textBoxTrackFormat.Location = new System.Drawing.Point(12, 25);
             this.textBoxTrackFormat.Name = "textBoxTrackFormat";
-            this.textBoxTrackFormat.Size = new System.Drawing.Size(156, 20);
+            this.textBoxTrackFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxTrackFormat.TabIndex = 1;
             this.textBoxTrackFormat.Text = this.resourceManager.GetString("TrackFormat");
             // 
             // labelSeparatorFormat
             // 
-            this.labelSeparatorFormat.AutoSize = true;
             this.labelSeparatorFormat.Location = new System.Drawing.Point(12, 58);
             this.labelSeparatorFormat.Name = "labelSeparatorFormat";
-            this.labelSeparatorFormat.Size = new System.Drawing.Size(110, 13);
+            this.labelSeparatorFormat.Size = new System.Drawing.Size(254, 13);
             this.labelSeparatorFormat.TabIndex = 2;
             this.labelSeparatorFormat.Text = this.resourceManager.GetString("SetSeparatorFormat");
             // 
@@ -70,16 +68,15 @@
             // 
             this.textBoxSeparatorFormat.Location = new System.Drawing.Point(12, 74);
             this.textBoxSeparatorFormat.Name = "textBoxSeparatorFormat";
-            this.textBoxSeparatorFormat.Size = new System.Drawing.Size(156, 20);
+            this.textBoxSeparatorFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxSeparatorFormat.TabIndex = 3;
             this.textBoxSeparatorFormat.Text = this.resourceManager.GetString("SeparatorFormat");
             // 
             // labelArtistFormat
             // 
-            this.labelArtistFormat.AutoSize = true;
             this.labelArtistFormat.Location = new System.Drawing.Point(12, 107);
             this.labelArtistFormat.Name = "labelArtistFormat";
-            this.labelArtistFormat.Size = new System.Drawing.Size(108, 13);
+            this.labelArtistFormat.Size = new System.Drawing.Size(254, 13);
             this.labelArtistFormat.TabIndex = 4;
             this.labelArtistFormat.Text = this.resourceManager.GetString("SetArtistFormat");
             // 
@@ -87,7 +84,7 @@
             // 
             this.textBoxArtistFormat.Location = new System.Drawing.Point(12, 123);
             this.textBoxArtistFormat.Name = "textBoxArtistFormat";
-            this.textBoxArtistFormat.Size = new System.Drawing.Size(156, 20);
+            this.textBoxArtistFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxArtistFormat.TabIndex = 5;
             this.textBoxArtistFormat.Text = this.resourceManager.GetString("ArtistFormat");
             // 
@@ -95,7 +92,7 @@
             // 
             this.buttonDefaults.Location = new System.Drawing.Point(12, 206);
             this.buttonDefaults.Name = "buttonDefaults";
-            this.buttonDefaults.Size = new System.Drawing.Size(75, 23);
+            this.buttonDefaults.Size = new System.Drawing.Size(122, 23);
             this.buttonDefaults.TabIndex = 8;
             this.buttonDefaults.Text = this.resourceManager.GetString("ButtonDefaults");
             this.buttonDefaults.UseVisualStyleBackColor = true;
@@ -103,9 +100,9 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(93, 206);
+            this.buttonSave.Location = new System.Drawing.Point(144, 206);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.Size = new System.Drawing.Size(122, 23);
             this.buttonSave.TabIndex = 9;
             this.buttonSave.Text = this.resourceManager.GetString("ButtonSave");
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -113,10 +110,9 @@
             // 
             // labelAlbumFormat
             // 
-            this.labelAlbumFormat.AutoSize = true;
             this.labelAlbumFormat.Location = new System.Drawing.Point(12, 155);
             this.labelAlbumFormat.Name = "labelAlbumFormat";
-            this.labelAlbumFormat.Size = new System.Drawing.Size(110, 13);
+            this.labelAlbumFormat.Size = new System.Drawing.Size(254, 13);
             this.labelAlbumFormat.TabIndex = 6;
             this.labelAlbumFormat.Text = this.resourceManager.GetString("SetAlbumFormat");
             // 
@@ -124,7 +120,7 @@
             // 
             this.textBoxAlbumFormat.Location = new System.Drawing.Point(12, 171);
             this.textBoxAlbumFormat.Name = "textBoxAlbumFormat";
-            this.textBoxAlbumFormat.Size = new System.Drawing.Size(156, 20);
+            this.textBoxAlbumFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxAlbumFormat.TabIndex = 7;
             this.textBoxAlbumFormat.Text = this.resourceManager.GetString("AlbumFormat");
             // 
@@ -132,7 +128,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(180, 241);
+            this.ClientSize = new System.Drawing.Size(278, 241);
             this.Controls.Add(this.textBoxAlbumFormat);
             this.Controls.Add(this.labelAlbumFormat);
             this.Controls.Add(this.buttonSave);

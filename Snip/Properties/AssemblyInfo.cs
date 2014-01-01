@@ -1,7 +1,7 @@
 ﻿#region File Information
 //-----------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="David Rudie">
-//     Copyright (C) 2012, 2013 David Rudie
+//     Copyright (C) 2012, 2013, 2014 David Rudie
 //
 //     This program is free software; you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("David Rudie")]
 [assembly: AssemblyProduct("Snip")]
-[assembly: AssemblyCopyright("Copyright © David Rudie 2012, 2013")]
+[assembly: AssemblyCopyright("Copyright © David Rudie 2012, 2013, 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -56,8 +56,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.0.1.0")]
-[assembly: AssemblyFileVersion("3.0.1.0")]
+[assembly: AssemblyVersion("3.1.0.0")]
+[assembly: AssemblyFileVersion("3.1.0.0")]
 
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 [assembly: CLSCompliant(false)]

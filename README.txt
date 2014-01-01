@@ -1,6 +1,6 @@
-SNIP V3.0.1
+SNIP V3.1.0
 =========
-Copyright 2012, 2013 David Rudie <d.rudie@gmail.com>
+Copyright 2012, 2013, 2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
 
 ABOUT
@@ -65,6 +65,12 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+
+v3.1.0 (2014-xxx-xx):
+* Renamed Cache Spotify Album Artwork to Keep Spotify Album Artwork.
+* Added French translation.  Thanks, MindFlaw!
+* Resized the Output Format form to be wider to accomodate languages that
+    might require more room to display text.
 
 v3.0.1 (2013-Dec-30):
 * Manifest file modified to require Administrator rights.
