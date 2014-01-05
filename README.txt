@@ -66,7 +66,7 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 CHANGES
 =======
 
-v3.1.0 (2014-xxx-xx):
+v3.1.0 (2014-Jan-05):
 * Renamed Cache Spotify Album Artwork to Keep Spotify Album Artwork.
 * Added French translation.  Thanks, MindFlaw!
 * Added Dutch translation.  Thanks, Azeirah!
