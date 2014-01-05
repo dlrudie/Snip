@@ -168,6 +168,7 @@
   <ItemGroup>
     <Content Include="Strings.en-US.txt" />
     <Content Include="Strings.fr-CA.txt" />
+    <Content Include="Strings.nl-NL.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

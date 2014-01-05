@@ -69,6 +69,7 @@ CHANGES
 v3.1.0 (2014-xxx-xx):
 * Renamed Cache Spotify Album Artwork to Keep Spotify Album Artwork.
 * Added French translation.  Thanks, MindFlaw!
+* Added Dutch translation.  Thanks, Azeirah!
 * Resized the Output Format form to be wider to accomodate languages that
     might require more room to display text.
 
