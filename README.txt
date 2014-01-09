@@ -1,6 +1,6 @@
-SNIP V3.1.0
+SNIP V3.5.0
 =========
-Copyright 2012, 2013, 2014 David Rudie <d.rudie@gmail.com>
+Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
 
 ABOUT
@@ -65,6 +65,11 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+v3.5.0 (2014-XXX-##):
+* A lot of code was refactored to make the code easier to manage.
+* All warnings from Code Analysis were fixed.
+* Updated AUTHORS.txt
+* Updated Copyright format in all of the files.
 
 v3.1.0 (2014-Jan-05):
 * Renamed Cache Spotify Album Artwork to Keep Spotify Album Artwork.
