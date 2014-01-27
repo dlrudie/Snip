@@ -65,7 +65,7 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
-v3.5.0 (2014-XXX-##):
+v3.5.0 (2014-Jan-26):
 * A lot of code was refactored to make the code easier to manage.
 * All warnings from Code Analysis were fixed.
 * Updated AUTHORS.txt
