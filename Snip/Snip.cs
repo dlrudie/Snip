@@ -605,7 +605,7 @@ namespace Winter
 
         private void HandleSpotifyAlbumArtwork(string artist, string songTitle)
         {
-            string trackId = string.Empty;
+            string albumId = string.Empty;
 
             try
             {
@@ -615,7 +615,7 @@ namespace Winter
                         string.Format(
                             CultureInfo.InvariantCulture,
                             "http://ws.spotify.com/search/1/track.json?q={0}+{1}",
-                            HttpUtility.UrlEncode(artist),
+                            HttpUtility.UrlEncode(artist.Replace(":", string.Empty)),
                             HttpUtility.UrlEncode(songTitle.Replace(":", string.Empty))));
 
                     dynamic jsonSummary = SimpleJson.DeserializeObject(json);
@@ -624,24 +624,26 @@ namespace Winter
                     {
                         jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
 
-                        foreach (dynamic jsonAlbum in jsonSummary)
+                        foreach (dynamic jsonTrack in jsonSummary)
                         {
                             string modifiedTitle = UnifyTitles(songTitle);
-                            string foundTitle = UnifyTitles(jsonAlbum.name.ToString());
+                            string foundTitle = UnifyTitles(jsonTrack.name.ToString());
 
                             if (foundTitle == modifiedTitle)
                             {
-                                trackId = jsonAlbum.href.ToString();
+                                dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
+                                albumId = jsonAlbum.href.ToString();
+
                                 break;
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(trackId))
+                        if (!string.IsNullOrEmpty(albumId))
                         {
-                            trackId = trackId.Substring(trackId.LastIndexOf(':') + 1);
+                            albumId = albumId.Substring(albumId.LastIndexOf(':') + 1);
 
                             string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
-                            string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, trackId);
+                            string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
 
                             AlbumArtworkResolution albumArtworkResolution = this.GetAlbumArtworkResolution();
 
@@ -660,13 +662,13 @@ namespace Winter
                                 }
                                 else
                                 {
-                                    DownloadSpotifyAlbumArtwork(trackId, (int)albumArtworkResolution, artworkImagePath);
+                                    DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution, artworkImagePath);
                                     fileInfo.CopyTo(this.defaultArtworkFile, true);
                                 }
                             }
                             else
                             {
-                                DownloadSpotifyAlbumArtwork(trackId, (int)albumArtworkResolution, this.defaultArtworkFile);
+                                DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution, this.defaultArtworkFile);
                             }
                         }
                     }
@@ -679,11 +681,11 @@ namespace Winter
             }
         }
 
-        private static void DownloadSpotifyAlbumArtwork(string trackId, int albumArtworkResolution, string savePath)
+        private static void DownloadSpotifyAlbumArtwork(string albumId, int albumArtworkResolution, string savePath)
         {
             using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
             {
-                var json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:track:{0}", trackId));
+                var json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
 
                 dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
