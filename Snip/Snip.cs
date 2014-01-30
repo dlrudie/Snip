@@ -21,6 +21,7 @@
 namespace Winter
 {
     using System;
+    using System.ComponentModel;
     using System.Drawing;
     using System.Globalization;
     using System.IO;
@@ -668,30 +669,54 @@ namespace Winter
                             }
                             else
                             {
-                                DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution, this.defaultArtworkFile);
+                                DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution);
                             }
                         }
                     }
                 }
             }
-            catch
+            catch (FileNotFoundException)
             {
                 this.SaveBlankImage();
-                throw;
             }
         }
 
-        private static void DownloadSpotifyAlbumArtwork(string albumId, int albumArtworkResolution, string savePath)
+        private void DownloadSpotifyAlbumArtwork(string albumId, int albumArtworkResolution, string savePath = null)
         {
             using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
             {
-                var json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
+                try
+                {
+                    var json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
 
-                dynamic jsonSummary = SimpleJson.DeserializeObject(json);
+                    dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
-                string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", albumArtworkResolution));
+                    string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", albumArtworkResolution));
 
-                webClient.DownloadFile(new Uri(imageUrl), savePath);
+                    if (savePath == null)
+                    {
+                        webClient.DownloadFileAsync(new Uri(imageUrl), this.defaultArtworkFile);
+                    }
+                    else
+                    {
+                        this.SaveBlankImage();
+
+                        webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
+                        webClient.DownloadFileAsync(new Uri(imageUrl), savePath, savePath);
+                    }
+                }
+                catch (WebException)
+                {
+                    this.SaveBlankImage();
+                }
+            }
+        }
+
+        private void DownloadSpotifyFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                File.Copy((string)e.UserState, this.defaultArtworkFile, true);
             }
         }
 
@@ -1560,14 +1585,14 @@ namespace Winter
         }
 
         /// <summary>
-        /// This replaces the default WebClient class with a 10 second timeout instead of the default 100 second timeout.
+        /// This replaces the default WebClient class with a short timeout instead of the default 100 second timeout.
         /// </summary>
         private class WebClientWithShortTimeout : WebClient
         {
             /// <summary>
             /// How many seconds before webclient times out and moves on.
             /// </summary>
-            private const int WebClientTimeoutSeconds = 5;
+            private const int WebClientTimeoutSeconds = 10;
 
             /// <summary>
             /// And this is where we override the timeout.
