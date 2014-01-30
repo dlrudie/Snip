@@ -50,7 +50,7 @@ namespace Winter
         private readonly string defaultArtworkFile = @Application.StartupPath + @"\Snip_Artwork.jpg";
 
         /// <summary>
-        /// This is a alpha transparent 1x1 PNG image.
+        /// This is an alpha transparent 1x1 PNG image.
         /// </summary>
         private readonly byte[] blankImage = new byte[]
         {

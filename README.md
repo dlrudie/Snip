@@ -1,4 +1,4 @@
-SNIP V3.5.0
+SNIP V3.6.0
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -65,6 +65,13 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+v3.6.0 (2014-Jan-29):
+* Album artwork for Spotify is now saved by album ID and not track ID.
+* Added a WebException catch that will just save a blank image if an error
+    occurs.
+* Increased the timeout from 5 seconds to 10 seconds.
+* Changed the artwork download to be asynchronous.
+
 v3.5.0 (2014-Jan-26):
 * A lot of code was refactored to make the code easier to manage.
 * All warnings from Code Analysis were fixed.
