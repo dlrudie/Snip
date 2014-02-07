@@ -880,7 +880,7 @@ namespace Winter
                         // Only update the system tray text and text file text if the title changes.
                         if (foobar2000Title != this.lastTitle)
                         {
-                            if (foobar2000Title.StartsWith("foobar2000"))
+                            if (foobar2000Title.StartsWith("foobar2000", StringComparison.OrdinalIgnoreCase))
                             {
                                 this.UpdateTextAndEmptyFile(this.resourceManager.GetString("NoTrackPlaying"));
                             }
