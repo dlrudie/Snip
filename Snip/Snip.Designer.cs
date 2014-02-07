@@ -4,8 +4,10 @@
     {
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemItunes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpotify;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemItunes;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWinamp;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFoobar2000;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
         private System.Windows.Forms.Timer timerScanTitle;
@@ -16,7 +18,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAlbumArtwork;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWinamp;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemKeepSpotifyAlbumArtwork;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTiny;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall;
@@ -57,6 +58,7 @@
             this.toolStripMenuItemSpotify = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemItunes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWinamp = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemFoobar2000 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -87,6 +89,7 @@
             this.toolStripMenuItemSpotify,
             this.toolStripMenuItemItunes,
             this.toolStripMenuItemWinamp,
+            this.toolStripMenuItemFoobar2000,
             this.toolStripSeparator,
             this.toolStripMenuItemSetFormat,
             this.toolStripSeparator2,
@@ -121,6 +124,13 @@
             this.toolStripMenuItemWinamp.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemWinamp.Text = this.resourceManager.GetString("Winamp");
             this.toolStripMenuItemWinamp.Click += new System.EventHandler(this.ToolStripMenuItemWinamp_Click);
+            // 
+            // toolStripMenuItemWinamp
+            // 
+            this.toolStripMenuItemFoobar2000.Name = "toolStripMenuItemFoobar2000";
+            this.toolStripMenuItemFoobar2000.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemFoobar2000.Text = this.resourceManager.GetString("foobar2000");
+            this.toolStripMenuItemFoobar2000.Click += new System.EventHandler(this.ToolStripMenuItemFoobar2000_Click);
             // 
             // toolStripSeparator
             // 

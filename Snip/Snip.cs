@@ -107,6 +107,11 @@ namespace Winter
         private MediaPlayer winampApp;
 
         /// <summary>
+        /// Used to store information about foobar2000.
+        /// </summary>
+        private MediaPlayer foobar2000App;
+
+        /// <summary>
         /// This will hold the last title that was checked.  If it is different than before we can update the text file and system tray text.
         /// </summary>
         private string lastTitle = string.Empty;
@@ -161,6 +166,7 @@ namespace Winter
 
             this.spotifyApp = new MediaPlayer();
             this.winampApp = new MediaPlayer();
+            this.foobar2000App = new MediaPlayer();
         }
 
         #endregion
@@ -195,7 +201,12 @@ namespace Winter
             /// <summary>
             /// Winamp identification.
             /// </summary>
-            Winamp = 2
+            Winamp = 2,
+
+            /// <summary>
+            /// foobar2000 identification.
+            /// </summary>
+            foobar2000 = 3
         }
 
         /// <summary>
@@ -311,6 +322,16 @@ namespace Winter
         }
 
         /// <summary>
+        /// Tells the program that we only want to look for foobar2000.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        private void ToolStripMenuItemFoobar2000_Click(object sender, EventArgs e)
+        {
+            this.UpdatePlayer(PlayerSelection.foobar2000);
+        }
+
+        /// <summary>
         /// This updates the menu item checkboxes to reflect what the user chose as well as prepares anything else necessary.
         /// </summary>
         /// <param name="playerSelection">The chosen media player.</param>
@@ -322,6 +343,7 @@ namespace Winter
                     this.toolStripMenuItemSpotify.Checked = true;
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = false;
+                    this.toolStripMenuItemFoobar2000.Checked = false;
 
                     this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToSpotify"));
 
@@ -334,6 +356,7 @@ namespace Winter
                     this.toolStripMenuItemSpotify.Checked = false;
                     this.toolStripMenuItemItunes.Checked = true;
                     this.toolStripMenuItemWinamp.Checked = false;
+                    this.toolStripMenuItemFoobar2000.Checked = false;
 
                     this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToiTunes"));
 
@@ -348,8 +371,22 @@ namespace Winter
                     this.toolStripMenuItemSpotify.Checked = false;
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = true;
+                    this.toolStripMenuItemFoobar2000.Checked = false;
 
                     this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToWinamp"));
+
+                    this.itunes = null;
+                    this.itunesSetup = false;
+
+                    break;
+
+                case PlayerSelection.foobar2000:
+                    this.toolStripMenuItemSpotify.Checked = false;
+                    this.toolStripMenuItemItunes.Checked = false;
+                    this.toolStripMenuItemWinamp.Checked = false;
+                    this.toolStripMenuItemFoobar2000.Checked = true;
+
+                    this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedTofoobar2000"));
 
                     this.itunes = null;
                     this.itunesSetup = false;
@@ -360,6 +397,7 @@ namespace Winter
                     this.toolStripMenuItemSpotify.Checked = true;
                     this.toolStripMenuItemItunes.Checked = false;
                     this.toolStripMenuItemWinamp.Checked = false;
+                    this.toolStripMenuItemFoobar2000.Checked = false;
 
                     this.UpdateTextAndEmptyFile(this.resourceManager.GetString("SwitchedToSpotify"));
 
@@ -441,6 +479,10 @@ namespace Winter
             else if (this.toolStripMenuItemWinamp.Checked)
             {
                 this.ScanWinamp();
+            }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                this.ScanFoobar2000();
             }
         }
 
@@ -812,6 +854,98 @@ namespace Winter
             }
         }
 
+        private void ScanFoobar2000()
+        {
+            if (!this.foobar2000App.Found)
+            {
+                this.foobar2000App.Handle = UnsafeNativeMethods.FindWindow("{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}", null);
+
+                this.foobar2000App.Found = true;
+                this.foobar2000App.NotRunning = false;
+            }
+            else
+            {
+                // Make sure the process is still valid.
+                if (this.foobar2000App.Handle != IntPtr.Zero && this.foobar2000App.Handle != null)
+                {
+                    int windowTextLength = UnsafeNativeMethods.GetWindowText(this.foobar2000App.Handle, this.foobar2000App.Title, this.foobar2000App.Title.Capacity);
+
+                    string foobar2000Title = this.foobar2000App.Title.ToString();
+
+                    this.foobar2000App.Title.Clear();
+
+                    // If the window title length is 0 then the process handle is not valid.
+                    if (windowTextLength > 0)
+                    {
+                        // Only update the system tray text and text file text if the title changes.
+                        if (foobar2000Title != this.lastTitle)
+                        {
+                            if (foobar2000Title.StartsWith("foobar2000"))
+                            {
+                                this.UpdateTextAndEmptyFile(this.resourceManager.GetString("NoTrackPlaying"));
+                            }
+                            else
+                            {
+                                // Winamp window titles look like "[%album artist% - ]['['%album%[ CD%discnumber%][ #%tracknumber%]']' ]%title%[ '//' %track artist%]".
+                                // Require that the user use ATF and replace the format with something like:
+                                // %artist% – %title%
+                                string windowTitleFull = System.Text.RegularExpressions.Regex.Replace(foobar2000Title, @"\s+\[foobar2000 v\d+\.\d+\.\d+\]", string.Empty);
+                                string[] windowTitle = windowTitleFull.Split('–');
+
+                                // Album artwork not supported by foobar2000
+                                if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
+                                {
+                                    this.SaveBlankImage();
+                                }
+
+                                if (windowTitle.Length > 1)
+                                {
+                                    string artist = windowTitle[0].Trim();
+                                    string songTitle = windowTitle[1].Trim();
+
+                                    this.UpdateText(songTitle, artist);
+                                }
+                                else
+                                {
+                                    this.UpdateText(windowTitle[0].Trim());
+                                }
+                            }
+
+                            this.lastTitle = foobar2000Title;
+                        }
+                    }
+                    else
+                    {
+                        if (!this.foobar2000App.NotRunning)
+                        {
+                            if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
+                            {
+                                this.SaveBlankImage();
+                            }
+
+                            this.UpdateTextAndEmptyFile(this.resourceManager.GetString("foobar2000IsNotRunning"));
+                            this.foobar2000App.Found = false;
+                            this.foobar2000App.NotRunning = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!this.foobar2000App.NotRunning)
+                    {
+                        if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
+                        {
+                            this.SaveBlankImage();
+                        }
+
+                        this.UpdateTextAndEmptyFile(this.resourceManager.GetString("foobar2000IsNotRunning"));
+                        this.foobar2000App.Found = false;
+                        this.foobar2000App.NotRunning = true;
+                    }
+                }
+            }
+        }
+
         private void SetUpItunes()
         {
             if (!this.itunesSetup)
@@ -1098,6 +1232,7 @@ namespace Winter
                         this.toolStripMenuItemSpotify.Checked = true;
                         this.toolStripMenuItemItunes.Checked = false;
                         this.toolStripMenuItemWinamp.Checked = false;
+                        this.toolStripMenuItemFoobar2000.Checked = false;
 
                         break;
 
@@ -1105,6 +1240,7 @@ namespace Winter
                         this.toolStripMenuItemSpotify.Checked = false;
                         this.toolStripMenuItemItunes.Checked = true;
                         this.toolStripMenuItemWinamp.Checked = false;
+                        this.toolStripMenuItemFoobar2000.Checked = false;
 
                         this.SetUpItunes();
 
@@ -1114,6 +1250,15 @@ namespace Winter
                         this.toolStripMenuItemSpotify.Checked = false;
                         this.toolStripMenuItemItunes.Checked = false;
                         this.toolStripMenuItemWinamp.Checked = true;
+                        this.toolStripMenuItemFoobar2000.Checked = false;
+
+                        break;
+
+                    case PlayerSelection.foobar2000:
+                        this.toolStripMenuItemSpotify.Checked = false;
+                        this.toolStripMenuItemItunes.Checked = false;
+                        this.toolStripMenuItemWinamp.Checked = false;
+                        this.toolStripMenuItemFoobar2000.Checked = true;
 
                         break;
 
@@ -1121,6 +1266,7 @@ namespace Winter
                         this.toolStripMenuItemSpotify.Checked = true;
                         this.toolStripMenuItemItunes.Checked = false;
                         this.toolStripMenuItemWinamp.Checked = false;
+                        this.toolStripMenuItemFoobar2000.Checked = false;
 
                         break;
                 }
@@ -1257,6 +1403,10 @@ namespace Winter
             else if (this.toolStripMenuItemWinamp.Checked)
             {
                 registryKey.SetValue("Player", (int)PlayerSelection.Winamp);
+            }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                registryKey.SetValue("Player", (int)PlayerSelection.foobar2000);
             }
 
             if (this.toolStripMenuItemSaveSeparateFiles.Checked)

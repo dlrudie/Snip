@@ -38,6 +38,10 @@ namespace Winter
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
             }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.NextTrack));
+            }
         }
 
         private void ChangeToPreviousTrack()
@@ -53,6 +57,10 @@ namespace Winter
             else if (this.toolStripMenuItemWinamp.Checked)
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
+            }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PreviousTrack));
             }
         }
 
@@ -70,6 +78,10 @@ namespace Winter
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
             }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeUp));
+            }
         }
 
         private void DecreasePlayerVolume()
@@ -85,6 +97,10 @@ namespace Winter
             else if (this.toolStripMenuItemWinamp.Checked)
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
+            }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.VolumeDown));
             }
         }
 
@@ -102,6 +118,10 @@ namespace Winter
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
             }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.MuteTrack));
+            }
         }
 
         private void PlayOrPauseTrack()
@@ -117,6 +137,10 @@ namespace Winter
             else if (this.toolStripMenuItemWinamp.Checked)
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
+            }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.PlayPauseTrack));
             }
         }
 
@@ -134,6 +158,10 @@ namespace Winter
             {
                 // Not supported in Winamp.
             }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                // Not supported in foobar2000.
+            }
         }
 
         private void StopTrack()
@@ -149,6 +177,10 @@ namespace Winter
             else if (this.toolStripMenuItemWinamp.Checked)
             {
                 UnsafeNativeMethods.SendMessage(this.winampApp.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
+            }
+            else if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                UnsafeNativeMethods.SendMessage(this.foobar2000App.Handle, WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)MediaCommands.StopTrack));
             }
         }
     }

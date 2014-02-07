@@ -1,4 +1,4 @@
-SNIP V3.6.0
+SNIP V3.7.0
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -49,6 +49,22 @@ The hyphen used is an En Dash character!  Snip uses this character internally
 to split the text apart so make sure you use this En Dash character or Snip
 will not read it correctly!
 
+FOOBAR2000
+======
+For foobar2000 support to work properly you must change some options.
+
+Inside foobar2000 open up the preferences window.
+
+Expand the Display options and select Default User Interface.  At the bottom
+of the window you will need to change "Window title" to look like this:
+%title% – %artist%
+
+Note
+----
+The hyphen used is an En Dash character!  Snip uses this character internally
+to split the text apart so make sure you use this En Dash character or Snip
+will not read it correctly!
+
 HOTKEYS
 =======
 * Next Track: Ctrl, Alt, ]
@@ -65,6 +81,9 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+v3.7.0 (2014-Feb-06):
+* Added support for foobar2000.
+
 v3.6.0 (2014-Jan-29):
 * Album artwork for Spotify is now saved by album ID and not track ID.
 * Added a WebException catch that will just save a blank image if an error
