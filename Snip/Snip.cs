@@ -858,7 +858,19 @@ namespace Winter
         {
             if (!this.foobar2000App.Found)
             {
-                this.foobar2000App.Handle = UnsafeNativeMethods.FindWindow("{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}", null);
+                System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcessesByName("foobar2000");
+
+                if (processes.Length > 0)
+                {
+                    this.foobar2000App.Handle = processes[0].MainWindowHandle;
+                }
+
+                foreach (var process in processes)
+                {
+                    process.Dispose();
+                }
+
+                processes = null;
 
                 this.foobar2000App.Found = true;
                 this.foobar2000App.NotRunning = false;
