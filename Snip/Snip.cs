@@ -661,57 +661,61 @@ namespace Winter
                             HttpUtility.UrlEncode(artist.Replace(":", string.Empty)),
                             HttpUtility.UrlEncode(songTitle.Replace(":", string.Empty))));
 
-                    dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-                    if (jsonSummary != null)
+                    if (!string.IsNullOrEmpty(json))
                     {
-                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+                        dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
-                        foreach (dynamic jsonTrack in jsonSummary)
+                        if (jsonSummary != null)
                         {
-                            string modifiedTitle = UnifyTitles(songTitle);
-                            string foundTitle = UnifyTitles(jsonTrack.name.ToString());
+                            jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
 
-                            if (foundTitle == modifiedTitle)
+                            foreach (dynamic jsonTrack in jsonSummary)
                             {
-                                dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
-                                albumId = jsonAlbum.href.ToString();
+                                string modifiedTitle = UnifyTitles(songTitle);
+                                string foundTitle = UnifyTitles(jsonTrack.name.ToString());
 
-                                break;
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(albumId))
-                        {
-                            albumId = albumId.Substring(albumId.LastIndexOf(':') + 1);
-
-                            string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
-                            string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
-
-                            AlbumArtworkResolution albumArtworkResolution = this.GetAlbumArtworkResolution();
-
-                            if (this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked)
-                            {
-                                FileInfo fileInfo = new FileInfo(artworkImagePath);
-
-                                if (!Directory.Exists(artworkDirectory))
+                                if (foundTitle == modifiedTitle)
                                 {
-                                    Directory.CreateDirectory(artworkDirectory);
+                                    dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
+                                    albumId = jsonAlbum.href.ToString();
+
+                                    break;
                                 }
+                            }
 
-                                if (fileInfo.Exists && fileInfo.Length > 0)
+                            if (!string.IsNullOrEmpty(albumId))
+                            {
+                                albumId = albumId.Substring(albumId.LastIndexOf(':') + 1);
+
+                                string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
+                                string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
+
+                                AlbumArtworkResolution albumArtworkResolution = this.GetAlbumArtworkResolution();
+
+                                if (this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked)
                                 {
-                                    fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                    FileInfo fileInfo = new FileInfo(artworkImagePath);
+
+                                    if (!Directory.Exists(artworkDirectory))
+                                    {
+                                        Directory.CreateDirectory(artworkDirectory);
+                                    }
+
+                                    if (fileInfo.Exists && fileInfo.Length > 0)
+                                    {
+
+                                        fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                    }
+                                    else
+                                    {
+                                        DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution, artworkImagePath);
+                                        fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                    }
                                 }
                                 else
                                 {
-                                    DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution, artworkImagePath);
-                                    fileInfo.CopyTo(this.defaultArtworkFile, true);
+                                    DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution);
                                 }
-                            }
-                            else
-                            {
-                                DownloadSpotifyAlbumArtwork(albumId, (int)albumArtworkResolution);
                             }
                         }
                     }
@@ -729,22 +733,30 @@ namespace Winter
             {
                 try
                 {
+                    webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
                     var json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
 
-                    dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-                    string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", albumArtworkResolution));
-
-                    if (savePath == null)
+                    if (!string.IsNullOrEmpty(json))
                     {
-                        webClient.DownloadFileAsync(new Uri(imageUrl), this.defaultArtworkFile);
+                        dynamic jsonSummary = SimpleJson.DeserializeObject(json);
+
+                        string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", albumArtworkResolution));
+
+                        if (savePath == null)
+                        {
+                            webClient.DownloadFileAsync(new Uri(imageUrl), this.defaultArtworkFile);
+                        }
+                        else
+                        {
+                            this.SaveBlankImage();
+
+                            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
+                            webClient.DownloadFileAsync(new Uri(imageUrl), savePath, savePath);
+                        }
                     }
                     else
                     {
                         this.SaveBlankImage();
-
-                        webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
-                        webClient.DownloadFileAsync(new Uri(imageUrl), savePath, savePath);
                     }
                 }
                 catch (WebException)
