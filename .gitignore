@@ -110,5 +110,6 @@ UpgradeLog*.XML
 # Dopefish
 *.pfx
 *.swp
+Strings.resources
 Strings.*.resources
 

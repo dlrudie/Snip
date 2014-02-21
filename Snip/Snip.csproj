@@ -175,7 +175,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Strings.en-US.txt" />
+    <Content Include="Resources\Strings.txt" />
     <Content Include="Resources\Strings.fr-FR.txt" />
     <Content Include="Resources\Strings.nl-NL.txt" />
   </ItemGroup>
