@@ -27,51 +27,19 @@ namespace Winter
     using System.Windows.Forms;
     using Microsoft.Win32;
 
-    /// <summary>
-    /// This class is for setting the output format of the saved text.
-    /// </summary>
     public partial class OutputFormat : Form
     {
-        /// <summary>
-        /// The name of this program.
-        /// </summary>
         private readonly string assemblyTitle = AssemblyInformation.AssemblyTitle;
-
-        /// <summary>
-        /// The author of this program.
-        /// </summary>
         private readonly string assemblyAuthor = AssemblyInformation.AssemblyAuthor;
-
-        /// <summary>
-        /// The version number of this program.
-        /// </summary>
         private readonly string assemblyVersion = AssemblyInformation.AssemblyVersion;
 
-        /// <summary>
-        /// The default track output format.
-        /// </summary>
         private string trackFormat;
-
-        /// <summary>
-        /// The default separator output format.
-        /// </summary>
         private string separatorFormat;
-
-        /// <summary>
-        /// The default artist output format.
-        /// </summary>
         private string artistFormat;
-
-        /// <summary>
-        /// The default album output format.
-        /// </summary>
         private string albumFormat;
 
         private ResourceManager resourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
 
-        /// <summary>
-        /// Initializes a new instance of the OutputFormat class.
-        /// </summary>
         public OutputFormat()
         {
             this.InitializeComponent();
@@ -92,21 +60,11 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// When the Default button is depressed, this method is called and the default values are restored.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event args.</param>
         private void ButtonDefaults_Click(object sender, EventArgs e)
         {
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// When the Save button is depressed, this method is called and the current values are saved to the registry.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event args.</param>
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             this.SaveSettings();
@@ -114,9 +72,6 @@ namespace Winter
             this.Close();
         }
 
-        /// <summary>
-        /// When the Load button is depressed, this method is called and the saved values in the registry are loaded.
-        /// </summary>
         private void LoadSettings()
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
@@ -141,9 +96,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Saves current settings to the registry.
-        /// </summary>
         private void SaveSettings()
         {
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
@@ -165,9 +117,6 @@ namespace Winter
             registryKey.Close();
         }
 
-        /// <summary>
-        /// Restores the default values.
-        /// </summary>
         private void SetDefaults()
         {
             this.trackFormat = this.resourceManager.GetString("TrackFormat");

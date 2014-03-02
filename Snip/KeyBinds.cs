@@ -33,9 +33,6 @@ namespace Winter
         const int muteTrack = (int)Keys.M;                     // Default: M
         const int pauseTrack = (int)Keys.P;                    // Default: P
 
-        /// <summary>
-        /// Gets the key bind used for switching to the next track.
-        /// </summary>
         public static int NextTrack
         {
             get
@@ -44,9 +41,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the keybind used for switching to the previous track.
-        /// </summary>
         public static int PreviousTrack
         {
             get
@@ -55,9 +49,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the key bind used for raising the volume.
-        /// </summary>
         public static int VolumeUp
         {
             get
@@ -66,9 +57,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the key bind used for lowering the volume.
-        /// </summary>
         public static int VolumeDown
         {
             get
@@ -77,9 +65,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the key bind used to play or pause the track.
-        /// </summary>
         public static int PlayPauseTrack
         {
             get
@@ -88,9 +73,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the key used to stop playing the currently playing track.
-        /// </summary>
         public static int StopTrack
         {
             get
@@ -99,9 +81,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the key bind used to mute the currently playing track.
-        /// </summary>
         public static int MuteTrack
         {
             get
@@ -110,9 +89,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the key used to pause playback of the currently playing track.
-        /// </summary>
         public static int PauseTrack
         {
             get

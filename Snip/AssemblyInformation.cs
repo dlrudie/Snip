@@ -23,14 +23,8 @@ namespace Winter
     using System;
     using System.Reflection;
 
-    /// <summary>
-    /// This class holds information about the program itself.
-    /// </summary>
     public static class AssemblyInformation
     {
-        /// <summary>
-        /// Gets the name of the program from the program.
-        /// </summary>
         public static string AssemblyTitle
         {
             get
@@ -51,9 +45,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the author of the program from the program.
-        /// </summary>
         public static string AssemblyAuthor
         {
             get
@@ -74,9 +65,6 @@ namespace Winter
             }
         }
 
-        /// <summary>
-        /// Gets the version of the program from the program.
-        /// </summary>
         public static string AssemblyVersion
         {
             get

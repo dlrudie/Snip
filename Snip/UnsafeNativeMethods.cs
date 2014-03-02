@@ -25,9 +25,6 @@ namespace Winter
     using System.Security;
     using System.Text;
 
-    /// <summary>
-    /// This class holds unsafe native methods.
-    /// </summary>
     internal static class UnsafeNativeMethods
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]

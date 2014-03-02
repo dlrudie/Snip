@@ -24,14 +24,8 @@ namespace Winter
     using System.Threading;
     using System.Windows.Forms;
 
-    /// <summary>
-    /// Because StyleCop.
-    /// </summary>
     public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         public static void Main()
         {

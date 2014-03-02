@@ -104,20 +104,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInformation.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="KeyBinds.cs" />
-    <Compile Include="KeyState.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="KeyState.cs" />
     <Compile Include="OutputFormat.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="OutputFormat.Designer.cs">
       <DependentUpon>OutputFormat.cs</DependentUpon>
     </Compile>
-    <Compile Include="PlayerControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="MediaPlayer.cs" />
+    <Compile Include="Players\foobar2000.cs" />
+    <Compile Include="Players\Spotify.cs" />
+    <Compile Include="Players\iTunes.cs" />
+    <Compile Include="Players\Winamp.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SimpleJson.cs" />
     <Compile Include="Snip.cs">
       <SubType>Form</SubType>
@@ -127,6 +129,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextHandler.cs" />
     <Compile Include="UnsafeNativeMethods.cs" />
     <EmbeddedResource Include="OutputFormat.resx">
       <DependentUpon>OutputFormat.cs</DependentUpon>

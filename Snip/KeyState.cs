@@ -20,125 +20,15 @@
 
 namespace Winter
 {
-    public partial class Snip
+    public static class KeyState
     {
-        /// <summary>
-        /// This structure will hold the last key state of a hotkey.
-        /// </summary>
-        private class KeyState
-        {
-            private int nextTrack;
-            private int previousTrack;
-            private int volumeUp;
-            private int volumeDown;
-            private int playPauseTrack;
-            private int stopTrack;
-            private int muteTrack;
-            private int pauseTrack;
-
-            public int NextTrack
-            {
-                get
-                {
-                    return this.nextTrack;
-                }
-
-                set
-                {
-                    this.nextTrack = value;
-                }
-            }
-
-            public int PreviousTrack
-            {
-                get
-                {
-                    return this.previousTrack;
-                }
-
-                set
-                {
-                    this.previousTrack = value;
-                }
-            }
-
-            public int VolumeUp
-            {
-                get
-                {
-                    return this.volumeUp;
-                }
-
-                set
-                {
-                    this.volumeUp = value;
-                }
-            }
-
-            public int VolumeDown
-            {
-                get
-                {
-                    return this.volumeDown;
-                }
-
-                set
-                {
-                    this.volumeDown = value;
-                }
-            }
-
-            public int PlayPauseTrack
-            {
-                get
-                {
-                    return this.playPauseTrack;
-                }
-
-                set
-                {
-                    this.playPauseTrack = value;
-                }
-            }
-
-            public int StopTrack
-            {
-                get
-                {
-                    return this.stopTrack;
-                }
-
-                set
-                {
-                    this.stopTrack = value;
-                }
-            }
-
-            public int MuteTrack
-            {
-                get
-                {
-                    return this.muteTrack;
-                }
-
-                set
-                {
-                    this.muteTrack = value;
-                }
-            }
-
-            public int PauseTrack
-            {
-                get
-                {
-                    return this.pauseTrack;
-                }
-
-                set
-                {
-                    this.pauseTrack = value;
-                }
-            }
-        }
+        public static int NextTrack { get; set; }
+        public static int PreviousTrack { get; set; }
+        public static int VolumeUp { get; set; }
+        public static int VolumeDown { get; set; }
+        public static int PlayPauseTrack { get; set; }
+        public static int StopTrack { get; set; }
+        public static int MuteTrack { get; set; }
+        public static int PauseTrack { get; set; }
     }
 }
