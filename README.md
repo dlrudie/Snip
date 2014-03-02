@@ -1,4 +1,4 @@
-SNIP V3.7.0
+SNIP V4.0.0
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -81,6 +81,12 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+v4.0.0 (2014-Mar-02):
+* foobar2000 will now be detected via exe name instead of window class name.
+* Fixed crash related to invalid JSON.
+* Renamed default strings file to prevent a crash.
+* Major code re-factoring.
+
 v3.7.0 (2014-Feb-06):
 * Added support for foobar2000.
 
