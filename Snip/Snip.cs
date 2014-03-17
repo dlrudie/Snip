@@ -18,21 +18,6 @@
  */
 #endregion
 
-/*
- * use Globals.* to set all toolstrip menu items and to load from them as well
- * across all files
- * 
- * MediaPlayer.Load() -- prepares the player for usage
- * MediaPlayer.Update() -- updates the text
- * MediaPlayer.Unload() -- cleans up the player in preparation to switch
- * 
- * issues:
- * saving and loading do not work correctly just yet
- * if other player or resolution selected, it will set the checkmark right but it will also set the default
- * 
- * look at output formatting!
- */
-
 namespace Winter
 {
     using System;
