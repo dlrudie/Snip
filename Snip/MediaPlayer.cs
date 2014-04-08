@@ -127,20 +127,7 @@ namespace Winter
 
         public void SaveBlankImage()
         {
-            Image image = ImageFromByteArray(this.blankImage);
-            image.Save(this.defaultArtworkFile);
-        }
-
-        private static Image ImageFromByteArray(byte[] imageByteArray)
-        {
-            Image image = null;
-
-            using (MemoryStream memoryStream = new MemoryStream(imageByteArray))
-            {
-                image = Image.FromStream(memoryStream);
-            }
-
-            return image;
+            File.WriteAllBytes(this.defaultArtworkFile, this.blankImage);
         }
     }
 }
