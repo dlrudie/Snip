@@ -1,4 +1,4 @@
-SNIP V4.0.0
+SNIP V4.0.1
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -81,6 +81,14 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+v4.0.1 (2014-Apr-11):
+* Caught exception when ws.spotify.com couldn't be resolved. This fixes
+    #10 <https://github.com/dlrudie/Snip/issues/10> by catching the exception
+    thrown when ws.spotify.com could not be resolved.  In the case the name
+    cannot be resolved then a blank image will be saved in its place.
+* Remove unnecessary code related to saving album artwork to disk.  Hopefully
+    this fixes #9 <https://github.com/dlrudie/Snip/issues/9>.
+
 v4.0.0 (2014-Mar-02):
 * foobar2000 will now be detected via exe name instead of window class name.
 * Fixed crash related to invalid JSON.
