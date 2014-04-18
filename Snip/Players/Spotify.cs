@@ -284,7 +284,14 @@ namespace Winter
         {
             if (e.Error == null)
             {
-                File.Copy((string)e.UserState, this.DefaultArtworkFilePath, true);
+                try
+                {
+                    File.Copy((string)e.UserState, this.DefaultArtworkFilePath, true);
+                }
+                catch (IOException)
+                {
+                    this.SaveBlankImage();
+                }
             }
         }
 
