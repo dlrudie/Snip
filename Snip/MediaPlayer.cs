@@ -128,24 +128,13 @@ namespace Winter
 
         public void SaveBlankImage()
         {
-            // http://stackoverflow.com/a/937558
-            FileStream fileStream = null;
-
             try
             {
-                fileStream = File.Open(this.defaultArtworkFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-                fileStream.Write(this.blankImage, 0, this.blankImage.Length);
+                File.WriteAllBytes(this.defaultArtworkFile, this.blankImage);
             }
             catch (IOException)
             {
                 // File is in use... or something.  We can't write so we'll just bail out and hope no one notices.
-            }
-            finally
-            {
-                if (fileStream != null)
-                {
-                    fileStream.Close();
-                }
             }
         }
     }
