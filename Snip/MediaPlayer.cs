@@ -86,6 +86,7 @@ namespace Winter
 
         public virtual void Unload()
         {
+            this.SaveBlankImage();
             this.Found = false;
             this.Handle = IntPtr.Zero;
             this.NotRunning = true;
