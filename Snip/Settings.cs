@@ -149,6 +149,19 @@ namespace Winter
 
                 registryKey.Close();
             }
+            else
+            {
+                Globals.PlayerSelection = Globals.MediaPlayerSelection.Spotify;
+                Globals.SaveSeparateFiles = false;
+                Globals.SaveAlbumArtwork = false;
+                Globals.KeepSpotifyAlbumArtwork = false;
+                Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
+                Globals.SaveHistory = false;
+                Globals.TrackFormat = "“$t”";
+                Globals.SeparatorFormat = " ― ";
+                Globals.ArtistFormat = "$a";
+                Globals.AlbumFormat = "$l";
+            }
         }
     }
 }
