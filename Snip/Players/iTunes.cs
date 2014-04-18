@@ -53,6 +53,11 @@ namespace Winter
         {
             base.Unload();
 
+            this.iTunesApplication.OnPlayerPlayEvent -= this.App_OnPlayerPlayEvent;
+            this.iTunesApplication.OnPlayerPlayingTrackChangedEvent -= this.App_OnPlayerPlayingTrackChangedEvent;
+            this.iTunesApplication.OnPlayerStopEvent -= this.App_OnPlayerStopEvent;
+            this.iTunesApplication.OnQuittingEvent -= this.App_OnPlayerQuittingEvent;
+
             this.iTunesApplication = null;
         }
 
