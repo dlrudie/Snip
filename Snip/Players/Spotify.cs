@@ -68,7 +68,7 @@ namespace Winter
                             }
                             else
                             {
-                                // Spotify window titles look like "Spotify - Artist - Song Title".
+                                // Spotify window titles look like "Spotify - Artist – Song Title".
                                 string windowTitleFull = spotifyTitle.Replace("Spotify - ", string.Empty);
                                 string[] windowTitle = windowTitleFull.Split('–');
 
@@ -261,8 +261,6 @@ namespace Winter
                         dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
                         string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", albumArtworkResolution));
-
-                        this.SaveBlankImage();
 
                         if (savePath == null)
                         {
