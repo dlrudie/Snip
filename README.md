@@ -1,4 +1,4 @@
-SNIP V4.0.1
+SNIP V4.0.3
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -81,6 +81,15 @@ Not all hotkeys work between Spotify, iTunes, and Winamp.
 
 CHANGES
 =======
+v4.0.3 (2014-Apr-19):
+* Fixed crash when image file was in use and Snip tried to overwrite it.
+* Removed some unnecessary code.
+* Switched to an even smaller 1x1 transparent PNG for failed artwork.
+* Fixed settings not truly having a default whenever a new version is ran.
+* Switching media players now overwrites the artwork with a blank image.
+* Fixed crash when switching from iTunes to another player and then
+    manipulating iTunes.
+
 v4.0.1 (2014-Apr-11):
 * Caught exception when ws.spotify.com couldn't be resolved. This fixes
     #10 <https://github.com/dlrudie/Snip/issues/10> by catching the exception
