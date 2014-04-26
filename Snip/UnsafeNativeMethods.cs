@@ -28,8 +28,18 @@ namespace Winter
     internal static class UnsafeNativeMethods
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern short GetAsyncKeyState(
-            [In] int keyInt);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool RegisterHotKey(
+            [In] [Optional] IntPtr windowHandle,
+            [In] int id,
+            [In] uint modifier,
+            [In] uint key);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool UnregisterHotKey(
+            [In] [Optional] IntPtr windowHandle,
+            [In] int id);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr FindWindow(

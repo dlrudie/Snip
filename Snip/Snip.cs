@@ -33,6 +33,8 @@ namespace Winter
 
         // There are none.
 
+        KeyboardHook keyboardHook = new KeyboardHook();
+
         #endregion
 
         #region Constructor
@@ -40,6 +42,10 @@ namespace Winter
         public Snip()
         {
             Globals.ResourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
+            Globals.DefaultTrackFormat = Globals.ResourceManager.GetString("TrackFormat");
+            Globals.DefaultSeparatorFormat = Globals.ResourceManager.GetString("SeparatorFormat");
+            Globals.DefaultArtistFormat = Globals.ResourceManager.GetString("ArtistFormat");
+            Globals.DefaultAlbumFormat = Globals.ResourceManager.GetString("AlbumFormat");
 
             this.InitializeComponent();
 
@@ -57,11 +63,60 @@ namespace Winter
 
             this.LoadSettings();
             this.timerScanMediaPlayer.Enabled = true;
+
+            // Register global hotkeys
+            this.keyboardHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(KeyboardHook_KeyPressed);
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemOpenBrackets);    // [
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemCloseBrackets);   // ]
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Oemplus);            // +
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemMinus);           // -
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Enter);              // Enter
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Back);               // Backspace
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M);                  // M
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P);                  // P
         }
 
         #endregion
 
         #region Methods
+
+        private void KeyboardHook_KeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Keys.OemOpenBrackets:
+                    Globals.CurrentPlayer.ChangeToPreviousTrack();
+                    break;
+
+                case Keys.OemCloseBrackets:
+                    Globals.CurrentPlayer.ChangeToNextTrack();
+                    break;
+
+                case Keys.OemMinus:
+                    Globals.CurrentPlayer.DecreasePlayerVolume();
+                    break;
+
+                case Keys.Oemplus:
+                    Globals.CurrentPlayer.IncreasePlayerVolume();
+                    break;
+
+                case Keys.M:
+                    Globals.CurrentPlayer.MutePlayerAudio();
+                    break;
+
+                case Keys.Enter:
+                    Globals.CurrentPlayer.PlayOrPauseTrack();
+                    break;
+
+                case Keys.P:
+                    Globals.CurrentPlayer.PauseTrack();
+                    break;
+
+                case Keys.Back:
+                    Globals.CurrentPlayer.StopTrack();
+                    break;
+            }
+        }
 
         private void Snip_Load(object sender, EventArgs e)
         {
@@ -267,73 +322,6 @@ namespace Winter
             Globals.CurrentPlayer.Update();
         }
 
-        private void TimerHotkey_Tick(object sender, EventArgs e)
-        {
-            int keyControl = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.ControlKey);
-            int keyAlt = UnsafeNativeMethods.GetAsyncKeyState((int)Keys.Menu);
-
-            int keyStateNextTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.NextTrack) & 0x8000;           // S I W
-            int keyStatePreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.PreviousTrack) & 0x8000;   // S I W
-            int keyStateVolumeUp = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.VolumeUp) & 0x8000;             // S I W
-            int keyStateVolumeDown = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.VolumeDown) & 0x8000;         // S I W
-            int keyStateMuteTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.MuteTrack) & 0x8000;           // S   W
-            int keyStatePlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.PlayPauseTrack) & 0x8000; // S I W
-            int keyStatePauseTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.PauseTrack) & 0x8000;         //   I
-            int keyStateStopTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.StopTrack) & 0x8000;           // S I W
-
-            if (keyControl != 0 && keyAlt != 0)
-            {
-                if (keyStateNextTrack > 0 && keyStateNextTrack != KeyState.NextTrack)
-                {
-                    Globals.CurrentPlayer.ChangeToNextTrack();
-                }
-
-                if (keyStatePreviousTrack > 0 && keyStatePreviousTrack != KeyState.PreviousTrack)
-                {
-                    Globals.CurrentPlayer.ChangeToPreviousTrack();
-                }
-
-                if (keyStateVolumeUp > 0 && keyStateVolumeUp != KeyState.VolumeUp)
-                {
-                    Globals.CurrentPlayer.IncreasePlayerVolume();
-                }
-
-                if (keyStateVolumeDown > 0 && keyStateVolumeDown != KeyState.VolumeDown)
-                {
-                    Globals.CurrentPlayer.DecreasePlayerVolume();
-                }
-
-                if (keyStateMuteTrack > 0 && keyStateMuteTrack != KeyState.MuteTrack)
-                {
-                    Globals.CurrentPlayer.MutePlayerAudio();
-                }
-
-                if (keyStatePlayPauseTrack > 0 && keyStatePlayPauseTrack != KeyState.PlayPauseTrack)
-                {
-                    Globals.CurrentPlayer.PlayOrPauseTrack();
-                }
-
-                if (keyStatePauseTrack > 0 && keyStatePauseTrack != KeyState.PauseTrack)
-                {
-                    Globals.CurrentPlayer.PauseTrack();
-                }
-
-                if (keyStateStopTrack > 0 && keyStateStopTrack != KeyState.StopTrack)
-                {
-                    Globals.CurrentPlayer.StopTrack();
-                }
-            }
-
-            KeyState.NextTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.NextTrack) & 0x8000;
-            KeyState.PreviousTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.PreviousTrack) & 0x8000;
-            KeyState.VolumeUp = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.VolumeUp) & 0x8000;
-            KeyState.VolumeDown = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.VolumeDown) & 0x8000;
-            KeyState.MuteTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.MuteTrack) & 0x8000;
-            KeyState.PlayPauseTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.PlayPauseTrack) & 0x8000;
-            KeyState.PauseTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.PauseTrack) & 0x8000;
-            KeyState.StopTrack = UnsafeNativeMethods.GetAsyncKeyState(KeyBinds.StopTrack) & 0x8000;
-        }
-
         private void ToolStripMenuItemSetFormat_Click(object sender, EventArgs e)
         {
             OutputFormat outputFormat = null;
@@ -361,13 +349,13 @@ namespace Winter
 
             if (registryKey != null)
             {
-                Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"), CultureInfo.CurrentCulture);
+                Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", Globals.DefaultTrackFormat), CultureInfo.CurrentCulture);
 
-                Globals.SeparatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "), CultureInfo.CurrentCulture);
+                Globals.SeparatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", Globals.DefaultSeparatorFormat), CultureInfo.CurrentCulture);
 
-                Globals.ArtistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"), CultureInfo.CurrentCulture);
+                Globals.ArtistFormat = Convert.ToString(registryKey.GetValue("Artist Format", Globals.DefaultArtistFormat), CultureInfo.CurrentCulture);
 
-                Globals.AlbumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"), CultureInfo.CurrentCulture);
+                Globals.AlbumFormat = Convert.ToString(registryKey.GetValue("Album Format", Globals.DefaultAlbumFormat), CultureInfo.CurrentCulture);
 
                 registryKey.Close();
             }

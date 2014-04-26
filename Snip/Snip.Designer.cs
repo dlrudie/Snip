@@ -11,7 +11,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
         private System.Windows.Forms.Timer timerScanMediaPlayer;
-        private System.Windows.Forms.Timer timerHotkey;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveHistory;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSeparateFiles;
@@ -38,6 +37,11 @@
             if (disposing && (this.components != null))
             {
                 this.components.Dispose();
+            }
+
+            if (disposing && (this.keyboardHook != null))
+            {
+                this.keyboardHook.Dispose();
             }
 
             base.Dispose(disposing);
@@ -73,7 +77,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.timerScanMediaPlayer = new System.Windows.Forms.Timer(this.components);
-            this.timerHotkey = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -228,12 +231,6 @@
             // 
             this.timerScanMediaPlayer.Enabled = false;
             this.timerScanMediaPlayer.Tick += new System.EventHandler(this.TimerScanMediaPlayer_Tick);
-            // 
-            // timerHotkey
-            // 
-            this.timerHotkey.Enabled = true;
-            this.timerHotkey.Interval = 1;
-            this.timerHotkey.Tick += new System.EventHandler(this.TimerHotkey_Tick);
             // 
             // Snip
             // 

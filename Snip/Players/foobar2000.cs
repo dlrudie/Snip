@@ -139,37 +139,37 @@ namespace Winter
 
         public override void ChangeToNextTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.NextTrack));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.NextTrack));
         }
 
         public override void ChangeToPreviousTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PreviousTrack));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PreviousTrack));
         }
 
         public override void IncreasePlayerVolume()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeUp));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeUp));
         }
 
         public override void DecreasePlayerVolume()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeDown));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeDown));
         }
 
         public override void MutePlayerAudio()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.MuteTrack));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.MuteTrack));
         }
 
         public override void PlayOrPauseTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PlayPauseTrack));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PlayPauseTrack));
         }
 
         public override void StopTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, Globals.WindowMessageAppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.StopTrack));
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.StopTrack));
         }
     }
 }

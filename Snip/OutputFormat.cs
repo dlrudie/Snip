@@ -84,15 +84,22 @@ namespace Winter
 
             if (registryKey != null)
             {
-                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", this.resourceManager.GetString("TrackFormat")), CultureInfo.CurrentCulture);
+                this.trackFormat = Convert.ToString(registryKey.GetValue("Track Format", Globals.DefaultTrackFormat), CultureInfo.CurrentCulture);
 
-                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", this.resourceManager.GetString("SeparatorFormat")), CultureInfo.CurrentCulture);
+                this.separatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", Globals.DefaultSeparatorFormat), CultureInfo.CurrentCulture);
 
-                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", this.resourceManager.GetString("ArtistFormat")), CultureInfo.CurrentCulture);
+                this.artistFormat = Convert.ToString(registryKey.GetValue("Artist Format", Globals.DefaultArtistFormat), CultureInfo.CurrentCulture);
 
-                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", this.resourceManager.GetString("AlbumFormat")), CultureInfo.CurrentCulture);
+                this.albumFormat = Convert.ToString(registryKey.GetValue("Album Format", Globals.DefaultAlbumFormat), CultureInfo.CurrentCulture);
 
                 registryKey.Close();
+            }
+            else
+            {
+                this.trackFormat = Globals.DefaultTrackFormat;
+                this.separatorFormat = Globals.DefaultSeparatorFormat;
+                this.artistFormat = Globals.DefaultArtistFormat;
+                this.albumFormat = Globals.DefaultAlbumFormat;
             }
         }
 
@@ -119,17 +126,10 @@ namespace Winter
 
         private void SetDefaults()
         {
-            this.trackFormat = this.resourceManager.GetString("TrackFormat");
-            this.textBoxTrackFormat.Text = this.trackFormat;
-
-            this.separatorFormat = this.resourceManager.GetString("SeparatorFormat");
-            this.textBoxSeparatorFormat.Text = this.separatorFormat;
-
-            this.artistFormat = this.resourceManager.GetString("ArtistFormat");
-            this.textBoxArtistFormat.Text = this.artistFormat;
-
-            this.albumFormat = this.resourceManager.GetString("AlbumFormat");
-            this.textBoxAlbumFormat.Text = this.albumFormat;
+            this.textBoxTrackFormat.Text = Globals.DefaultTrackFormat;
+            this.textBoxSeparatorFormat.Text = Globals.DefaultSeparatorFormat;
+            this.textBoxArtistFormat.Text = Globals.DefaultArtistFormat;
+            this.textBoxAlbumFormat.Text = Globals.DefaultAlbumFormat;
         }
     }
 }

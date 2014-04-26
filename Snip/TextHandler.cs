@@ -81,12 +81,12 @@ namespace Winter
         {
             string output = Globals.TrackFormat + Globals.SeparatorFormat + Globals.ArtistFormat;
 
-            output = output.Replace("$t", title);
-            output = output.Replace("$a", artist);
+            output = output.Replace(Globals.TrackVariable, title);
+            output = output.Replace(Globals.ArtistVariable, artist);
 
             if (!string.IsNullOrEmpty(album))
             {
-                output = output.Replace("$l", album);
+                output = output.Replace(Globals.AlbumVariable, album);
             }
 
             // Set the text that appears on the notify icon.
@@ -98,12 +98,12 @@ namespace Winter
             // Check if we want to save artist and track to separate files.
             if (Globals.SaveSeparateFiles)
             {
-                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace("$a", artist));
-                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace("$t", title));
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
 
                 if (!string.IsNullOrEmpty(album))
                 {
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace("$l", album));
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
                 }
             }
 

@@ -139,13 +139,13 @@ namespace Winter
                     Globals.SaveHistory = false;
                 }
 
-                Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", "“$t”"), CultureInfo.CurrentCulture);
+                Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", Globals.DefaultTrackFormat), CultureInfo.CurrentCulture);
 
-                Globals.SeparatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", " ― "), CultureInfo.CurrentCulture);
+                Globals.SeparatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", Globals.DefaultSeparatorFormat), CultureInfo.CurrentCulture);
 
-                Globals.ArtistFormat = Convert.ToString(registryKey.GetValue("Artist Format", "$a"), CultureInfo.CurrentCulture);
+                Globals.ArtistFormat = Convert.ToString(registryKey.GetValue("Artist Format", Globals.DefaultArtistFormat), CultureInfo.CurrentCulture);
 
-                Globals.AlbumFormat = Convert.ToString(registryKey.GetValue("Album Format", "$l"), CultureInfo.CurrentCulture);
+                Globals.AlbumFormat = Convert.ToString(registryKey.GetValue("Album Format", Globals.DefaultAlbumFormat), CultureInfo.CurrentCulture);
 
                 registryKey.Close();
             }
@@ -157,10 +157,10 @@ namespace Winter
                 Globals.KeepSpotifyAlbumArtwork = false;
                 Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
                 Globals.SaveHistory = false;
-                Globals.TrackFormat = "“$t”";
-                Globals.SeparatorFormat = " ― ";
-                Globals.ArtistFormat = "$a";
-                Globals.AlbumFormat = "$l";
+                Globals.TrackFormat = Globals.DefaultTrackFormat;
+                Globals.SeparatorFormat = Globals.DefaultSeparatorFormat;
+                Globals.ArtistFormat = Globals.DefaultArtistFormat;
+                Globals.AlbumFormat = Globals.DefaultAlbumFormat;
             }
         }
     }

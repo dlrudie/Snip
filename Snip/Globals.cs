@@ -28,7 +28,9 @@ namespace Winter
     {
         #region Fields
 
-        public const uint WindowMessageAppCommand = 0x319;
+        public const string TrackVariable = "$t";
+        public const string ArtistVariable = "$a";
+        public const string AlbumVariable = "$l";
 
         #endregion
 
@@ -46,6 +48,12 @@ namespace Winter
         public static bool KeepSpotifyAlbumArtwork { get; set; }
         public static AlbumArtworkResolution ArtworkResolution { get; set; }
         public static bool SaveHistory { get; set; }
+
+        public static string DefaultTrackFormat { get; set; }
+        public static string DefaultSeparatorFormat { get; set; }
+        public static string DefaultArtistFormat { get; set; }
+        public static string DefaultAlbumFormat { get; set; }
+
         public static string TrackFormat { get; set; }
         public static string SeparatorFormat { get; set; }
         public static string ArtistFormat { get; set; }
@@ -82,6 +90,13 @@ namespace Winter
             StopTrack = 0xD0000,
             PreviousTrack = 0xC0000,
             NextTrack = 0xB0000
+        }
+
+        public enum WindowMessage : int
+        {
+            None = 0x0,
+            Hotkey = 0x312,
+            AppCommand = 0x319
         }
 
         #endregion

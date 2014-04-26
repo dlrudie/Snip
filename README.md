@@ -1,4 +1,4 @@
-SNIP V4.0.3
+SNIP V4.1.0
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -77,10 +77,17 @@ HOTKEYS
 
 Note
 ----
-Not all hotkeys work between Spotify, iTunes, and Winamp.
+Not all hotkeys work between Spotify, iTunes, Winamp, and foobar2000.
 
 CHANGES
 =======
+v4.1.0 (2014-Apr-26):
+* Settings and defaults consolidated and made more consistent.
+* Window messages moved to own enum.
+* Complete change in hotkey functionality.  Changed from 1ms timer to events.
+    Hotkey timer deleted as well as two classes.
+* Replaced GetAsyncKeyState() with RegisterHotKey() and UnregisterHotKey().
+
 v4.0.3 (2014-Apr-19):
 * Fixed crash when image file was in use and Snip tried to overwrite it.
 * Removed some unnecessary code.
