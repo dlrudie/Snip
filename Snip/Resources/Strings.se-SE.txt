@@ -1,0 +1,98 @@
+#############
+# Snip Form #
+#############
+
+; Main application name.
+SnipForm=Snip
+
+; Supported media players.  These probably don't need translated unless they
+; actually have a different name in other countries.
+Spotify=Spotify
+iTunes=iTunes
+Winamp=Winamp
+foobar2000=foobar2000
+
+; This text is saved to the Snip.txt file when the user switches media players
+; from the right-click context menu.
+SwitchedToSpotify=Switched to Spotify
+SwitchedToiTunes=Switched to iTunes
+SwitchedToWinamp=Switched to Winamp
+SwitchedTofoobar2000=Switched to foobar2000
+
+; This text is saved to the Snip.txt file when Snip itself is running but Snip
+; does not detect the selected media player as running.
+SpotifyIsNotRunning=Spotify is not currently running
+iTunesNotRunning=iTunes is not currently running
+WinampIsNotRunning=Winamp is not currently running
+foobar2000IsNotRunning=foobar2000 is not currently running
+
+; This text is saved to the Snip.txt file when no track is playing in the
+; selected media file or when the user stops/pauses a playing track.
+NoTrackPlaying=No Track Playing
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will open up the "Set Output Format" form where the user can customize how
+; the text will look when saved to any of the text files.
+SetOutputFormat=Set Output Format
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artist information and song information to separate text files
+; on the harddrive.
+SaveInformationSeparately=Save Information Separately
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will download and save album artwork for the currently playing track to the
+; harddrive.
+SaveAlbumArtwork=Save Album Artwork
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artwork to a subdirectory using the trackid information
+; provided by Spotify as the filename.  Each track will save its own album
+; artwork and the next time that track is played it will use the saved file
+; instead of redownloading it each time.
+KeepSpotifyAlbumArtwork=Keep Spotify Album Artwork
+
+; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
+; and it refers to the image resolution of the artwork to be downloaded.
+ImageResolutionTiny=Tiny
+ImageResolutionSmall=Small
+ImageResolutionMedium=Medium
+ImageResolutionLarge=Large
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will create a file called Snip_History.txt where it will append each track
+; played to the end of the file, effectively creating a play history.
+SaveTrackHistory=Save Track History
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will exit the application.
+ExitApplication=Exit
+
+######################
+# Output Format Form #
+######################
+
+; This text is displayed as the title of the Output Format Form.
+SetOutputFormatForm=Set Output Format
+
+; These texts refer to setting how specific output looks when saved to any of
+; the text files.  The $t, $a, and $l variables will be filled in with the
+; track, artist, and album information of the currently playing track.
+SetTrackFormat=Set Track Format ($t):
+SetSeparatorFormat=Set Separator Format:
+SetArtistFormat=Set Artist Format ($a):
+SetAlbumFormat=Set Album Format ($l):
+
+; This text is displayed on the buttons within this form.  Clicking the
+; Defaults button will restore the output format settings to their default
+; appearance.  Clicking the Save button will save the user-set appearance.
+ButtonDefaults=Defaults
+ButtonSave=Save
+
+; These will most likely not need to be translated.  However, if your locale
+; uses different dashes or quotation marks then you can alternatively change
+; them here.
+TrackFormat=“$t”
+SeparatorFormat= ― 
+ArtistFormat=$a
+AlbumFormat=$l
