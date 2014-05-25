@@ -78,10 +78,24 @@ namespace Winter
 
                                 if (Globals.SaveAlbumArtwork)
                                 {
-                                    this.HandleSpotifyAlbumArtwork(artist, songTitle);
+                                    if (Globals.DebuggingIsEnabled)
+                                    {
+                                        Debug.MeasureMethod(this.HandleSpotifyAlbumArtwork, new string[] { artist, songTitle });
+                                    }
+                                    else
+                                    {
+                                        this.HandleSpotifyAlbumArtwork(new string[] { artist, songTitle });
+                                    }
                                 }
 
-                                TextHandler.UpdateText(songTitle, artist);
+                                if (Globals.DebuggingIsEnabled)
+                                {
+                                    Debug.MeasureMethod(TextHandler.UpdateText, new object[] { songTitle, artist, string.Empty });
+                                }
+                                else
+                                {
+                                    TextHandler.UpdateText(new object[] { songTitle, artist, string.Empty });
+                                }
                             }
 
                             this.LastTitle = spotifyTitle;
@@ -159,7 +173,7 @@ namespace Winter
             UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.StopTrack));
         }
 
-        private void HandleSpotifyAlbumArtwork(string artist, string songTitle)
+        private void HandleSpotifyAlbumArtwork(object[] artistAndTitle)
         {
             string albumId = string.Empty;
 
@@ -169,6 +183,8 @@ namespace Winter
                 {
                     try
                     {
+                        string artist = (string)artistAndTitle[0];
+                        string songTitle = (string)artistAndTitle[1];
                         var json = jsonWebClient.DownloadString(
                             string.Format(
                                 CultureInfo.InvariantCulture,
@@ -221,13 +237,28 @@ namespace Winter
                                         }
                                         else
                                         {
-                                            DownloadSpotifyAlbumArtwork(albumId, (int)Globals.ArtworkResolution, artworkImagePath);
+                                            if (Globals.DebuggingIsEnabled)
+                                            {
+                                                Debug.MeasureMethod(this.DownloadSpotifyAlbumArtwork, new object[] { albumId, (int)Globals.ArtworkResolution, artworkImagePath });
+                                            }
+                                            else
+                                            {
+                                                this.DownloadSpotifyAlbumArtwork(new object[] { albumId, (int)Globals.ArtworkResolution, artworkImagePath });
+                                            }
+
                                             fileInfo.CopyTo(this.DefaultArtworkFilePath, true);
                                         }
                                     }
                                     else
                                     {
-                                        DownloadSpotifyAlbumArtwork(albumId, (int)Globals.ArtworkResolution);
+                                        if (Globals.DebuggingIsEnabled)
+                                        {
+                                            Debug.MeasureMethod(this.DownloadSpotifyAlbumArtwork, new object[] { albumId, (int)Globals.ArtworkResolution, null });
+                                        }
+                                        else
+                                        {
+                                            this.DownloadSpotifyAlbumArtwork(new object[] { albumId, (int)Globals.ArtworkResolution, null });
+                                        }
                                     }
                                 }
                             }
@@ -245,7 +276,7 @@ namespace Winter
             }
         }
 
-        private void DownloadSpotifyAlbumArtwork(string albumId, int albumArtworkResolution, string savePath = null)
+        private void DownloadSpotifyAlbumArtwork(object[] albumIdAndAlbumArtworkResolutionAndSavePath)
         {
             this.SaveBlankImage();
 
@@ -253,6 +284,10 @@ namespace Winter
             {
                 try
                 {
+                    string albumId = (string)albumIdAndAlbumArtworkResolutionAndSavePath[0];
+                    int albumArtworkResolution = (int)albumIdAndAlbumArtworkResolutionAndSavePath[1];
+                    string savePath = (string)albumIdAndAlbumArtworkResolutionAndSavePath[2];
+
                     webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
                     var json = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
 

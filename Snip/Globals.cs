@@ -59,6 +59,8 @@ namespace Winter
         public static string ArtistFormat { get; set; }
         public static string AlbumFormat { get; set; }
 
+        public static bool DebuggingIsEnabled { get; set; }
+
         #endregion
 
         #region Enumerations

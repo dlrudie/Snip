@@ -58,7 +58,14 @@ namespace Winter
 
         public static void UpdateTextAndEmptyFile(string text)
         {
-            SetNotifyIconText(text);
+            if (Globals.DebuggingIsEnabled)
+            {
+                Debug.MeasureMethod(SetNotifyIconText, text);
+            }
+            else
+            {
+                SetNotifyIconText(text);
+            }
 
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
         }
@@ -66,51 +73,60 @@ namespace Winter
         public static void UpdateText(string text)
         {
             // Set the text that appears on the notify icon.
-            SetNotifyIconText(text);
+            if (Globals.DebuggingIsEnabled)
+            {
+                Debug.MeasureMethod(SetNotifyIconText, text);
+            }
+            else
+            {
+                SetNotifyIconText(text);
+            }
 
             // Write the song title and artist to a text file.
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
         }
 
-        public static void UpdateText(string title, string artist)
+        public static void UpdateText(object[] titleAndArtistAndAlbum)
         {
-            UpdateText(title, artist, string.Empty);
-        }
-
-        public static void UpdateText(string title, string artist, string album)
-        {
-            string output = Globals.TrackFormat + Globals.SeparatorFormat + Globals.ArtistFormat;
-
-            output = output.Replace(Globals.TrackVariable, title);
-            output = output.Replace(Globals.ArtistVariable, artist);
-
-            if (!string.IsNullOrEmpty(album))
+            if (titleAndArtistAndAlbum != null)
             {
-                output = output.Replace(Globals.AlbumVariable, album);
-            }
+                string output = Globals.TrackFormat + Globals.SeparatorFormat + Globals.ArtistFormat;
 
-            // Set the text that appears on the notify icon.
-            SetNotifyIconText(output);
+                string title = (string)titleAndArtistAndAlbum[0];
+                string artist = (string)titleAndArtistAndAlbum[1];
+                string album = (string)titleAndArtistAndAlbum[2];
 
-            // Write the song title and artist to a text file.
-            File.WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
-
-            // Check if we want to save artist and track to separate files.
-            if (Globals.SaveSeparateFiles)
-            {
-                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
-                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
+                output = output.Replace(Globals.TrackVariable, title);
+                output = output.Replace(Globals.ArtistVariable, artist);
 
                 if (!string.IsNullOrEmpty(album))
                 {
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
+                    output = output.Replace(Globals.AlbumVariable, album);
                 }
-            }
 
-            // If saving track history is enabled, append that information to a separate file.
-            if (Globals.SaveHistory)
-            {
-                File.AppendAllText(@Application.StartupPath + @"\Snip_History.txt", output + Environment.NewLine);
+                // Set the text that appears on the notify icon.
+                SetNotifyIconText(output);
+
+                // Write the song title and artist to a text file.
+                File.WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
+
+                // Check if we want to save artist and track to separate files.
+                if (Globals.SaveSeparateFiles)
+                {
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
+
+                    if (!string.IsNullOrEmpty(album))
+                    {
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
+                    }
+                }
+
+                // If saving track history is enabled, append that information to a separate file.
+                if (Globals.SaveHistory)
+                {
+                    File.AppendAllText(@Application.StartupPath + @"\Snip_History.txt", output + Environment.NewLine);
+                }
             }
         }
 

@@ -74,6 +74,9 @@ namespace Winter
             this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Back);               // Backspace
             this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M);                  // M
             this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P);                  // P
+
+            // Debug hotkey
+            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.D);                  // D
         }
 
         #endregion
@@ -114,6 +117,10 @@ namespace Winter
 
                 case Keys.Back:
                     Globals.CurrentPlayer.StopTrack();
+                    break;
+
+                case Keys.D:
+                    Debug.ToggleDebugging();
                     break;
             }
         }
@@ -319,7 +326,14 @@ namespace Winter
         private void TimerScanMediaPlayer_Tick(object sender, EventArgs e)
         {
             // Make sure this is set before starting the timer.
-            Globals.CurrentPlayer.Update();
+            //if (Globals.DebuggingIsEnabled)
+            //{
+                //Debug.MeasureMethod(Globals.CurrentPlayer.Update); // Writes a LOT of data
+            //}
+            //else
+            //{
+                Globals.CurrentPlayer.Update();
+            //}
         }
 
         private void ToolStripMenuItemSetFormat_Click(object sender, EventArgs e)

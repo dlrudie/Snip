@@ -128,11 +128,25 @@ namespace Winter
                     }
                 }
 
-                TextHandler.UpdateText(track.Name, track.Artist, track.Album);
+                if (Globals.DebuggingIsEnabled)
+                {
+                    Debug.MeasureMethod(TextHandler.UpdateText, new object[] { track.Name, track.Artist, track.Album });
+                }
+                else
+                {
+                    TextHandler.UpdateText(new object[] { track.Name, track.Artist, track.Album });
+                }
             }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
-                TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
+                if (Globals.DebuggingIsEnabled)
+                {
+                    Debug.MeasureMethod(TextHandler.UpdateText, this.iTunesApplication.CurrentStreamTitle);
+                }
+                else
+                {
+                    TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
+                }
             }
         }
 
@@ -158,11 +172,25 @@ namespace Winter
                     }
                 }
 
-                TextHandler.UpdateText(track.Name, track.Artist, track.Album);
+                if (Globals.DebuggingIsEnabled)
+                {
+                    Debug.MeasureMethod(TextHandler.UpdateText, new object[] { track.Name, track.Artist, track.Album });
+                }
+                else
+                {
+                    TextHandler.UpdateText(new object[] { track.Name, track.Artist, track.Album });
+                }
             }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
-                TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
+                if (Globals.DebuggingIsEnabled)
+                {
+                    Debug.MeasureMethod(TextHandler.UpdateText, this.iTunesApplication.CurrentStreamTitle);
+                }
+                else
+                {
+                    TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
+                }
             }
         }
 

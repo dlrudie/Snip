@@ -74,11 +74,25 @@ namespace Winter
                                     string artist = windowTitle[0].Trim();
                                     string songTitle = windowTitle[1].Trim();
 
-                                    TextHandler.UpdateText(songTitle, artist);
+                                    if (Globals.DebuggingIsEnabled)
+                                    {
+                                        Debug.MeasureMethod(TextHandler.UpdateText, new object[] { songTitle, artist, string.Empty });
+                                    }
+                                    else
+                                    {
+                                        TextHandler.UpdateText(new object[] { songTitle, artist, string.Empty });
+                                    }
                                 }
                                 else
                                 {
-                                    TextHandler.UpdateText(windowTitle[0].Trim());
+                                    if (Globals.DebuggingIsEnabled)
+                                    {
+                                        Debug.MeasureMethod(TextHandler.UpdateText, windowTitle[0].Trim());
+                                    }
+                                    else
+                                    {
+                                        TextHandler.UpdateText(windowTitle[0].Trim());
+                                    }
                                 }
                             }
 
