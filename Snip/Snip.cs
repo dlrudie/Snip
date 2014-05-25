@@ -43,7 +43,7 @@ namespace Winter
         {
             Globals.ResourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
             Globals.DefaultTrackFormat = Globals.ResourceManager.GetString("TrackFormat");
-            Globals.DefaultSeparatorFormat = Globals.ResourceManager.GetString("SeparatorFormat");
+            Globals.DefaultSeparatorFormat = " " + Globals.ResourceManager.GetString("SeparatorFormat") + " ";
             Globals.DefaultArtistFormat = Globals.ResourceManager.GetString("ArtistFormat");
             Globals.DefaultAlbumFormat = Globals.ResourceManager.GetString("AlbumFormat");
 

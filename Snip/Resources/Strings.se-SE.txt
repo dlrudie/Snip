@@ -93,6 +93,6 @@ ButtonSave=Spara
 ; uses different dashes or quotation marks then you can alternatively change
 ; them here.
 TrackFormat=“$t”
-SeparatorFormat= ― 
+SeparatorFormat=―
 ArtistFormat=$a
 AlbumFormat=$l
