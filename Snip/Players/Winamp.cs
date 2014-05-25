@@ -22,9 +22,6 @@ namespace Winter
 {
     using System;
     using System.Globalization;
-    using System.IO;
-    using System.Net;
-    using SimpleJson;
 
     internal sealed class Winamp : MediaPlayer
     {

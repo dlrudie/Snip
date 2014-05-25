@@ -22,11 +22,8 @@ namespace Winter
 {
     using System;
     using System.Globalization;
-    using System.IO;
-    using System.Net;
     using System.Windows.Forms;
     using iTunesLib;
-    using SimpleJson;
 
     internal sealed class iTunes : MediaPlayer
     {
