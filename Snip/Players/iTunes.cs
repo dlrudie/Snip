@@ -122,17 +122,17 @@ namespace Winter
             {
                 if (Globals.SaveAlbumArtwork)
                 {
-                    try
+                    IITArtworkCollection artworkCollection = track.Artwork;
+
+                    if (artworkCollection.Count > 0)
                     {
-                        IITArtworkCollection artworkCollection = track.Artwork;
                         IITArtwork artwork = artworkCollection[1];
 
                         artwork.SaveArtworkToFile(this.DefaultArtworkFilePath);
                     }
-                    catch
+                    else
                     {
                         this.SaveBlankImage();
-                        throw;
                     }
                 }
 
