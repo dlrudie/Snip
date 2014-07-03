@@ -1,4 +1,4 @@
-SNIP V4.3.0
+SNIP V4.3.1
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -81,6 +81,9 @@ Not all hotkeys work between Spotify, iTunes, Winamp, and foobar2000.
 
 CHANGES
 =======
+v4.3.1 (2014-Jul-03):
+* Added some exception catching to hopefully narrow down some issues.
+
 v4.3.0 (2014-May-25):
 * Added Swedish translation thanks to Lukas Michanek.
 * Fixed missing leading space on separator.
