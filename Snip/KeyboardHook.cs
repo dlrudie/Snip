@@ -3,6 +3,7 @@
 namespace Winter
 {
     using System;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     public sealed class KeyboardHook : IDisposable
@@ -81,7 +82,7 @@ namespace Winter
             // Register the hot key.
             if (!UnsafeNativeMethods.RegisterHotKey(this.window.Handle, this.currentId, (uint)modifier, (uint)key))
             {
-                throw new InvalidOperationException("Couldn't register the hotkey.");
+                throw new InvalidOperationException("Couldn't register the hotkey.\n\n" + Marshal.GetLastWin32Error());
             }
         }
 
