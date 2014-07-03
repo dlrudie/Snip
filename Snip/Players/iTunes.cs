@@ -36,26 +36,34 @@ namespace Winter
 
         public override void Load()
         {
-            // invoke relies on the form..........................
+            try
+            {
+                this.iTunesApplication = new iTunesApp();
 
-            this.iTunesApplication = new iTunesApp();
-
-            this.iTunesApplication.OnPlayerPlayEvent += new _IiTunesEvents_OnPlayerPlayEventEventHandler(this.App_OnPlayerPlayEvent);
-            this.iTunesApplication.OnPlayerPlayingTrackChangedEvent += new _IiTunesEvents_OnPlayerPlayingTrackChangedEventEventHandler(this.App_OnPlayerPlayingTrackChangedEvent);
-            this.iTunesApplication.OnPlayerStopEvent += new _IiTunesEvents_OnPlayerStopEventEventHandler(this.App_OnPlayerStopEvent);
-            this.iTunesApplication.OnQuittingEvent += new _IiTunesEvents_OnQuittingEventEventHandler(this.App_OnPlayerQuittingEvent);
+                this.iTunesApplication.OnPlayerPlayEvent += new _IiTunesEvents_OnPlayerPlayEventEventHandler(this.App_OnPlayerPlayEvent);
+                this.iTunesApplication.OnPlayerPlayingTrackChangedEvent += new _IiTunesEvents_OnPlayerPlayingTrackChangedEventEventHandler(this.App_OnPlayerPlayingTrackChangedEvent);
+                this.iTunesApplication.OnPlayerStopEvent += new _IiTunesEvents_OnPlayerStopEventEventHandler(this.App_OnPlayerStopEvent);
+                this.iTunesApplication.OnQuittingEvent += new _IiTunesEvents_OnQuittingEventEventHandler(this.App_OnPlayerQuittingEvent);
+            }
+            catch (System.Runtime.InteropServices.COMException comException)
+            {
+                MessageBox.Show(comException.Message, Globals.ResourceManager.GetString("SnipForm"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public override void Unload()
         {
             base.Unload();
 
-            this.iTunesApplication.OnPlayerPlayEvent -= this.App_OnPlayerPlayEvent;
-            this.iTunesApplication.OnPlayerPlayingTrackChangedEvent -= this.App_OnPlayerPlayingTrackChangedEvent;
-            this.iTunesApplication.OnPlayerStopEvent -= this.App_OnPlayerStopEvent;
-            this.iTunesApplication.OnQuittingEvent -= this.App_OnPlayerQuittingEvent;
+            if (this.iTunesApplication != null)
+            {
+                this.iTunesApplication.OnPlayerPlayEvent -= this.App_OnPlayerPlayEvent;
+                this.iTunesApplication.OnPlayerPlayingTrackChangedEvent -= this.App_OnPlayerPlayingTrackChangedEvent;
+                this.iTunesApplication.OnPlayerStopEvent -= this.App_OnPlayerStopEvent;
+                this.iTunesApplication.OnQuittingEvent -= this.App_OnPlayerQuittingEvent;
 
-            this.iTunesApplication = null;
+                this.iTunesApplication = null;
+            }
         }
 
         public override void ChangeToNextTrack()
