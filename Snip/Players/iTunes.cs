@@ -47,7 +47,7 @@ namespace Winter
             }
             catch (System.Runtime.InteropServices.COMException comException)
             {
-                MessageBox.Show(comException.Message, Globals.ResourceManager.GetString("SnipForm"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Globals.ResourceManager.GetString("iTunesException") + "\n\n" + comException.Message, Globals.ResourceManager.GetString("SnipForm"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

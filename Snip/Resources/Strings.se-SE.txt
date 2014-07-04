@@ -68,6 +68,10 @@ SaveTrackHistory=Spara Spårhistorik
 ; will exit the application.
 ExitApplication=Avsluta
 
+; This is an error message that is shown when there is a COM exception caused
+; by iTunes.
+iTunesException=Please exit iTunes and reselect iTunes from within Snip.
+
 ######################
 # Output Format Form #
 ######################
