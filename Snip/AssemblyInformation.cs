@@ -21,6 +21,7 @@
 namespace Winter
 {
     using System;
+    using System.Globalization;
     using System.Reflection;
 
     public static class AssemblyInformation
@@ -70,6 +71,21 @@ namespace Winter
             get
             {
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
+
+        public static string AssemblyShorterVersion
+        {
+            get
+            {
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                string shorterVersion = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "v{0}.{1}.{2}",
+                    version.Major,
+                    version.Minor,
+                    version.Build);
+                return shorterVersion;
             }
         }
     }
