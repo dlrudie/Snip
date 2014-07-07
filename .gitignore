@@ -112,4 +112,4 @@ UpgradeLog*.XML
 *.swp
 Strings.resources
 Strings.*.resources
-
+SignAllTheThings.cmd

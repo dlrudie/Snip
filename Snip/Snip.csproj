@@ -178,14 +178,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Strings.se-SE.txt" />
-    <Content Include="Resources\Strings.txt" />
-    <Content Include="Resources\Strings.fr-FR.txt" />
-    <Content Include="Resources\Strings.nl-NL.txt" />
+    <Resource Include="Resources\Strings.se-SE.txt" />
+    <Resource Include="Resources\Strings.txt" />
+    <Resource Include="Resources\Strings.fr-FR.txt" />
+    <Resource Include="Resources\Strings.nl-NL.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Strings.de-AT.txt" />
+    <Content Include="Resources\Strings.de-CH.txt" />
+    <Content Include="Resources\Strings.de-DE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe" sign /d "Snip" /du "https://impas.se/" /f "$(SolutionDir)codesign.pfx" /t "http://timestamp.verisign.com/scripts/timestamp.dll" /v "$(TargetDir)$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>"$(ProjectDir)ResgenAllTheThings.cmd" $(ProjectDir) $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
