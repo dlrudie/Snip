@@ -82,13 +82,28 @@ namespace Winter
             // Register the hot key.
             if (!UnsafeNativeMethods.RegisterHotKey(this.window.Handle, this.currentId, (uint)modifier, (uint)key))
             {
-                if (Marshal.GetLastWin32Error() == 1409)
+                int lastError = Marshal.GetLastWin32Error();
+
+                if (lastError == 1409)
                 {
                     // ERROR_HOTKEY_ALREADY_REGISTERED
+
+                    // This is a temporary message until I can implement custom hotkeys.
+                    // Even then some kind of message or notification will need to be shown to let the user
+                    // know that the default or chosen hotkey will not work.
+                    MessageBox.Show(
+                        string.Format(
+                            "This hotkey is already registered\n" +
+                            "globally and will be skipped:\n\n{0}, {1}",
+                            modifier.ToString("G"),
+                            key.ToString()),
+                        Globals.ResourceManager.GetString("SnipForm"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
                 }
                 else
                 {
-                    throw new InvalidOperationException("Couldn't register the hotkey: " + Marshal.GetLastWin32Error());
+                    throw new InvalidOperationException("Couldn't register the hotkey: " + lastError);
                 }
             }
         }
