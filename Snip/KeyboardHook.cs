@@ -82,7 +82,14 @@ namespace Winter
             // Register the hot key.
             if (!UnsafeNativeMethods.RegisterHotKey(this.window.Handle, this.currentId, (uint)modifier, (uint)key))
             {
-                throw new InvalidOperationException("Couldn't register the hotkey.\n\n" + Marshal.GetLastWin32Error());
+                if (Marshal.GetLastWin32Error() == 1409)
+                {
+                    // ERROR_HOTKEY_ALREADY_REGISTERED
+                }
+                else
+                {
+                    throw new InvalidOperationException("Couldn't register the hotkey: " + Marshal.GetLastWin32Error());
+                }
             }
         }
 
