@@ -65,18 +65,7 @@ namespace Winter
             this.timerScanMediaPlayer.Enabled = true;
 
             // Register global hotkeys
-            this.keyboardHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(KeyboardHook_KeyPressed);
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemOpenBrackets);    // [
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemCloseBrackets);   // ]
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Oemplus);            // +
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemMinus);           // -
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Enter);              // Enter
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Back);               // Backspace
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M);                  // M
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P);                  // P
-
-            // Debug hotkey
-            this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.D);                  // D
+            this.ToggleHotkeys();
         }
 
         #endregion
@@ -178,6 +167,40 @@ namespace Winter
             }
 
             this.toolStripMenuItemSaveHistory.Checked = Globals.SaveHistory;
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = Globals.EmptyFileIfNoTrackPlaying;
+            this.toolStripMenuItemEnableHotkeys.Checked = Globals.EnableHotkeys;
+        }
+
+        private void ToggleHotkeys()
+        {
+            if (this.toolStripMenuItemEnableHotkeys.Checked)
+            {
+                if (this.keyboardHook == null)
+                {
+                    this.keyboardHook = new KeyboardHook();
+                }
+
+                this.keyboardHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(KeyboardHook_KeyPressed);
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemOpenBrackets);    // [
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemCloseBrackets);   // ]
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Oemplus);            // +
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemMinus);           // -
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Enter);              // Enter
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Back);               // Backspace
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M);                  // M
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P);                  // P
+
+                // Debug hotkey
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.D);                  // D
+            }
+            else
+            {
+                if (this.keyboardHook != null)
+                {
+                    this.keyboardHook.Dispose();
+                    this.keyboardHook = null;
+                }
+            }
         }
 
         private void PlayerSelectionCheck(object sender, EventArgs e)
@@ -433,6 +456,36 @@ namespace Winter
             this.toolStripMenuItemLarge.Checked = true;
 
             Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Large;
+        }
+
+        private void ToolStripMenuItemEmptyFileIfNoTrackPlaying_Click(object sender, EventArgs e)
+        {
+            if (this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked)
+            {
+                this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = false;
+            }
+            else
+            {
+                this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = true;
+            }
+
+            Globals.EmptyFileIfNoTrackPlaying = this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked;
+        }
+
+        private void ToolStripMenuItemEnableHotkeys_Click(object sender, EventArgs e)
+        {
+            if (this.toolStripMenuItemEnableHotkeys.Checked)
+            {
+                this.toolStripMenuItemEnableHotkeys.Checked = false;
+                this.ToggleHotkeys();
+            }
+            else
+            {
+                this.toolStripMenuItemEnableHotkeys.Checked = true;
+                this.ToggleHotkeys();
+            }
+
+            Globals.EnableHotkeys = this.toolStripMenuItemEnableHotkeys.Checked;
         }
 
         #endregion

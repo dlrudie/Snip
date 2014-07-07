@@ -48,6 +48,8 @@ namespace Winter
         public static bool KeepSpotifyAlbumArtwork { get; set; }
         public static AlbumArtworkResolution ArtworkResolution { get; set; }
         public static bool SaveHistory { get; set; }
+        public static bool EmptyFileIfNoTrackPlaying { get; set; }
+        public static bool EnableHotkeys { get; set; }
 
         public static string DefaultTrackFormat { get; set; }
         public static string DefaultSeparatorFormat { get; set; }

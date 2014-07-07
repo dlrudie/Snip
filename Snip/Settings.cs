@@ -76,6 +76,24 @@ namespace Winter
                 registryKey.SetValue("Save History", "false");
             }
 
+            if (Globals.EmptyFileIfNoTrackPlaying)
+            {
+                registryKey.SetValue("Empty File If No Track Playing", "true");
+            }
+            else
+            {
+                registryKey.SetValue("Empty File If No Track Playing", "false");
+            }
+
+            if (Globals.EnableHotkeys)
+            {
+                registryKey.SetValue("Enable Hotkeys", "true");
+            }
+            else
+            {
+                registryKey.SetValue("Enable Hotkeys", "false");
+            }
+
             registryKey.Close();
         }
 
@@ -94,7 +112,6 @@ namespace Winter
                 Globals.PlayerSelection = (Globals.MediaPlayerSelection)registryKey.GetValue("Player", Globals.MediaPlayerSelection.Spotify);
 
                 bool saveSeparateFilesChecked = Convert.ToBoolean(registryKey.GetValue("Save Separate Files", false), CultureInfo.InvariantCulture);
-
                 if (saveSeparateFilesChecked)
                 {
                     Globals.SaveSeparateFiles = true;
@@ -105,7 +122,6 @@ namespace Winter
                 }
 
                 bool saveAlbumArtworkChecked = Convert.ToBoolean(registryKey.GetValue("Save Album Artwork", false), CultureInfo.InvariantCulture);
-
                 if (saveAlbumArtworkChecked)
                 {
                     Globals.SaveAlbumArtwork = true;
@@ -116,7 +132,6 @@ namespace Winter
                 }
 
                 bool keepSpotifyAlbumArtwork = Convert.ToBoolean(registryKey.GetValue("Keep Spotify Album Artwork", false), CultureInfo.InvariantCulture);
-
                 if (keepSpotifyAlbumArtwork)
                 {
                     Globals.KeepSpotifyAlbumArtwork = true;
@@ -129,7 +144,6 @@ namespace Winter
                 Globals.ArtworkResolution = (Globals.AlbumArtworkResolution)registryKey.GetValue("Album Artwork Resolution", Globals.AlbumArtworkResolution.Tiny);
 
                 bool saveHistoryChecked = Convert.ToBoolean(registryKey.GetValue("Save History", false), CultureInfo.InvariantCulture);
-
                 if (saveHistoryChecked)
                 {
                     Globals.SaveHistory = true;
@@ -137,6 +151,26 @@ namespace Winter
                 else
                 {
                     Globals.SaveHistory = false;
+                }
+
+                bool emptyFileIfNoTrackPlayingChecked = Convert.ToBoolean(registryKey.GetValue("Empty File If No Track Playing", true), CultureInfo.InvariantCulture);
+                if (emptyFileIfNoTrackPlayingChecked)
+                {
+                    Globals.EmptyFileIfNoTrackPlaying = true;
+                }
+                else
+                {
+                    Globals.EmptyFileIfNoTrackPlaying = false;
+                }
+
+                bool enableHotkeysChecked = Convert.ToBoolean(registryKey.GetValue("Enable Hotkeys", true), CultureInfo.InvariantCulture);
+                if (enableHotkeysChecked)
+                {
+                    Globals.EnableHotkeys = true;
+                }
+                else
+                {
+                    Globals.EnableHotkeys = false;
                 }
 
                 Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", Globals.DefaultTrackFormat), CultureInfo.CurrentCulture);
@@ -157,6 +191,8 @@ namespace Winter
                 Globals.KeepSpotifyAlbumArtwork = false;
                 Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
                 Globals.SaveHistory = false;
+                Globals.EmptyFileIfNoTrackPlaying = true;
+                Globals.EnableHotkeys = true;
                 Globals.TrackFormat = Globals.DefaultTrackFormat;
                 Globals.SeparatorFormat = Globals.DefaultSeparatorFormat;
                 Globals.ArtistFormat = Globals.DefaultArtistFormat;

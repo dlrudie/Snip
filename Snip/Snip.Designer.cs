@@ -4,24 +4,28 @@
     {
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSnipVersion;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpotify;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemItunes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWinamp;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFoobar2000;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
-        private System.Windows.Forms.Timer timerScanMediaPlayer;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveHistory;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSeparateFiles;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAlbumArtwork;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemKeepSpotifyAlbumArtwork;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTiny;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMedium;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLarge;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveHistory;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEmptyFileIfNoTrackPlaying;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEnableHotkeys;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
+        private System.Windows.Forms.Timer timerScanMediaPlayer;
 
         /// <summary>
         /// Required designer variable.
@@ -59,11 +63,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Snip));
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSnipVersion = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSpotify = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemItunes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWinamp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFoobar2000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSaveSeparateFiles = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,7 +80,9 @@
             this.toolStripMenuItemMedium = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemLarge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveHistory = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEnableHotkeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.timerScanMediaPlayer = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip.SuspendLayout();
@@ -89,21 +97,32 @@
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSnipVersion,
+            this.toolStripSeparator,
             this.toolStripMenuItemSpotify,
             this.toolStripMenuItemItunes,
             this.toolStripMenuItemWinamp,
             this.toolStripMenuItemFoobar2000,
-            this.toolStripSeparator,
+            this.toolStripSeparator1,
             this.toolStripMenuItemSetFormat,
             this.toolStripSeparator2,
             this.toolStripMenuItemSaveSeparateFiles,
             this.toolStripMenuItemSaveAlbumArtwork,
             this.toolStripMenuItemKeepSpotifyAlbumArtwork,
             this.toolStripMenuItemSaveHistory,
-            this.toolStripSeparator1,
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying,
+            this.toolStripMenuItemEnableHotkeys,
+            this.toolStripSeparator3,
             this.toolStripMenuItemExit});
             this.contextMenuStrip.Name = "contextMenuStrip";
             this.contextMenuStrip.Size = new System.Drawing.Size(68, 220);
+            // 
+            // toolStripMenuItemSnipVersion
+            // 
+            this.toolStripMenuItemSnipVersion.Enabled = false;
+            this.toolStripMenuItemSnipVersion.Name = "toolStripMenuItemSnipVersion";
+            this.toolStripMenuItemSnipVersion.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemSnipVersion.Text = Globals.ResourceManager.GetString("SnipForm") + ' ' + AssemblyInformation.AssemblyShorterVersion;
             // 
             // toolStripMenuItemSpotify
             // 
@@ -226,6 +245,29 @@
             this.toolStripMenuItemExit.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemExit.Text = Globals.ResourceManager.GetString("ExitApplication");
             this.toolStripMenuItemExit.Click += new System.EventHandler(this.ToolStripMenuItemExit_Click);
+            // 
+            // toolStripMenuItemEmptyFileIfNoTrackPlaying
+            // 
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = true;
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Name = "toolStripMenuItemEmptyFileIfNoTrackPlaying";
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Text = Globals.ResourceManager.GetString("EmptyFile");
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Click += new System.EventHandler(this.ToolStripMenuItemEmptyFileIfNoTrackPlaying_Click);
+            // 
+            // toolStripMenuItemEnableHotkeys
+            // 
+            this.toolStripMenuItemEnableHotkeys.Checked = true;
+            this.toolStripMenuItemEnableHotkeys.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemEnableHotkeys.Name = "toolStripMenuItemEnableHotkeys";
+            this.toolStripMenuItemEnableHotkeys.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemEnableHotkeys.Text = Globals.ResourceManager.GetString("EnableHotkeys");
+            this.toolStripMenuItemEnableHotkeys.Click += new System.EventHandler(this.ToolStripMenuItemEnableHotkeys_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator3";
+            this.toolStripSeparator.Size = new System.Drawing.Size(64, 6);
             // 
             // timerScanTitle
             // 
