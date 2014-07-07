@@ -14,55 +14,55 @@ foobar2000=foobar2000
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
-SwitchedToSpotify=Omgeschakeld naar Spotify
-SwitchedToiTunes=Omgeschakeld naar iTunes
-SwitchedToWinamp=Omgeschakeld naar Winamp
-SwitchedTofoobar2000=Omgeschakeld naar foobar2000
+SwitchedToSpotify=Auf Spotify gewechselt
+SwitchedToiTunes=Auf iTunes gewechselt
+SwitchedToWinamp=Auf Winamp gewechselt
+SwitchedTofoobar2000=Auf foobar2000 gewechselt
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
-SpotifyIsNotRunning=Spotify draait nu niet
-iTunesNotRunning=iTunes draait nu niet
-WinampIsNotRunning=Winamp draait nu niet
-foobar2000IsNotRunning=foobar2000 draait nu niet
+SpotifyIsNotRunning=Spotify läuft im Moment nicht
+iTunesNotRunning=iTunes läuft im Moment nicht
+WinampIsNotRunning=Winamp läuft gerade nicht
+foobar2000IsNotRunning=foobar2000 läuft gerade nicht
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.
-NoTrackPlaying=Er speelt geen Track
+NoTrackPlaying=Im Moment wird kein Track abgespielt
 
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will open up the "Set Output Format" form where the user can customize how
 ; the text will look when saved to any of the text files.
-SetOutputFormat=Verander output opmaak
+SetOutputFormat=Ausgabeformat festlegen
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will save the artist information and song information to separate text files
 ; on the harddrive.
-SaveInformationSeparately=Sla informatie los op
+SaveInformationSeparately=Information separat speichern
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will download and save album artwork for the currently playing track to the
 ; harddrive.
-SaveAlbumArtwork=Sla Album Artwork op
+SaveAlbumArtwork=Album-Bild speichern
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will save the artwork to a subdirectory using the trackid information
 ; provided by Spotify as the filename.  Each track will save its own album
 ; artwork and the next time that track is played it will use the saved file
 ; instead of redownloading it each time.
-KeepSpotifyAlbumArtwork=Behoud Spotify Album Artwork
+KeepSpotifyAlbumArtwork=Abum-Bild behalten
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
-ImageResolutionTiny=Erg klein
+ImageResolutionTiny=Winzig
 ImageResolutionSmall=Klein
-ImageResolutionMedium=Middel
-ImageResolutionLarge=Groot
+ImageResolutionMedium=Mittel
+ImageResolutionLarge=Gross
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will create a file called Snip_History.txt where it will append each track
 ; played to the end of the file, effectively creating a play history.
-SaveTrackHistory=Sla Track geschiedenis op
+SaveTrackHistory=Track-Verlauf speichern
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will cause Snip.txt to be emptied out when no track is playing.  If this
@@ -77,32 +77,33 @@ EnableHotkeys=Enable Hotkeys
 
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will exit the application.
-ExitApplication=Sluit
+ExitApplication=Beenden
 
 ; This text is displayed in a MessageBox pop-up when there is a COM exception
 ; caused by trying to load the iTunes COM library.
-iTunesException=Please exit iTunes and reselect iTunes from within Snip.
+iTunesException=Bitte beenden Sie iTunes und wählen Sie iTunes in Snip
 
 ######################
 # Output Format Form #
 ######################
 
 ; This text is displayed as the title of the Output Format Form.
-SetOutputFormatForm=Stel output opmaak in
+; SetOutputFormatForm=Set Output Format
+SetOutputFormatForm=Ausgabe-Format festlegen
 
 ; These texts refer to setting how specific output looks when saved to any of
 ; the text files.  The $t, $a, and $l variables will be filled in with the
 ; track, artist, and album information of the currently playing track.
-SetTrackFormat=Stel Track Opmaak in ($t):
-SetSeparatorFormat=Stel scheidingsteken in:
-SetArtistFormat=Stel Artiest Opmaak in ($a):
-SetAlbumFormat=Stel Album Opmaak in($l):
+SetTrackFormat=Track Format festlegen ($t):
+SetSeparatorFormat=Separator Format festlegen:
+SetArtistFormat=Artist Format festlegen ($a):
+SetAlbumFormat=Album Format festlegen ($l):
 
 ; This text is displayed on the buttons within this form.  Clicking the
 ; Defaults button will restore the output format settings to their default
 ; appearance.  Clicking the Save button will save the user-set appearance.
-ButtonDefaults=Standaarden
-ButtonSave=Opslaan
+ButtonDefaults=Voreinstellungen
+ButtonSave=Speichern
 
 ; These will most likely not need to be translated.  However, if your locale
 ; uses different dashes or quotation marks then you can alternatively change
