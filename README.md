@@ -1,4 +1,4 @@
-SNIP V4.3.1
+SNIP V4.4.0
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -81,6 +81,16 @@ Not all hotkeys work between Spotify, iTunes, Winamp, and foobar2000.
 
 CHANGES
 =======
+v4.4.0 (2014-Jul-07):
+* Added version number to context menu.
+* A message will now appear asking the user to exit iTunes if there is an
+    issue loading the iTunes COM library.
+* Fixed issue with not saving information if artwork is missing in iTunes.
+* Added option to enable/disable hotkeys.
+* Added an option to save text that no track is playing.
+* Automated resgen usage to generate .resources files automatically.
+* Removed signing from project and placed it in a separate external script.
+
 v4.3.1 (2014-Jul-03):
 * Added some exception catching to hopefully narrow down some issues.
 
