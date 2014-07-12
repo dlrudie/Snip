@@ -1,8 +1,9 @@
-= Snip Author
+Snip Author
+===========
 David Rudie <d.rudie@gmail.com>
 
-== Contributors
-
+Contributors
+============
 Kailan Blanks (TheKomputerKing)
 MindFlaw
 Azeirah
