@@ -20,4 +20,6 @@ rem for /l %%n in (0,1,6) do (
 rem     copy /Y !fileToResgen[%%n]!.resources "bin\Debug\Resources"
 rem )
 
+if not exist "%targetDir%Resources\nul" mkdir "%targetDir%Resources"
+
 for /f "tokens=2 delims==" %%s in ('set fileToResgen[') do copy /Y %%s.resources "%targetDir%Resources"
