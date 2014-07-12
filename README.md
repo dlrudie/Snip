@@ -1,5 +1,5 @@
-SNIP V4.4.2
-===========
+SNIP
+====
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
 
