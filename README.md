@@ -1,4 +1,4 @@
-SNIP V4.4.1
+SNIP V4.4.2
 ===========
 Copyright 2012-2014 David Rudie <d.rudie@gmail.com>
 Project Page: https://github.com/dlrudie/Snip
@@ -81,6 +81,9 @@ Not all hotkeys work between Spotify, iTunes, Winamp, and foobar2000.
 
 CHANGES
 =======
+**v4.4.2 (2014-Jul-11):**
+* Dropped privilege requirement from Administrator to AsInvoker.
+
 **v4.4.1 (2014-Jul-07):**
 * Alert the user if one of the hotkeys is already registered globally and
   that the hotkey will be skipped by Snip.
