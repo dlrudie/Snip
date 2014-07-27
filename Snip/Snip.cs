@@ -141,6 +141,10 @@ namespace Winter
                 case Globals.MediaPlayerSelection.foobar2000:
                     this.Togglefoobar2000();
                     break;
+
+                case Globals.MediaPlayerSelection.VLC:
+                    this.ToggleVLC();
+                    break;
             }
 
             this.toolStripMenuItemSaveSeparateFiles.Checked = Globals.SaveSeparateFiles;
@@ -221,6 +225,10 @@ namespace Winter
             {
                 this.Togglefoobar2000();
             }
+            else if (sender == this.toolStripMenuItemVlc)
+            {
+                this.ToggleVLC();
+            }
         }
 
         private void ToggleSpotify()
@@ -229,6 +237,7 @@ namespace Winter
             this.toolStripMenuItemItunes.Checked = false;
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
+            this.toolStripMenuItemVlc.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Spotify();
@@ -244,6 +253,7 @@ namespace Winter
             this.toolStripMenuItemItunes.Checked = true;
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
+            this.toolStripMenuItemVlc.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new iTunes();
@@ -259,6 +269,7 @@ namespace Winter
             this.toolStripMenuItemItunes.Checked = false;
             this.toolStripMenuItemWinamp.Checked = true;
             this.toolStripMenuItemFoobar2000.Checked = false;
+            this.toolStripMenuItemVlc.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Winamp();
@@ -274,6 +285,7 @@ namespace Winter
             this.toolStripMenuItemItunes.Checked = false;
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = true;
+            this.toolStripMenuItemVlc.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new foobar2000();
@@ -281,6 +293,22 @@ namespace Winter
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.foobar2000;
             TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedTofoobar2000"));
+        }
+
+        private void ToggleVLC()
+        {
+            this.toolStripMenuItemSpotify.Checked = false;
+            this.toolStripMenuItemItunes.Checked = false;
+            this.toolStripMenuItemWinamp.Checked = false;
+            this.toolStripMenuItemFoobar2000.Checked = false;
+            this.toolStripMenuItemVlc.Checked = true;
+
+            Globals.CurrentPlayer.Unload();
+            Globals.CurrentPlayer = new VLC();
+            Globals.CurrentPlayer.Load();
+
+            Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
+            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedToVLC"));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)

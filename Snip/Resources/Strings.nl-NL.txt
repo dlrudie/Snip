@@ -11,6 +11,7 @@ Spotify=Spotify
 iTunes=iTunes
 Winamp=Winamp
 foobar2000=foobar2000
+VLC=VLC
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
@@ -18,6 +19,7 @@ SwitchedToSpotify=Omgeschakeld naar Spotify
 SwitchedToiTunes=Omgeschakeld naar iTunes
 SwitchedToWinamp=Omgeschakeld naar Winamp
 SwitchedTofoobar2000=Omgeschakeld naar foobar2000
+SwitchedToVLC=Omgeschakeld naar VLC
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
@@ -25,6 +27,7 @@ SpotifyIsNotRunning=Spotify draait nu niet
 iTunesNotRunning=iTunes draait nu niet
 WinampIsNotRunning=Winamp draait nu niet
 foobar2000IsNotRunning=foobar2000 draait nu niet
+VLCIsNotRunning=VLC draait nu niet
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.

@@ -45,8 +45,8 @@ Then you need to edit the formatting to look like this:
 
 Note
 ----
-The hyphen used is an En Dash character!  Snip uses this character internally
-to split the text apart so make sure you use this En Dash character or Snip
+The hyphen used is an en dash character!  Snip uses this character internally
+to split the text apart so make sure you use this en dash character or Snip
 will not read it correctly!
 
 FOOBAR2000
@@ -61,9 +61,16 @@ of the window you will need to change "Window title" to look like this:
 
 Note
 ----
-The hyphen used is an En Dash character!  Snip uses this character internally
-to split the text apart so make sure you use this En Dash character or Snip
+The hyphen used is an en dash character!  Snip uses this character internally
+to split the text apart so make sure you use this en dash character or Snip
 will not read it correctly!
+
+VLC
+===
+Snip looks for the window class and "VLC media player" window title to
+determine if VLC is running.  If the title bar is anything different then it
+will not be found.  If a track is currently playing when you start Snip you
+just have to push stop and Snip will find VLC.
 
 HOTKEYS
 =======
@@ -77,4 +84,4 @@ HOTKEYS
 
 Note
 ----
-Not all hotkeys work between Spotify, iTunes, Winamp, and foobar2000.
+Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, and VLC.

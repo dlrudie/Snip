@@ -1,5 +1,8 @@
 CHANGES
 =======
+**v4.5.0 (2014-Jul-27):**
+* Added support for VLC.
+
 **v4.4.2 (2014-Jul-11):**
 * Dropped privilege requirement from Administrator to AsInvoker.
 
