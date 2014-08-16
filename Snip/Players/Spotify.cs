@@ -85,13 +85,25 @@ namespace Winter
                                 string songTitle = windowTitle[1].Trim();
                                 songTitle = songTitle.Replace(" - Explicit Album Version", string.Empty);
 
-                                if (Globals.SaveAlbumArtwork)
+                                if (Globals.SaveAlbumArtwork || Globals.SaveSeparateFiles)
                                 {
                                     this.DownloadJson(artist, songTitle);
+                                }
+
+                                if (Globals.SaveAlbumArtwork)
+                                {
                                     this.HandleSpotifyAlbumArtwork(songTitle);
                                 }
 
-                                TextHandler.UpdateText(songTitle, artist);
+                                if (Globals.SaveSeparateFiles)
+                                {
+                                    string album = this.HandleSpotifyAlbumName();
+                                    TextHandler.UpdateText(songTitle, artist, album);
+                                }
+                                else
+                                {
+                                    TextHandler.UpdateText(songTitle, artist);
+                                }
                             }
 
                             this.LastTitle = spotifyTitle;
@@ -208,6 +220,32 @@ namespace Winter
                     this.json = string.Empty;
                     this.SaveBlankImage();
                 }
+            }
+        }
+
+        private string HandleSpotifyAlbumName()
+        {
+            if (!string.IsNullOrEmpty(this.json))
+            {
+                dynamic jsonSummary = SimpleJson.DeserializeObject(json);
+
+                if (jsonSummary != null)
+                {
+                    jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+
+                    foreach (dynamic jsonTrack in jsonSummary)
+                    {
+                        dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
+
+                        return jsonAlbum.name.ToString();
+                    }
+                }
+
+                return string.Empty;
+            }
+            else
+            {
+                return string.Empty;
             }
         }
 

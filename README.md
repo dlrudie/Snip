@@ -24,7 +24,7 @@ called Snip_History.txt.
 
 SUPPORTED FEATURES FOR PLAYERS
 ==============================
-* **Spotify:** Artist, Track, Artwork
+* **Spotify:** Artist, Track, Album, Artwork
 * **iTunes:** Artist, Track, Album, Artwork
 * **Winamp:** Artist, Track
 * **foobar2000:** Artist, Track
@@ -87,6 +87,7 @@ HOTKEYS
 * **Volume Up:** Ctrl, Alt, +
 * **Volume Down:** Ctrl, Alt, -
 * **Mute Track:** Ctrl, Alt, M
+* **Pause Track:** Ctrl, Alt, P
 * **Play/Pause Track:** Ctrl, Alt, Enter
 * **Stop Track:** Ctrl, Alt, Backspace
 
