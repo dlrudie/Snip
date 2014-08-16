@@ -107,10 +107,6 @@ namespace Winter
                 case Keys.Back:
                     Globals.CurrentPlayer.StopTrack();
                     break;
-
-                case Keys.D:
-                    Debug.ToggleDebugging();
-                    break;
             }
         }
 
@@ -193,9 +189,6 @@ namespace Winter
                 this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Back);               // Backspace
                 this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M);                  // M
                 this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P);                  // P
-
-                // Debug hotkey
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.D);                  // D
             }
             else
             {

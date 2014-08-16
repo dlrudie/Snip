@@ -71,14 +71,7 @@ namespace Winter
                                     this.SaveBlankImage();
                                 }
 
-                                if (Globals.DebuggingIsEnabled)
-                                {
-                                    Debug.MeasureMethod(TextHandler.UpdateText, windowTitleFull.Trim());
-                                }
-                                else
-                                {
-                                    TextHandler.UpdateText(windowTitleFull.Trim());
-                                }
+                                TextHandler.UpdateText(windowTitleFull.Trim());
                             }
 
                             this.LastTitle = vlcTitle;

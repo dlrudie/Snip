@@ -136,25 +136,11 @@ namespace Winter
                     }
                 }
 
-                if (Globals.DebuggingIsEnabled)
-                {
-                    Debug.MeasureMethod(TextHandler.UpdateText, new object[] { track.Name, track.Artist, track.Album });
-                }
-                else
-                {
-                    TextHandler.UpdateText(new object[] { track.Name, track.Artist, track.Album });
-                }
+                TextHandler.UpdateText(track.Name, track.Artist, track.Album);
             }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
-                if (Globals.DebuggingIsEnabled)
-                {
-                    Debug.MeasureMethod(TextHandler.UpdateText, this.iTunesApplication.CurrentStreamTitle);
-                }
-                else
-                {
-                    TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
-                }
+                TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
             }
         }
 
@@ -180,25 +166,11 @@ namespace Winter
                     }
                 }
 
-                if (Globals.DebuggingIsEnabled)
-                {
-                    Debug.MeasureMethod(TextHandler.UpdateText, new object[] { track.Name, track.Artist, track.Album });
-                }
-                else
-                {
-                    TextHandler.UpdateText(new object[] { track.Name, track.Artist, track.Album });
-                }
+                TextHandler.UpdateText(track.Name, track.Artist, track.Album);
             }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
-                if (Globals.DebuggingIsEnabled)
-                {
-                    Debug.MeasureMethod(TextHandler.UpdateText, this.iTunesApplication.CurrentStreamTitle);
-                }
-                else
-                {
-                    TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
-                }
+                TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
             }
         }
 
