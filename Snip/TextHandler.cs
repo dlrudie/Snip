@@ -68,6 +68,13 @@ namespace Winter
             }
 
             File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
+
+            if (Globals.SaveSeparateFiles)
+            {
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", string.Empty);
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", string.Empty);
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", string.Empty);
+            }
         }
 
         public static void UpdateText(string text)
@@ -115,11 +122,7 @@ namespace Winter
                 {
                     File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
                     File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
-
-                    if (!string.IsNullOrEmpty(album))
-                    {
-                        File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
-                    }
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
                 }
 
                 // If saving track history is enabled, append that information to a separate file.
