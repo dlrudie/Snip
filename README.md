@@ -23,7 +23,7 @@ and if you choose to save track history then it will be saved to a file
 called Snip_History.txt.
 
 SUPPORTED FEATURES FOR PLAYERS
-==============================
+------------------------------
 * **Spotify:** Artist, Track, Album, Artwork
 * **iTunes:** Artist, Track, Album, Artwork
 * **Winamp:** Artist, Track
