@@ -22,6 +22,14 @@ then the files will be called Snip_Arist.txt, Snip_Track.txt, Snip_Album.txt,
 and if you choose to save track history then it will be saved to a file
 called Snip_History.txt.
 
+SUPPORTED FEATURES FOR PLAYERS
+==============================
+* **Spotify:** Artist, Track, Artwork
+* **iTunes:** Artist, Track, Album, Artwork
+* **Winamp:** Artist, Track
+* **foobar2000:** Artist, Track
+* **VLC:** Nothing (It uses whatever the titlebar says)
+
 WINAMP
 ======
 For Winamp support to work properly you must change some options.
