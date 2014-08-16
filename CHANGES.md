@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v4.6.0 (2014-Aug-16):**
+* Fixed artist, track, and album files not being emptied out.
+* Removed hidden debugging option to track execution times of methods.
+* Cleaned up code for Spotify to cut down on complexity.
+* Added support for saving the album name when using Spotify.
+
 **v4.5.0 (2014-Jul-27):**
 * Added support for VLC.
 
