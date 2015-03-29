@@ -18,16 +18,22 @@
  */
 #endregion
 
+using System.Net.NetworkInformation;
+using System.Threading;
+using System.Windows.Forms.VisualStyles;
+using SpotifyAPI.SpotifyLocalAPI;
+
 namespace Winter
 {
+    using SimpleJson;
     using System;
     using System.ComponentModel;
     using System.Globalization;
     using System.IO;
+    using System.Threading;
     using System.Net;
-    using System.Windows.Forms;
     using System.Web;
-    using SimpleJson;
+    using System.Windows.Forms;
 
     internal sealed class Spotify : MediaPlayer
     {
@@ -44,22 +50,102 @@ namespace Winter
             }
             else
             {
-                // Make sure the process is still valid.
-                if (this.Handle != IntPtr.Zero && this.Handle != null)
-                {
-                    int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title, this.Title.Capacity);
+                    SpotifyLocalAPIClass spotify = new SpotifyLocalAPIClass();
+                    spotify.RunSpotify();
+                    Thread.Sleep(3);
 
-                    string spotifyTitle = this.Title.ToString();
-
-                    this.Title.Clear();
-
-                    // If the window title length is 0 then the process handle is not valid.
-                    if (windowTextLength > 0)
+                    if (!spotify.Connect())
                     {
-                        // Only update the system tray text and text file text if the title changes.
-                        if (spotifyTitle != this.LastTitle)
+                        Boolean retry = true;
+                        while (retry)
                         {
-                            if (spotifyTitle == "Spotify")
+                            if (
+                                MessageBox.Show("SpotifyLocalAPIClass could'nt load!", "Error",
+                                    MessageBoxButtons.RetryCancel) == System.Windows.Forms.DialogResult.Retry)
+                            {
+                                if (spotify.Connect())
+                                    retry = false;
+                                else
+                                    retry = true;
+                            }
+                        }
+                    }
+
+                    // Make sure the process is still valid.
+                    if (this.Handle != IntPtr.Zero && this.Handle != null)
+                    {
+                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title,
+                            this.Title.Capacity);
+
+                        this.Title.Clear();
+
+                        // If the window title length is 0 then the process handle is not valid.
+                        if (windowTextLength > 0)
+                        {
+                            spotify.Update();
+                            if (spotify.GetMusicHandler().GetCurrentTrack() != null)
+                            {
+
+                                string spotifyTitle = spotify.GetMusicHandler().GetCurrentTrack().GetTrackName();
+                                // Only update the system tray text and text file text if the title changes.
+                                if (spotifyTitle != this.LastTitle)
+                                {
+                                    if (spotifyTitle == "Spotify")
+                                    {
+                                        if (Globals.SaveAlbumArtwork)
+                                        {
+                                            this.SaveBlankImage();
+                                        }
+
+                                        if (Globals.EmptyFileIfNoTrackPlaying)
+                                        {
+                                            TextHandler.UpdateTextAndEmptyFile(
+                                                Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                        }
+                                        else
+                                        {
+                                            TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Spotify window titles look like "Spotify - Artist – Song Title".
+                                        spotify.Update();
+                                        if (spotify.GetMusicHandler().GetCurrentTrack() != null)
+                                        {
+                                            string songTitle =
+                                                spotify.GetMusicHandler().GetCurrentTrack().GetTrackName();
+                                            string artist = spotify.GetMusicHandler().GetCurrentTrack().GetArtistName();
+
+                                            if (Globals.SaveAlbumArtwork || Globals.SaveSeparateFiles)
+                                            {
+                                                this.DownloadJson(artist, songTitle);
+                                            }
+
+                                            if (Globals.SaveAlbumArtwork)
+                                            {
+                                                this.HandleSpotifyAlbumArtwork(songTitle);
+                                            }
+
+                                            if (Globals.SaveSeparateFiles)
+                                            {
+                                                string album = this.HandleSpotifyAlbumName();
+                                                TextHandler.UpdateText(songTitle, artist, album);
+                                            }
+                                            else
+                                            {
+                                                TextHandler.UpdateText(songTitle, artist);
+                                            }
+                                        }
+                                    }
+
+                                    this.LastTitle = spotifyTitle;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!this.NotRunning)
                             {
                                 if (Globals.SaveAlbumArtwork)
                                 {
@@ -68,45 +154,17 @@ namespace Winter
 
                                 if (Globals.EmptyFileIfNoTrackPlaying)
                                 {
-                                    TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                    TextHandler.UpdateTextAndEmptyFile(
+                                        Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
                                 }
                                 else
                                 {
-                                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                    TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
                                 }
+
+                                this.Found = false;
+                                this.NotRunning = true;
                             }
-                            else
-                            {
-                                // Spotify window titles look like "Spotify - Artist – Song Title".
-                                string windowTitleFull = spotifyTitle.Replace("Spotify - ", string.Empty);
-                                string[] windowTitle = windowTitleFull.Split('–');
-
-                                string artist = windowTitle[0].Trim();
-                                string songTitle = windowTitle[1].Trim();
-                                songTitle = songTitle.Replace(" - Explicit Album Version", string.Empty);
-
-                                if (Globals.SaveAlbumArtwork || Globals.SaveSeparateFiles)
-                                {
-                                    this.DownloadJson(artist, songTitle);
-                                }
-
-                                if (Globals.SaveAlbumArtwork)
-                                {
-                                    this.HandleSpotifyAlbumArtwork(songTitle);
-                                }
-
-                                if (Globals.SaveSeparateFiles)
-                                {
-                                    string album = this.HandleSpotifyAlbumName();
-                                    TextHandler.UpdateText(songTitle, artist, album);
-                                }
-                                else
-                                {
-                                    TextHandler.UpdateText(songTitle, artist);
-                                }
-                            }
-
-                            this.LastTitle = spotifyTitle;
                         }
                     }
                     else
@@ -120,7 +178,8 @@ namespace Winter
 
                             if (Globals.EmptyFileIfNoTrackPlaying)
                             {
-                                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+                                TextHandler.UpdateTextAndEmptyFile(
+                                    Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
                             }
                             else
                             {
@@ -132,30 +191,8 @@ namespace Winter
                         }
                     }
                 }
-                else
-                {
-                    if (!this.NotRunning)
-                    {
-                        if (Globals.SaveAlbumArtwork)
-                        {
-                            this.SaveBlankImage();
-                        }
-
-                        if (Globals.EmptyFileIfNoTrackPlaying)
-                        {
-                            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
-                        }
-                        else
-                        {
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
-                        }
-
-                        this.Found = false;
-                        this.NotRunning = true;
-                    }
-                }
             }
-        }
+        
 
         public override void Unload()
         {
