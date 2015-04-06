@@ -21,7 +21,6 @@
 namespace Winter
 {
     using System;
-    using System.Collections;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -30,8 +29,6 @@ namespace Winter
 
     public static class TextHandler
     {
-        private static Hashtable previousText = new Hashtable();
-         
         // This will set the notify icon text correctly if it's over 64 characters long, and truncate it if it's over 128.
         public static void SetNotifyIconText(string text)
         {
@@ -63,13 +60,13 @@ namespace Winter
         {
             SetNotifyIconText(text);
 
-            WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
+            File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
 
             if (Globals.SaveSeparateFiles)
             {
-                WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", string.Empty);
-                WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", string.Empty);
-                WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", string.Empty);
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", string.Empty);
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", string.Empty);
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", string.Empty);
             }
         }
 
@@ -79,7 +76,7 @@ namespace Winter
             SetNotifyIconText(text);
 
             // Write the song title and artist to a text file.
-            WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
+            File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
         }
 
         public static void UpdateText(string title, string artist)
@@ -103,44 +100,21 @@ namespace Winter
             SetNotifyIconText(output);
 
             // Write the song title and artist to a text file.
-            WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
+            File.WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
 
             // Check if we want to save artist and track to separate files.
             if (Globals.SaveSeparateFiles)
             {
-                WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
-                WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
-                WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
+                File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
             }
 
             // If saving track history is enabled, append that information to a separate file.
             if (Globals.SaveHistory)
             {
-                AppendAllText(@Application.StartupPath + @"\Snip_History.txt", output + Environment.NewLine);
+                File.AppendAllText(@Application.StartupPath + @"\Snip_History.txt", output + Environment.NewLine);
             }
-        }
-        
-        private static void WriteAllText(string path, string output)
-        {
-            WriteOrAppendAllText(path, output, false);
-        }
-
-        private static void AppendAllText(string path, string output)
-        {
-            WriteOrAppendAllText(path, output, true);
-        }
-
-        private static void WriteOrAppendAllText(string path, string output, bool append)
-        {
-            string prevValue = null;
-            if (previousText.ContainsKey(path))
-                prevValue = previousText[path].ToString();
-            if (output != prevValue)
-                if (append)
-                    File.AppendAllText(path, output);
-                else
-                    File.WriteAllText(path, output);
-            previousText[path] = output;
         }
 
         public static string UnifyTitles(string title)
