@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set sourceDir=%1
-set targetDir=%2
+set sourceDir=%~1
+set targetDir=%~2
 
 set resgenPath="C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\resgen.exe"
 
