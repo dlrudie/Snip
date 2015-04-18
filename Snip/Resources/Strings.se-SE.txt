@@ -71,12 +71,12 @@ SaveTrackHistory=Spara spårhistorik
 ; will cause Snip.txt to be emptied out when no track is playing.  If this
 ; option is disabled then the text from "NoTrackPlaying" will be saved to
 ; Snip.txt.
-EmptyFile=Empty File If No Track Playing
+EmptyFile=Töm fil om inget spelas
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will cause Snip to register global hotkeys that can be used to control the
 ; selected media player from anywhere.
-EnableHotkeys=Enable Hotkeys
+EnableHotkeys=Sätt på kortkommandon
 
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will exit the application.
@@ -84,7 +84,7 @@ ExitApplication=Avsluta
 
 ; This text is displayed in a MessageBox pop-up when there is a COM exception
 ; caused by trying to load the iTunes COM library.
-iTunesException=Please exit iTunes and reselect iTunes from within Snip.
+iTunesException=Var god avsluta iTunes och välj iTunes igen innuti Snip.
 
 ######################
 # Output Format Form #
