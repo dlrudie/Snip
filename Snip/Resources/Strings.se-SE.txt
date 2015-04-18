@@ -31,33 +31,33 @@ VLCIsNotRunning=VLC körs inte just nu
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.
-NoTrackPlaying=Inget Spår Spelas
+NoTrackPlaying=Inget spår spelas
 
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will open up the "Set Output Format" form where the user can customize how
 ; the text will look when saved to any of the text files.
-SetOutputFormat=Ställ In Utgående Format
+SetOutputFormat=Ställ in utgående format
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will save the artist information and song information to separate text files
 ; on the harddrive.
-SaveInformationSeparately=Spara Information Separat
+SaveInformationSeparately=Spara information separat
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will download and save album artwork for the currently playing track to the
 ; harddrive.
-SaveAlbumArtwork=Spara Albumgrafik
+SaveAlbumArtwork=Spara albumgrafik
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will save the artwork to a subdirectory using the trackid information
 ; provided by Spotify as the filename.  Each track will save its own album
 ; artwork and the next time that track is played it will use the saved file
 ; instead of redownloading it each time.
-KeepSpotifyAlbumArtwork=Spara Spotify Albumgrafik
+KeepSpotifyAlbumArtwork=Spara Spotify albumgrafik
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
-ImageResolutionTiny=Mycket Liten
+ImageResolutionTiny=Mycket liten
 ImageResolutionSmall=Liten
 ImageResolutionMedium=Mellan
 ImageResolutionLarge=Stor
@@ -65,7 +65,7 @@ ImageResolutionLarge=Stor
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will create a file called Snip_History.txt where it will append each track
 ; played to the end of the file, effectively creating a play history.
-SaveTrackHistory=Spara Spårhistorik
+SaveTrackHistory=Spara spårhistorik
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will cause Snip.txt to be emptied out when no track is playing.  If this
@@ -91,15 +91,15 @@ iTunesException=Please exit iTunes and reselect iTunes from within Snip.
 ######################
 
 ; This text is displayed as the title of the Output Format Form.
-SetOutputFormatForm=Ställ In Utgående Format
+SetOutputFormatForm=Ställ in utgående format
 
 ; These texts refer to setting how specific output looks when saved to any of
 ; the text files.  The $t, $a, and $l variables will be filled in with the
 ; track, artist, and album information of the currently playing track.
-SetTrackFormat=Ställ In Spårformat ($t):
-SetSeparatorFormat=Ställ In Separatorformat:
-SetArtistFormat=Ställ In Artistformat ($a):
-SetAlbumFormat=Ställ In Albumformat ($l):
+SetTrackFormat=Ställ in spårformat ($t):
+SetSeparatorFormat=Ställ in separatorformat:
+SetArtistFormat=Ställ in artistformat ($a):
+SetAlbumFormat=Ställ in albumformat ($l):
 
 ; This text is displayed on the buttons within this form.  Clicking the
 ; Defaults button will restore the output format settings to their default
