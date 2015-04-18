@@ -46,14 +46,14 @@ SaveInformationSeparately=Spara information separat
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will download and save album artwork for the currently playing track to the
 ; harddrive.
-SaveAlbumArtwork=Spara albumgrafik
+SaveAlbumArtwork=Spara omslagsbild
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will save the artwork to a subdirectory using the trackid information
 ; provided by Spotify as the filename.  Each track will save its own album
 ; artwork and the next time that track is played it will use the saved file
 ; instead of redownloading it each time.
-KeepSpotifyAlbumArtwork=Spara Spotify albumgrafik
+KeepSpotifyAlbumArtwork=Spara Spotify-omslagsbild
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
@@ -97,7 +97,7 @@ SetOutputFormatForm=Ställ in utgående format
 ; the text files.  The $t, $a, and $l variables will be filled in with the
 ; track, artist, and album information of the currently playing track.
 SetTrackFormat=Ställ in spårformat ($t):
-SetSeparatorFormat=Ställ in separatorformat:
+SetSeparatorFormat=Ställ in särskiljningsformat:
 SetArtistFormat=Ställ in artistformat ($a):
 SetAlbumFormat=Ställ in albumformat ($l):
 
