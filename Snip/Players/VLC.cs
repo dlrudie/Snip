@@ -53,14 +53,7 @@ namespace Winter
                         {
                             if (vlcTitle.Equals("VLC media player"))
                             {
-                                if (Globals.EmptyFileIfNoTrackPlaying)
-                                {
-                                    TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
-                                else
-                                {
-                                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
+                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -86,14 +79,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            if (Globals.EmptyFileIfNoTrackPlaying)
-                            {
-                                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("VLCIsNotRunning"));
-                            }
-                            else
-                            {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("VLCIsNotRunning"));
-                            }
+                            TextHandler.UpdateText(Globals.ResourceManager.GetString("VLCIsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -109,14 +95,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        if (Globals.EmptyFileIfNoTrackPlaying)
-                        {
-                            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("VLCIsNotRunning"));
-                        }
-                        else
-                        {
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("VLCIsNotRunning"));
-                        }
+                        TextHandler.UpdateText(Globals.ResourceManager.GetString("VLCIsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;

@@ -65,14 +65,7 @@ namespace Winter
                         {
                             if (foobar2000Title.StartsWith("foobar2000", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (Globals.EmptyFileIfNoTrackPlaying)
-                                {
-                                    TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
-                                else
-                                {
-                                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
+                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -113,14 +106,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            if (Globals.EmptyFileIfNoTrackPlaying)
-                            {
-                                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
-                            }
-                            else
-                            {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
-                            }
+                            TextHandler.UpdateText(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -136,14 +122,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        if (Globals.EmptyFileIfNoTrackPlaying)
-                        {
-                            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
-                        }
-                        else
-                        {
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
-                        }
+                        TextHandler.UpdateText(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;

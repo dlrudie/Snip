@@ -37,25 +37,26 @@ namespace Winter
         private string csrfToken = string.Empty;
 
         private string trackTitle = string.Empty;
-        private string trackTitleLast = string.Empty;
         private string trackArtist = string.Empty;
-        private string trackArtistLast = string.Empty;
         private string trackAlbum = string.Empty;
-        private string trackAlbumLast = string.Empty;
 
         private bool spotifyIsPaused = false;
 
+        private bool spotifyTokensObtained = false;
+
         public override void Load()
         {
-            this.RunSpotifyWebHelperIfNotRunning();
+            RunSpotifyWebHelperIfNotRunning();
 
             //this.SpotifyAvailabilityChanged += Spotify_SpotifyAvailabilityChanged;
             //this.SpotifyPlayStateChanged += Spotify_SpotifyPlayStateChanged;
-            //this.SpotifyTrackChanged += Spotify_SpotifyTrackChanged;
+            this.SpotifyTrackChanged += Spotify_SpotifyTrackChanged;
         }
 
         public override void Update()
         {
+            /*
+            // Spotify and the helper are not running but it's available.
             if ((!IsSpotifyRunning || !IsSpotifyWebHelperRunning) && IsSpotifyAvailable)
             {
                 this.IsSpotifyAvailable = false;
@@ -66,6 +67,7 @@ namespace Winter
                 }
             }
 
+            // Spotify and the helper are running but are not available.
             if (IsSpotifyRunning && IsSpotifyWebHelperRunning && !IsSpotifyAvailable)
             {
                 this.IsSpotifyAvailable = true;
@@ -78,55 +80,83 @@ namespace Winter
                 this.UpdateTokens();
             }
 
-            if (this.IsSpotifyRunning && !this.IsSpotifyWebHelperRunning)
+            // Spotify is running but the helper is not.
+            if (IsSpotifyRunning && !IsSpotifyWebHelperRunning)
             {
-                this.RunSpotifyWebHelperIfNotRunning();
+                RunSpotifyWebHelperIfNotRunning();
 
                 return;
             }
 
-            if (!this.IsSpotifyAvailable)
+            // Spotify is not available at all.
+            if (!IsSpotifyRunning && !IsSpotifyWebHelperRunning)
             {
+                TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+
                 return;
+            }*/
+
+            if (!IsSpotifyWebHelperRunning)
+            {
+                RunSpotifyWebHelperIfNotRunning();
+
+                return;
+            }
+
+            if (!IsSpotifyRunning)
+            {
+                TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+
+                return;
+            }
+
+            if (!this.spotifyTokensObtained)
+            {
+                this.spotifyTokensObtained = true;
+
+                this.UpdateTokens();
             }
 
             string json = this.QueryWebHelperStatus();
             dynamic jsonSummary = SimpleJson.DeserializeObject(json);
 
+            bool playingStatusCurrent = false;
+
             if (jsonSummary != null)
             {
-                this.trackTitle = jsonSummary.track.track_resource.name;
-                this.trackArtist = jsonSummary.track.artist_resource.name;
-                this.trackAlbum = jsonSummary.track.album_resource.name;
+                playingStatusCurrent = jsonSummary.playing;
 
-                if (this.trackTitle != this.trackTitleLast &&
-                    this.trackArtist != this.trackArtistLast &&
-                    this.trackAlbum != this.trackAlbumLast)
+                if (playingStatusCurrent == true)
                 {
-                    this.trackTitleLast = this.trackTitle;
-                    this.trackArtistLast = this.trackArtist;
-                    this.trackAlbumLast = this.trackAlbum;
+                    this.trackTitle = jsonSummary.track.track_resource.name;
+                    this.trackArtist = jsonSummary.track.artist_resource.name;
+                    this.trackAlbum = jsonSummary.track.album_resource.name;
 
-                    TextHandler.UpdateText(this.trackTitle, this.trackArtist, this.trackAlbum);
+                    if (this.SpotifyTrackChanged != null)
+                    {
+                        this.SpotifyTrackChanged(this, EventArgs.Empty);
+                    }
+                }
+                else
+                {
+                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
                 }
             }
         }
 
         public override void PlayOrPauseTrack()
         {
-            if (this.IsSpotifyRunning && this.IsSpotifyWebHelperRunning)
+            if (IsSpotifyRunning && IsSpotifyWebHelperRunning)
             {
-                string pause = string.Empty;
-
                 if (this.spotifyIsPaused)
                 {
-                    pause = this.QueryWebHelper("remote/pause.json", true, true, "pause=false");
+                    this.QueryWebHelper("remote/pause.json", true, true, "pause=false");
 
                     this.spotifyIsPaused = false;
                 }
                 else
                 {
-                    pause = this.QueryWebHelper("remote/pause.json", true, true, "pause=true");
+                    this.QueryWebHelper("remote/pause.json", true, true, "pause=true");
 
                     this.spotifyIsPaused = true;
                 }
@@ -139,10 +169,22 @@ namespace Winter
 
             //this.SpotifyAvailabilityChanged -= Spotify_SpotifyAvailabilityChanged;
             //this.SpotifyPlayStateChanged -= Spotify_SpotifyPlayStateChanged;
-            //this.SpotifyTrackChanged -= Spotify_SpotifyTrackChanged;
+            this.SpotifyTrackChanged -= Spotify_SpotifyTrackChanged;
+
+            this.spotifyTokensObtained = false;
         }
 
-        private event EventHandler SpotifyAvailabilityChanged;
+        //private event EventHandler SpotifyAvailabilityChanged;
+        private event EventHandler SpotifyTrackChanged;
+
+        private void Spotify_SpotifyTrackChanged(object sender, EventArgs e)
+        {
+            TextHandler.UpdateText(this.trackTitle, this.trackArtist, this.trackAlbum);
+        }
+
+        private void Spotify_SpotifyAvailabilityChanged(object sender, EventArgs e)
+        {
+        }
 
         private bool IsSpotifyAvailable
         {
@@ -150,7 +192,7 @@ namespace Winter
             set;
         }
 
-        private bool IsSpotifyRunning
+        private static bool IsSpotifyRunning
         {
             get
             {
@@ -158,7 +200,7 @@ namespace Winter
             }
         }
 
-        private bool IsSpotifyWebHelperRunning
+        private static bool IsSpotifyWebHelperRunning
         {
             get
             {
@@ -169,7 +211,7 @@ namespace Winter
         private void UpdateTokens()
         {
             this.csrfToken = this.GetCFIDToken();
-            this.oauthToken = this.GetOAuthToken();
+            this.oauthToken = GetOAuthToken();
         }
 
         private string GetCFIDToken()
@@ -191,7 +233,7 @@ namespace Winter
             return token;
         }
 
-        private string GetOAuthToken()
+        private static string GetOAuthToken()
         {
             string json = string.Empty;
             var token = string.Empty;
@@ -214,17 +256,17 @@ namespace Winter
             return token;
         }
 
-        private void RunSpotifyIfNotRunning()
+        private static void RunSpotifyIfNotRunning()
         {
-            if (!this.IsSpotifyRunning)
+            if (!IsSpotifyRunning)
             {
                 Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Spotify\spotify.exe");
             }
         }
 
-        private void RunSpotifyWebHelperIfNotRunning()
+        private static void RunSpotifyWebHelperIfNotRunning()
         {
-            if (!this.IsSpotifyWebHelperRunning)
+            if (!IsSpotifyWebHelperRunning)
             {
                 Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Spotify\Data\SpotifyWebHelper.exe");
             }
@@ -255,7 +297,7 @@ namespace Winter
 
             if (!string.IsNullOrEmpty(extraParameters))
             {
-                parameters = string.Format("?{0}&ref=&cors=&_=" + Convert.ToInt32((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds), extraParameters);
+                parameters = string.Format(CultureInfo.InvariantCulture, "?{0}&ref=&cors=&_=" + Convert.ToInt32((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds), extraParameters);
             }
             else
             {

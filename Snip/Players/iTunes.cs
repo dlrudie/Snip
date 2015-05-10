@@ -181,14 +181,7 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            if (Globals.EmptyFileIfNoTrackPlaying)
-            {
-                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
-            }
-            else
-            {
-                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-            }
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
         }
 
         private void App_OnPlayerQuittingEvent()
@@ -198,14 +191,7 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            if (Globals.EmptyFileIfNoTrackPlaying)
-            {
-                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("iTunesNotRunning"));
-            }
-            else
-            {
-                TextHandler.UpdateText(Globals.ResourceManager.GetString("iTunesNotRunning"));
-            }
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("iTunesNotRunning"));
         }
     }
 }

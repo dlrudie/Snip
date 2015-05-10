@@ -237,7 +237,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.Spotify;
-            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedToSpotify"));
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToSpotify"));
         }
 
         private void ToggleiTunes()
@@ -253,7 +253,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.iTunes;
-            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedToiTunes"));
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToiTunes"));
         }
 
         private void ToggleWinamp()
@@ -269,7 +269,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.Winamp;
-            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedToWinamp"));
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToWinamp"));
         }
 
         private void Togglefoobar2000()
@@ -285,7 +285,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.foobar2000;
-            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedTofoobar2000"));
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedTofoobar2000"));
         }
 
         private void ToggleVLC()
@@ -301,7 +301,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
-            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("SwitchedToVLC"));
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToVLC"));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)

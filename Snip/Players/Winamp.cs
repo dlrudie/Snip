@@ -53,14 +53,7 @@ namespace Winter
                         {
                             if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                             {
-                                if (Globals.EmptyFileIfNoTrackPlaying)
-                                {
-                                    TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
-                                else
-                                {
-                                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
+                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -101,14 +94,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            if (Globals.EmptyFileIfNoTrackPlaying)
-                            {
-                                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                            }
-                            else
-                            {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                            }
+                            TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -124,14 +110,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        if (Globals.EmptyFileIfNoTrackPlaying)
-                        {
-                            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                        }
-                        else
-                        {
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                        }
+                        TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;
