@@ -1,6 +1,6 @@
 ﻿#region File Information
 /*
- * Copyright (C) 2012-2014 David Rudie
+ * Copyright (C) 2012-2015 David Rudie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -181,14 +181,7 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            if (Globals.EmptyFileIfNoTrackPlaying)
-            {
-                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
-            }
-            else
-            {
-                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-            }
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
         }
 
         private void App_OnPlayerQuittingEvent()
@@ -198,14 +191,7 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            if (Globals.EmptyFileIfNoTrackPlaying)
-            {
-                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("iTunesNotRunning"));
-            }
-            else
-            {
-                TextHandler.UpdateText(Globals.ResourceManager.GetString("iTunesNotRunning"));
-            }
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("iTunesNotRunning"));
         }
     }
 }

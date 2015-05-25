@@ -1,6 +1,6 @@
 ﻿#region File Information
 /*
- * Copyright (C) 2012-2014 David Rudie
+ * Copyright (C) 2012-2015 David Rudie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,14 +53,7 @@ namespace Winter
                         {
                             if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                             {
-                                if (Globals.EmptyFileIfNoTrackPlaying)
-                                {
-                                    TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
-                                else
-                                {
-                                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
+                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -101,14 +94,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            if (Globals.EmptyFileIfNoTrackPlaying)
-                            {
-                                TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                            }
-                            else
-                            {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                            }
+                            TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -124,14 +110,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        if (Globals.EmptyFileIfNoTrackPlaying)
-                        {
-                            TextHandler.UpdateTextAndEmptyFile(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                        }
-                        else
-                        {
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
-                        }
+                        TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;

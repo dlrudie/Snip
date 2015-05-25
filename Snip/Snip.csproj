@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Winter</RootNamespace>
     <AssemblyName>Snip</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -188,6 +188,7 @@
     <Content Include="Resources\Strings.de-CH.txt" />
     <Content Include="Resources\Strings.de-DE.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(ProjectDir)ResgenAllTheThings.cmd" "$(ProjectDir)" "$(TargetDir)"</PostBuildEvent>
