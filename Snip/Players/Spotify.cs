@@ -21,6 +21,8 @@
 // Sections of this code are from:
 // https://github.com/ikkentim/Spotify
 
+using System.Text;
+
 namespace Winter
 {
     using System;
@@ -321,6 +323,7 @@ namespace Winter
             using (WebClient webClient = new WebClient())
             {
                 webClient.Headers.Set("Origin", "https://embed.spotify.com");
+                webClient.Encoding = Encoding.UTF8;
 
                 result = webClient.DownloadString(address);
             }
