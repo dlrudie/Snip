@@ -44,6 +44,9 @@ namespace Winter
 
         private bool spotifyTokensObtained = false;
 
+        private string lastAlbumId = String.Empty;
+        private Globals.AlbumArtworkResolution lastResolution;
+
         public override void Load()
         {
             RunSpotifyWebHelperIfNotRunning();
@@ -140,7 +143,12 @@ namespace Winter
                     if (Globals.SaveAlbumArtwork)
                     {
                         string albumId = jsonSummary.track.album_resource.uri.Replace("spotify:album:", "");
-                        SaveAlbumArt(albumId);
+                        if (lastAlbumId != albumId || lastResolution != Globals.ArtworkResolution)
+                        {
+                            SaveAlbumArt(albumId);
+                        }
+                        lastAlbumId = albumId;
+                        lastResolution = Globals.ArtworkResolution;
                     }
                     else
                     {
