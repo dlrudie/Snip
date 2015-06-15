@@ -46,6 +46,9 @@ namespace Winter
 
         private bool spotifyTokensObtained = false;
 
+        private string lastAlbumId = String.Empty;
+        private Globals.AlbumArtworkResolution lastResolution;
+
         public override void Load()
         {
             RunSpotifyWebHelperIfNotRunning();
@@ -138,11 +141,61 @@ namespace Winter
                     {
                         this.SpotifyTrackChanged(this, EventArgs.Empty);
                     }
+
+                    if (Globals.SaveAlbumArtwork)
+                    {
+                        string albumId = jsonSummary.track.album_resource.uri.Replace("spotify:album:", "");
+                        if (lastAlbumId != albumId || lastResolution != Globals.ArtworkResolution)
+                        {
+                            SaveAlbumArt(albumId);
+                        }
+                        lastAlbumId = albumId;
+                        lastResolution = Globals.ArtworkResolution;
+                    }
+                    else
+                    {
+                        this.SaveBlankImage();
+                    }
                 }
                 else
                 {
                     TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
                 }
+            }
+        }
+
+        private void SaveAlbumArt(string albumId)
+        {
+            string result = String.Empty;
+
+            Uri requestUri = new Uri("https://api.spotify.com/v1/albums/" + albumId);
+
+            using (WebClient client = new WebClient())
+            {
+                result = client.DownloadString(requestUri);
+            }
+
+            dynamic jsonSummary = SimpleJson.DeserializeObject(result);
+
+            string albumArtUri = String.Empty;
+            switch (Globals.ArtworkResolution)
+            {
+                case Globals.AlbumArtworkResolution.Tiny: case Globals.AlbumArtworkResolution.Small:
+                    albumArtUri = jsonSummary.images[2].url;
+                    break;
+
+                case Globals.AlbumArtworkResolution.Medium:
+                    albumArtUri = jsonSummary.images[1].url;
+                    break;
+
+                case Globals.AlbumArtworkResolution.Large:
+                    albumArtUri = jsonSummary.images[0].url;
+                    break;
+            }
+
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFile(new Uri(albumArtUri), this.DefaultArtworkFilePath);
             }
         }
 
