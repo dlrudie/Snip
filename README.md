@@ -8,7 +8,7 @@ ABOUT
 This is a small application that sits in the system tray and updates a text
 file with the currently playing audio track.
 
-It supports Spotify, iTunes, and Winamp.
+It supports Spotify, iTunes, Winamp, foobar2000, and VLC.
 
 If you choose to use iTunes then Snip will automatically launch iTunes.  This
 is the behavior of the COM API and there's nothing I can do about it.  If you
@@ -58,7 +58,7 @@ to split the text apart so make sure you use this en dash character or Snip
 will not read it correctly!
 
 FOOBAR2000
-======
+==========
 For foobar2000 support to work properly you must change some options.
 
 Inside foobar2000 open up the preferences window.

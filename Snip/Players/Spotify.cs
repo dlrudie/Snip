@@ -18,16 +18,12 @@
  */
 #endregion
 
-// Sections of this code are from:
-// https://github.com/ikkentim/Spotify
-
-using System.Text;
-
 namespace Winter
 {
     using System;
-    using System.Diagnostics;
+    using System.ComponentModel;
     using System.Globalization;
+    using System.IO;
     using System.Net;
     using System.Web;
     using System.Windows.Forms;
@@ -35,185 +31,83 @@ namespace Winter
 
     internal sealed class Spotify : MediaPlayer
     {
-        private string oauthToken = string.Empty;
-        private string csrfToken = string.Empty;
-
-        private string trackTitle = string.Empty;
-        private string trackArtist = string.Empty;
-        private string trackAlbum = string.Empty;
-
-        private bool spotifyIsPaused = false;
-
-        private bool spotifyTokensObtained = false;
-
-        private string lastAlbumId = String.Empty;
-        private Globals.AlbumArtworkResolution lastResolution;
-
-        public override void Load()
-        {
-            RunSpotifyWebHelperIfNotRunning();
-
-            //this.SpotifyAvailabilityChanged += Spotify_SpotifyAvailabilityChanged;
-            //this.SpotifyPlayStateChanged += Spotify_SpotifyPlayStateChanged;
-            this.SpotifyTrackChanged += Spotify_SpotifyTrackChanged;
-        }
+        private string json = string.Empty;
 
         public override void Update()
         {
-            /*
-            // Spotify and the helper are not running but it's available.
-            if ((!IsSpotifyRunning || !IsSpotifyWebHelperRunning) && IsSpotifyAvailable)
+            if (!this.Found)
             {
-                this.IsSpotifyAvailable = false;
+                this.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
 
-                if (this.SpotifyAvailabilityChanged != null)
+                this.Found = true;
+                this.NotRunning = false;
+            }
+            else
+            {
+                // Make sure the process is still valid.
+                if (this.Handle != IntPtr.Zero && this.Handle != null)
                 {
-                    this.SpotifyAvailabilityChanged(this, EventArgs.Empty);
-                }
-            }
+                    int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title, this.Title.Capacity);
 
-            // Spotify and the helper are running but are not available.
-            if (IsSpotifyRunning && IsSpotifyWebHelperRunning && !IsSpotifyAvailable)
-            {
-                this.IsSpotifyAvailable = true;
+                    string spotifyTitle = this.Title.ToString();
 
-                if (this.SpotifyAvailabilityChanged != null)
-                {
-                    this.SpotifyAvailabilityChanged(this, EventArgs.Empty);
-                }
+                    this.Title.Clear();
 
-                this.UpdateTokens();
-            }
-
-            // Spotify is running but the helper is not.
-            if (IsSpotifyRunning && !IsSpotifyWebHelperRunning)
-            {
-                RunSpotifyWebHelperIfNotRunning();
-
-                return;
-            }
-
-            // Spotify is not available at all.
-            if (!IsSpotifyRunning && !IsSpotifyWebHelperRunning)
-            {
-                TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
-
-                return;
-            }*/
-
-            if (!IsSpotifyWebHelperRunning)
-            {
-                RunSpotifyWebHelperIfNotRunning();
-
-                return;
-            }
-
-            if (!IsSpotifyRunning)
-            {
-                TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
-
-                return;
-            }
-
-            if (!this.spotifyTokensObtained)
-            {
-                this.spotifyTokensObtained = true;
-
-                this.UpdateTokens();
-            }
-
-            string json = this.QueryWebHelperStatus();
-            dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-            bool playingStatusCurrent = false;
-
-            if (jsonSummary != null)
-            {
-                playingStatusCurrent = jsonSummary.playing;
-
-                if (playingStatusCurrent == true)
-                {
-                    this.trackTitle = jsonSummary.track.track_resource.name;
-                    this.trackArtist = jsonSummary.track.artist_resource.name;
-                    this.trackAlbum = jsonSummary.track.album_resource.name;
-
-                    if (this.SpotifyTrackChanged != null)
+                    // If the window title length is 0 then the process handle is not valid.
+                    if (windowTextLength > 0)
                     {
-                        this.SpotifyTrackChanged(this, EventArgs.Empty);
-                    }
-
-                    if (Globals.SaveAlbumArtwork)
-                    {
-                        string albumId = jsonSummary.track.album_resource.uri.Replace("spotify:album:", "");
-                        if (lastAlbumId != albumId || lastResolution != Globals.ArtworkResolution)
+                        // Only update if the title has actually changed.
+                        // This prevents unnecessary calls and downloads.
+                        if (spotifyTitle != this.LastTitle)
                         {
-                            SaveAlbumArt(albumId);
+                            if (spotifyTitle == "Spotify")
+                            {
+                                if (Globals.SaveAlbumArtwork)
+                                {
+                                    this.SaveBlankImage();
+                                }
+
+                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                            }
+                            else
+                            {
+                                this.DownloadJson(spotifyTitle);
+
+                                dynamic jsonSummary = SimpleJson.DeserializeObject(this.json);
+
+                                if (jsonSummary != null)
+                                {
+                                    jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+
+                                    TextHandler.UpdateText(
+                                        jsonSummary[0].name.ToString(),
+                                        jsonSummary[0].artists[0].name.ToString(),
+                                        jsonSummary[0].album.name.ToString());
+
+                                    if (Globals.SaveAlbumArtwork)
+                                    {
+                                        this.HandleSpotifyAlbumArtwork(jsonSummary[0].name.ToString());
+                                    }
+                                }
+                            }
+
+                            this.LastTitle = spotifyTitle;
                         }
-                        lastAlbumId = albumId;
-                        lastResolution = Globals.ArtworkResolution;
                     }
                     else
                     {
-                        this.SaveBlankImage();
+                        if (!this.NotRunning)
+                        {
+                            this.ResetSinceSpotifyIsNotRunning();
+                        }
                     }
                 }
                 else
                 {
-                    TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                }
-            }
-        }
-
-        private void SaveAlbumArt(string albumId)
-        {
-            string result = String.Empty;
-
-            Uri requestUri = new Uri("https://api.spotify.com/v1/albums/" + albumId);
-
-            using (WebClient client = new WebClient())
-            {
-                result = client.DownloadString(requestUri);
-            }
-
-            dynamic jsonSummary = SimpleJson.DeserializeObject(result);
-
-            string albumArtUri = String.Empty;
-            switch (Globals.ArtworkResolution)
-            {
-                case Globals.AlbumArtworkResolution.Tiny: case Globals.AlbumArtworkResolution.Small:
-                    albumArtUri = jsonSummary.images[2].url;
-                    break;
-
-                case Globals.AlbumArtworkResolution.Medium:
-                    albumArtUri = jsonSummary.images[1].url;
-                    break;
-
-                case Globals.AlbumArtworkResolution.Large:
-                    albumArtUri = jsonSummary.images[0].url;
-                    break;
-            }
-
-            using (WebClient client = new WebClient())
-            {
-                client.DownloadFile(new Uri(albumArtUri), this.DefaultArtworkFilePath);
-            }
-        }
-
-        public override void PlayOrPauseTrack()
-        {
-            if (IsSpotifyRunning && IsSpotifyWebHelperRunning)
-            {
-                if (this.spotifyIsPaused)
-                {
-                    this.QueryWebHelper("remote/pause.json", true, true, "pause=false");
-
-                    this.spotifyIsPaused = false;
-                }
-                else
-                {
-                    this.QueryWebHelper("remote/pause.json", true, true, "pause=true");
-
-                    this.spotifyIsPaused = true;
+                    if (!this.NotRunning)
+                    {
+                        this.ResetSinceSpotifyIsNotRunning();
+                    }
                 }
             }
         }
@@ -221,167 +115,201 @@ namespace Winter
         public override void Unload()
         {
             base.Unload();
-
-            //this.SpotifyAvailabilityChanged -= Spotify_SpotifyAvailabilityChanged;
-            //this.SpotifyPlayStateChanged -= Spotify_SpotifyPlayStateChanged;
-            this.SpotifyTrackChanged -= Spotify_SpotifyTrackChanged;
-
-            this.spotifyTokensObtained = false;
         }
 
-        //private event EventHandler SpotifyAvailabilityChanged;
-        private event EventHandler SpotifyTrackChanged;
-
-        private void Spotify_SpotifyTrackChanged(object sender, EventArgs e)
+        public override void ChangeToNextTrack()
         {
-            TextHandler.UpdateText(this.trackTitle, this.trackArtist, this.trackAlbum);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.NextTrack));
         }
 
-        private void Spotify_SpotifyAvailabilityChanged(object sender, EventArgs e)
+        public override void ChangeToPreviousTrack()
         {
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PreviousTrack));
         }
 
-        private bool IsSpotifyAvailable
+        public override void IncreasePlayerVolume()
         {
-            get;
-            set;
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeUp));
         }
 
-        private static bool IsSpotifyRunning
+        public override void DecreasePlayerVolume()
         {
-            get
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeDown));
+        }
+
+        public override void MutePlayerAudio()
+        {
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.MuteTrack));
+        }
+
+        public override void PlayOrPauseTrack()
+        {
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PlayPauseTrack));
+        }
+
+        public override void StopTrack()
+        {
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.StopTrack));
+        }
+
+        private void ResetSinceSpotifyIsNotRunning()
+        {
+            if (Globals.SaveAlbumArtwork)
             {
-                return Process.GetProcessesByName("spotify").Length >= 1;
+                this.SaveBlankImage();
             }
+
+            TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+
+            this.Found = false;
+            this.NotRunning = true;
         }
 
-        private static bool IsSpotifyWebHelperRunning
+        private void DownloadJson(string spotifyTitle)
         {
-            get
+            using (WebClient jsonWebClient = new WebClient())
             {
-                return Process.GetProcessesByName("SpotifyWebHelper").Length >= 1;
-            }
-        }
-
-        private void UpdateTokens()
-        {
-            this.csrfToken = this.GetCFIDToken();
-            this.oauthToken = GetOAuthToken();
-        }
-
-        private string GetCFIDToken()
-        {
-            var token = string.Empty;
-
-            string json = this.QueryWebHelper("simplecsrf/token.json", false, false).Replace(@"\", "");
-
-            if (!string.IsNullOrEmpty(json))
-            {
-                dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-                if (jsonSummary != null)
+                try
                 {
-                    token = jsonSummary.token;
+                    var downloadedJson = jsonWebClient.DownloadString(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "http://ws.spotify.com/search/1/track.json?q={0}",
+                            HttpUtility.UrlEncode(spotifyTitle.Replace(":", string.Empty))));
+
+                    if (!string.IsNullOrEmpty(downloadedJson))
+                    {
+                        this.json = downloadedJson;
+                    }
+                }
+                catch (WebException)
+                {
+                    this.json = string.Empty;
+                    this.SaveBlankImage();
                 }
             }
-
-            return token;
         }
 
-        private static string GetOAuthToken()
+        private void HandleSpotifyAlbumArtwork(string songTitle)
         {
-            string json = string.Empty;
-            var token = string.Empty;
+            string albumId = string.Empty;
 
-            using (WebClient webClient = new WebClient())
+            try
             {
-                json = webClient.DownloadString("http://open.spotify.com/token");
-            }
-
-            if (!string.IsNullOrEmpty(json))
-            {
-                dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-                if (jsonSummary != null)
+                if (!string.IsNullOrEmpty(this.json))
                 {
-                    token = jsonSummary.t;
+                    dynamic jsonSummary = SimpleJson.DeserializeObject(json);
+
+                    if (jsonSummary != null)
+                    {
+                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+
+                        foreach (dynamic jsonTrack in jsonSummary)
+                        {
+                            string modifiedTitle = TextHandler.UnifyTitles(songTitle);
+                            string foundTitle = TextHandler.UnifyTitles(jsonTrack.name.ToString());
+
+                            if (foundTitle == modifiedTitle)
+                            {
+                                dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
+                                albumId = jsonAlbum.href.ToString();
+
+                                break;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(albumId))
+                        {
+                            albumId = albumId.Substring(albumId.LastIndexOf(':') + 1);
+                            this.DownloadSpotifyAlbumArtwork(albumId);
+                        }
+                    }
                 }
             }
-
-            return token;
-        }
-
-        private static void RunSpotifyIfNotRunning()
-        {
-            if (!IsSpotifyRunning)
+            catch (FileNotFoundException)
             {
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Spotify\spotify.exe");
+                this.SaveBlankImage();
             }
         }
 
-        private static void RunSpotifyWebHelperIfNotRunning()
+        private void DownloadSpotifyAlbumArtwork(string albumId)
         {
-            if (!IsSpotifyWebHelperRunning)
+            string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
+            string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
+
+            if (!Directory.Exists(artworkDirectory))
             {
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Spotify\Data\SpotifyWebHelper.exe");
-            }
-        }
-
-        private string QueryWebHelperStatus()
-        {
-            string status = string.Empty;
-
-            string response = this.QueryWebHelper("remote/status.json", true, true);
-
-            if (!string.IsNullOrEmpty(response))
-            {
-                status = response;
+                Directory.CreateDirectory(artworkDirectory);
             }
 
-            return status;
-        }
+            FileInfo fileInfo = new FileInfo(artworkImagePath);
 
-        private string QueryWebHelper(string request, bool oauth, bool cfid)
-        {
-            return this.QueryWebHelper(request, oauth, cfid, string.Empty);
-        }
-
-        private string QueryWebHelper(string request, bool oauth, bool cfid, string extraParameters)
-        {
-            string parameters = string.Empty;
-
-            if (!string.IsNullOrEmpty(extraParameters))
+            if (fileInfo.Exists && fileInfo.Length > 0)
             {
-                parameters = string.Format(CultureInfo.InvariantCulture, "?{0}&ref=&cors=&_=" + Convert.ToInt32((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds), extraParameters);
+                fileInfo.CopyTo(this.DefaultArtworkFilePath, true);
             }
             else
             {
-                parameters = "?ref=&cors=&_=" + Convert.ToInt32((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
-            }
+                this.SaveBlankImage();
 
-            if (oauth)
+                using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
+                {
+                    try
+                    {
+                        webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
+                        var downloadedJson = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
+
+                        if (!string.IsNullOrEmpty(downloadedJson))
+                        {
+                            dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                            string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", (int)Globals.ArtworkResolution));
+
+                            if (Globals.KeepSpotifyAlbumArtwork)
+                            {
+                                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
+                                webClient.DownloadFileAsync(new Uri(imageUrl), artworkImagePath, artworkImagePath);
+                            }
+                            else
+                            {
+                                webClient.DownloadFileAsync(new Uri(imageUrl), this.DefaultArtworkFilePath);
+                            }
+                        }
+                    }
+                    catch (WebException)
+                    {
+                        this.SaveBlankImage();
+                    }
+                }
+            }
+        }
+
+        private void DownloadSpotifyFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error == null)
             {
-                parameters += "&oauth=" + this.oauthToken;
+                try
+                {
+                    File.Copy((string)e.UserState, this.DefaultArtworkFilePath, true);
+                }
+                catch (IOException)
+                {
+                    this.SaveBlankImage();
+                }
             }
+        }
 
-            if (cfid)
+        private class WebClientWithShortTimeout : WebClient
+        {
+            // How many seconds before webclient times out and moves on.
+            private const int WebClientTimeoutSeconds = 10;
+
+            protected override WebRequest GetWebRequest(Uri address)
             {
-                parameters += "&csrf=" + this.csrfToken;
+                WebRequest webRequest = base.GetWebRequest(address);
+                webRequest.Timeout = WebClientTimeoutSeconds * 60 * 1000;
+                return webRequest;
             }
-
-            Uri address = new Uri(@"http://localhost:4380/" + request + parameters);
-
-            string result = string.Empty;
-
-            using (WebClient webClient = new WebClient())
-            {
-                webClient.Headers.Set("Origin", "https://embed.spotify.com");
-                webClient.Encoding = Encoding.UTF8;
-
-                result = webClient.DownloadString(address);
-            }
-
-            return result;
         }
     }
 }
