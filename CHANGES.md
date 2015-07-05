@@ -3,6 +3,7 @@ CHANGES
 **v5.0.0 (2015-Jul-05):**
 * Updated Spotify code to work with the latest client.
 * Optimized text handling globally so it won't write text unless it changed.
+* Updated Swedish translation by Lukas Michanek
 
 **v4.6.0 (2014-Aug-16):**
 * Fixed artist, track, and album files not being emptied out.
