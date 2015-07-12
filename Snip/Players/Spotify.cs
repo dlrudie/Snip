@@ -77,16 +77,27 @@ namespace Winter
 
                                 if (jsonSummary != null)
                                 {
-                                    jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+                                    var numberOfResults = jsonSummary.info.num_results;
 
-                                    TextHandler.UpdateText(
-                                        jsonSummary[0].name.ToString(),
-                                        jsonSummary[0].artists[0].name.ToString(),
-                                        jsonSummary[0].album.name.ToString());
-
-                                    if (Globals.SaveAlbumArtwork)
+                                    if (numberOfResults > 0)
                                     {
-                                        this.HandleSpotifyAlbumArtwork(jsonSummary[0].name.ToString());
+                                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+
+                                        TextHandler.UpdateText(
+                                            jsonSummary[0].name.ToString(),
+                                            jsonSummary[0].artists[0].name.ToString(),
+                                            jsonSummary[0].album.name.ToString());
+
+                                        if (Globals.SaveAlbumArtwork)
+                                        {
+                                            this.HandleSpotifyAlbumArtwork(jsonSummary[0].name.ToString());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // In the event of an advertisement (or any song that returns 0 results)
+                                        // then we'll just write the whole title as a single string instead.
+                                        TextHandler.UpdateText(spotifyTitle);
                                     }
                                 }
                             }
