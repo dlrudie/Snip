@@ -1,5 +1,10 @@
 CHANGES
 =======
+**v5.0.1 (2015-Jul-12):**
+* Fixed advertisements in Spotify causing a crash.
+* Updated Dutch translation by Eegee
+* Fix for Visual Studio paths with spaces by Eegee
+
 **v5.0.0 (2015-Jul-05):**
 * Updated Spotify code to work with the latest client.
 * Optimized text handling globally so it won't write text unless it changed.
