@@ -26,3 +26,6 @@ Contributors
 * Erik Jan Meijer (Eegee)
   * Updated Dutch translations
   * Fix for VS project paths with spaces
+
+* gummi
+  * Norwegian translation
