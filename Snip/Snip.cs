@@ -50,6 +50,7 @@ namespace Winter
             this.InitializeComponent();
 
             this.Load += new EventHandler(this.Snip_Load);
+            this.FormClosing += new FormClosingEventHandler(this.Snip_FormClosing);
 
             // Set the icon of the system tray icon.
             this.notifyIcon.Icon = new Icon(this.Icon, 48, 48);
@@ -114,6 +115,12 @@ namespace Winter
         {
             // Hide the window from ever showing.
             this.Hide();
+        }
+
+        private void Snip_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Save settings automatically when the form is being closed.
+            Settings.Save();
         }
 
         private void LoadSettings()
@@ -362,8 +369,6 @@ namespace Winter
 
         private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
         {
-            Settings.Save();
-
             Application.Exit();
         }
 
