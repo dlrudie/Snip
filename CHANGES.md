@@ -1,5 +1,12 @@
 CHANGES
 =======
+**v5.0.5 (2015-Jul-21):**
+* Renamed Swedish resource from se-SE to sv-SE.
+* Added Norwegian translation thanks to gummi.
+* Fixed Snip not saving settings in the event of not exiting via right-click.
+* Fixed Snip not writing song titles to text files for players other than
+    iTunes or Spotify.
+
 **v5.0.1 (2015-Jul-12):**
 * Fixed advertisements in Spotify causing a crash.
 * Updated Dutch translation by Eegee
