@@ -53,7 +53,7 @@ namespace Winter
                         {
                             if (vlcTitle.Equals("VLC media player"))
                             {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -79,7 +79,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("VLCIsNotRunning"));
+                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("VLCIsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -95,7 +95,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        TextHandler.UpdateText(Globals.ResourceManager.GetString("VLCIsNotRunning"));
+                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("VLCIsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;

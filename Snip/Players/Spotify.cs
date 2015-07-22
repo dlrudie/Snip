@@ -67,7 +67,7 @@ namespace Winter
                                     this.SaveBlankImage();
                                 }
 
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -170,7 +170,7 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            TextHandler.UpdateText(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
 
             this.Found = false;
             this.NotRunning = true;

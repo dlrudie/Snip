@@ -65,7 +65,7 @@ namespace Winter
                         {
                             if (foobar2000Title.StartsWith("foobar2000", StringComparison.OrdinalIgnoreCase))
                             {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -106,7 +106,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
+                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -122,7 +122,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        TextHandler.UpdateText(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
+                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;

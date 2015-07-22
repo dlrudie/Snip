@@ -58,7 +58,7 @@ namespace Winter
             }
         }
 
-        private static void UpdateTextAndEmptyFile(string text)
+        public static void UpdateTextAndEmptyFilesMaybe(string text)
         {
             if (text != lastTextToWrite)
             {
@@ -66,35 +66,38 @@ namespace Winter
 
                 SetNotifyIconText(text);
 
-                File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
-
-                if (Globals.SaveSeparateFiles)
+                if (Globals.EmptyFileIfNoTrackPlaying)
                 {
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", string.Empty);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", string.Empty);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", string.Empty);
+                    File.WriteAllText(@Application.StartupPath + @"\Snip.txt", string.Empty);
+                }
+                else
+                {
+                    File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
+                }
+
+                if (Globals.EmptyFileIfNoTrackPlaying)
+                {
+                    if (Globals.SaveSeparateFiles)
+                    {
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", string.Empty);
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", string.Empty);
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", string.Empty);
+                    }
                 }
             }
         }
 
         public static void UpdateText(string text)
         {
-            if (Globals.EmptyFileIfNoTrackPlaying)
+            if (text != lastTextToWrite)
             {
-                UpdateTextAndEmptyFile(text);
-            }
-            else
-            {
-                if (text != lastTextToWrite)
-                {
-                    lastTextToWrite = text;
+                lastTextToWrite = text;
 
-                    // Set the text that appears on the notify icon.
-                    SetNotifyIconText(text);
+                // Set the text that appears on the notify icon.
+                SetNotifyIconText(text);
 
-                    // Write the song title and artist to a text file.
-                    File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
-                }
+                // Write the song title and artist to a text file.
+                File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
             }
         }
 

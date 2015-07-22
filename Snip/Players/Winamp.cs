@@ -53,7 +53,7 @@ namespace Winter
                         {
                             if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                             {
-                                TextHandler.UpdateText(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -94,7 +94,7 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
+                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("WinampIsNotRunning"));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -110,7 +110,7 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        TextHandler.UpdateText(Globals.ResourceManager.GetString("WinampIsNotRunning"));
+                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("WinampIsNotRunning"));
 
                         this.Found = false;
                         this.NotRunning = true;
