@@ -68,6 +68,11 @@ ImageResolutionLarge=Groß
 SaveTrackHistory=Track-Verlauf speichern
 
 ; This text is displayed on the right-click context menu and, when enabled,
+; will cause a popup notification to display on the desktop with the
+; currently playing track title.
+DisplayTrackPopup=Display Track Popup
+
+; This text is displayed on the right-click context menu and, when enabled,
 ; will cause Snip.txt to be emptied out when no track is playing.  If this
 ; option is disabled then the text from "NoTrackPlaying" will be saved to
 ; Snip.txt.

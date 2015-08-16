@@ -172,6 +172,7 @@ namespace Winter
             }
 
             this.toolStripMenuItemSaveHistory.Checked = Globals.SaveHistory;
+            this.toolStripMenuItemDisplayTrackPopup.Checked = Globals.DisplayTrackPopup;
             this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = Globals.EmptyFileIfNoTrackPlaying;
             this.toolStripMenuItemEnableHotkeys.Checked = Globals.EnableHotkeys;
         }
@@ -363,6 +364,20 @@ namespace Winter
             }
 
             Globals.SaveHistory = this.toolStripMenuItemSaveHistory.Checked;
+        }
+
+        private void ToolStripMenuItemDisplayTrackPopup_Click(object sender, EventArgs e)
+        {
+            if (this.toolStripMenuItemDisplayTrackPopup.Checked)
+            {
+                this.toolStripMenuItemDisplayTrackPopup.Checked = false;
+            }
+            else
+            {
+                this.toolStripMenuItemDisplayTrackPopup.Checked = true;
+            }
+
+            Globals.DisplayTrackPopup = this.toolStripMenuItemDisplayTrackPopup.Checked;
         }
 
         private void ToolStripMenuItemExit_Click(object sender, EventArgs e)

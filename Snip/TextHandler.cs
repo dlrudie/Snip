@@ -98,6 +98,12 @@ namespace Winter
 
                 // Write the song title and artist to a text file.
                 File.WriteAllText(@Application.StartupPath + @"\Snip.txt", text);
+
+                // Display a popup message of the track.
+                if (Globals.DisplayTrackPopup)
+                {
+                    Globals.SnipNotifyIcon.ShowBalloonTip(500, "Snip", text, ToolTipIcon.None);
+                }
             }
         }
 
@@ -127,6 +133,12 @@ namespace Winter
 
                 // Write the song title and artist to a text file.
                 File.WriteAllText(@Application.StartupPath + @"\Snip.txt", output);
+
+                // Display a popup message of the track.
+                if (Globals.DisplayTrackPopup)
+                {
+                    Globals.SnipNotifyIcon.ShowBalloonTip(500, "Snip", output, ToolTipIcon.None);
+                }
 
                 // Check if we want to save artist and track to separate files.
                 if (Globals.SaveSeparateFiles)

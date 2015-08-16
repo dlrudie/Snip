@@ -22,6 +22,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMedium;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLarge;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveHistory;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDisplayTrackPopup;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEmptyFileIfNoTrackPlaying;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEnableHotkeys;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -82,6 +83,7 @@
             this.toolStripMenuItemMedium = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemLarge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveHistory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemDisplayTrackPopup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemEmptyFileIfNoTrackPlaying = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemEnableHotkeys = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -113,6 +115,7 @@
             this.toolStripMenuItemSaveAlbumArtwork,
             this.toolStripMenuItemKeepSpotifyAlbumArtwork,
             this.toolStripMenuItemSaveHistory,
+            this.toolStripMenuItemDisplayTrackPopup,
             this.toolStripMenuItemEmptyFileIfNoTrackPlaying,
             this.toolStripMenuItemEnableHotkeys,
             this.toolStripSeparator3,
@@ -243,6 +246,13 @@
             this.toolStripMenuItemSaveHistory.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemSaveHistory.Text = Globals.ResourceManager.GetString("SaveTrackHistory");
             this.toolStripMenuItemSaveHistory.Click += new System.EventHandler(this.ToolStripMenuItemSaveHistory_Click);
+            // 
+            // toolStripMenuItemDisplayTrackPopup
+            // 
+            this.toolStripMenuItemDisplayTrackPopup.Name = "toolStripMenuItemDisplayTrackPopup";
+            this.toolStripMenuItemDisplayTrackPopup.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemDisplayTrackPopup.Text = Globals.ResourceManager.GetString("DisplayTrackPopup");
+            this.toolStripMenuItemDisplayTrackPopup.Click += new System.EventHandler(this.ToolStripMenuItemDisplayTrackPopup_Click);
             // 
             // toolStripSeparator1
             // 

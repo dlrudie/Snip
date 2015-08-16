@@ -76,6 +76,15 @@ namespace Winter
                 registryKey.SetValue("Save History", "false");
             }
 
+            if (Globals.DisplayTrackPopup)
+            {
+                registryKey.SetValue("Display Track Popup", "true");
+            }
+            else
+            {
+                registryKey.SetValue("Display Track Popup", "false");
+            }
+
             if (Globals.EmptyFileIfNoTrackPlaying)
             {
                 registryKey.SetValue("Empty File If No Track Playing", "true");
@@ -153,6 +162,16 @@ namespace Winter
                     Globals.SaveHistory = false;
                 }
 
+                bool displayTrackPopupChecked = Convert.ToBoolean(registryKey.GetValue("Display Track Popup", true), CultureInfo.InvariantCulture);
+                if (displayTrackPopupChecked)
+                {
+                    Globals.DisplayTrackPopup = true;
+                }
+                else
+                {
+                    Globals.DisplayTrackPopup = false;
+                }
+
                 bool emptyFileIfNoTrackPlayingChecked = Convert.ToBoolean(registryKey.GetValue("Empty File If No Track Playing", true), CultureInfo.InvariantCulture);
                 if (emptyFileIfNoTrackPlayingChecked)
                 {
@@ -191,6 +210,7 @@ namespace Winter
                 Globals.KeepSpotifyAlbumArtwork = false;
                 Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
                 Globals.SaveHistory = false;
+                Globals.DisplayTrackPopup = false;
                 Globals.EmptyFileIfNoTrackPlaying = true;
                 Globals.EnableHotkeys = true;
                 Globals.TrackFormat = Globals.DefaultTrackFormat;
