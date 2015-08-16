@@ -31,8 +31,6 @@ namespace Winter
     {
         #region Fields
 
-        // There are none.
-
         KeyboardHook keyboardHook = new KeyboardHook();
 
         #endregion
@@ -53,7 +51,7 @@ namespace Winter
             this.FormClosing += new FormClosingEventHandler(this.Snip_FormClosing);
 
             // Set the icon of the system tray icon.
-            this.notifyIcon.Icon = new Icon(this.Icon, 48, 48);
+            this.notifyIcon.Icon = Properties.Resources.SnipIcon;
             Globals.SnipNotifyIcon = this.notifyIcon;
 
             // Minimize the main window.
