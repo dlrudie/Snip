@@ -242,7 +242,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.Spotify;
-            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToSpotify"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToSpotify"));
         }
 
         private void ToggleiTunes()
@@ -258,7 +258,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.iTunes;
-            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToiTunes"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToiTunes"));
         }
 
         private void ToggleWinamp()
@@ -274,7 +274,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.Winamp;
-            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToWinamp"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToWinamp"));
         }
 
         private void Togglefoobar2000()
@@ -290,7 +290,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.foobar2000;
-            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedTofoobar2000"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedTofoobar2000"));
         }
 
         private void ToggleVLC()
@@ -306,7 +306,7 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
-            TextHandler.UpdateText(Globals.ResourceManager.GetString("SwitchedToVLC"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToVLC"));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
