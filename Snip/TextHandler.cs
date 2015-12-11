@@ -36,7 +36,7 @@ namespace Winter
         {
             if (!string.IsNullOrEmpty(text))
             {
-                int maxLength = 126; // 128 max length minus 2 to allow for a space and 3 dots without crashing the program
+                int maxLength = 125; // 128 max length minus 3 to allow for a space and 3 dots without crashing the program
 
                 if (text.Length >= maxLength)
                 {
