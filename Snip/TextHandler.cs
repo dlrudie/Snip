@@ -36,11 +36,21 @@ namespace Winter
         {
             if (!string.IsNullOrEmpty(text))
             {
-                int maxLength = 120; // 128 max length minus 8 to stop issues with string length crashing the program
+                int maxLength = 124; // 128 max length minus 4 to allow for space and 3 dots during truncation
 
                 if (text.Length >= maxLength)
                 {
-                    int nextSpace = text.LastIndexOf(' ', maxLength);
+                    int nextSpace = 0; // Set to zero in case all else fails
+                    try
+                    {
+                        nextSpace = text.LastIndexOf(' ', maxLength);
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        maxLength = 62; // We have no idea what happened so to be safe slice the damn thing in half and try again
+
+                        nextSpace = text.LastIndexOf(' ', maxLength);
+                    }
 
                     text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength).Trim());
                 }
