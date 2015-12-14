@@ -36,23 +36,33 @@ namespace Winter
         {
             if (!string.IsNullOrEmpty(text))
             {
-                int maxLength = 124; // 128 max length minus 4 to allow for space and 3 dots during truncation
+                text = text.Trim(); //trim trailing spaces
+
+                int maxLength = 127; // 128 max length
+
+                int nextSpace = 0; // Set to zero in case all else fails
 
                 if (text.Length >= maxLength)
                 {
-                    int nextSpace = 0; // Set to zero in case all else fails
+                    maxLength -= 3; //need to ensure space to append "..." to the end of the string
+
+                    //LastIndexOf will search backwards from the specified index to find the specified char (space)
+                    //subtract one so that we get the index of char preceding the located space.
+                    //we add it back in with string.format
                     try
                     {
-                        nextSpace = text.LastIndexOf(' ', maxLength);
+                        nextSpace = text.LastIndexOf(' ', maxLength) - 1;
                     }
                     catch (IndexOutOfRangeException e)
                     {
-                        maxLength = 62; // We have no idea what happened so to be safe slice the damn thing in half and try again
+                        maxLength = 64; // we got a negative number before so lets try again from half of the string
 
-                        nextSpace = text.LastIndexOf(' ', maxLength);
+                        nextSpace = text.LastIndexOf(' ', maxLength) - ;
                     }
 
-                    text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength).Trim());
+                    //in the event that we don't find a space, we need to ensure there is space for us to add on in
+                    //hence the maxLength - 1
+                    text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : (maxLength - 1)).Trim());
                 }
 
                 Type t = typeof(NotifyIcon);
