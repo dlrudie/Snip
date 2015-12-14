@@ -52,7 +52,7 @@ namespace Winter
 
                     //in the event that we don't find a space, we need to ensure there is space for us to add on in
                     //hence the maxLength - 1
-                    text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength));
+                    text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength).Trim());
                 }
 
                 Type t = typeof(NotifyIcon);
