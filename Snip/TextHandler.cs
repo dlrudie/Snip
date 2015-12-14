@@ -49,11 +49,11 @@ namespace Winter
                     //LastIndexOf will search backwards from the specified index to find the specified char (space)
                     //subtract one so that we get the index of char preceding the located space.
                     //we add it back in with string.format
-                    try
+                    try // try to get an index, if the number is negative we catch the error
                     {
                         nextSpace = text.LastIndexOf(' ', maxLength) - 1;
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException e) // we got a negative number here
                     {
                         maxLength = 64; // we got a negative number before so lets try again from half of the string
 
