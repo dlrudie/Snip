@@ -42,16 +42,17 @@ namespace Winter
 
                 if (text.Length >= maxLength)
                 {
-                    maxLength -= 3; //need to ensure space to append "..." to the end of the string
+                    maxLength -= 4; //need to ensure space to append "..." to the end of the string
 
-                    //LastIndexOf will search backwards from the specified index to find the specified char (space)
-                    //subtract one so that we get the index of char preceding the located space.
-                    //we add it back in with string.format
-                    int nextSpace = text.LastIndexOf(' ', maxLength) - 1; 
+                    //LastIndexOf will search backwards from the specified index, this means that
+                    //we search maxLength + 1 characters to find the specified char (space)
+                    //this index gets treated as a length (from index 0) in text.Substring,
+                    //which implicitly removes the space from the resultant string 
+                    int nextSpace = text.LastIndexOf(' ', maxLength); 
 
                     //in the event that we don't find a space, we need to ensure there is space for us to add on in
                     //hence the maxLength - 1
-                    text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : (maxLength - 1)).Trim());
+                    text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength));
                 }
 
                 Type t = typeof(NotifyIcon);
