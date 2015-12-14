@@ -46,18 +46,19 @@ namespace Winter
                 {
                     maxLength -= 4; //need to ensure space to append "..." to the end of the string
 
-                    //LastIndexOf will search backwards from the specified index to find the specified char (space)
-                    //subtract one so that we get the index of char preceding the located space.
-                    //we add it back in with string.format
+                    //LastIndexOf will search backwards from the specified index, this means that
+                    //we search maxLength + 1 characters to find the specified char (space)
+                    //this index gets treated as a length (from index 0) in text.Substring,
+                    //which implicitly removes the space from the resultant string 
                     try // try to get an index, if the number is negative we catch the error
                     {
-                        nextSpace = text.LastIndexOf(' ', maxLength) - 1;
+                        nextSpace = text.LastIndexOf(' ', maxLength);
                     }
                     catch (IndexOutOfRangeException e) // we got a negative number here
                     {
                         maxLength = 64; // we got a negative number before so lets try again from half of the string
 
-                        nextSpace = text.LastIndexOf(' ', maxLength) - 1;
+                        nextSpace = text.LastIndexOf(' ', maxLength);
                     }
 
                     //in the event that we don't find a space, we need to ensure there is space for us to add on in
