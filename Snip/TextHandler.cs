@@ -36,12 +36,31 @@ namespace Winter
         {
             if (!string.IsNullOrEmpty(text))
             {
-                int maxLength = 120; // 128 max length minus 8 to stop issues with string length crashing the program
+                text = text.Trim(); //trim trailing spaces
+
+                int maxLength = 127; // 128 max length
+
+                int nextSpace = 0; // Set to zero in case all else fails
 
                 if (text.Length >= maxLength)
                 {
-                    int nextSpace = text.LastIndexOf(' ', maxLength);
+                    maxLength -= 4; //need to ensure space to append "..." to the end of the string
 
+                    //LastIndexOf will search backwards from the specified index, this means that
+                    //we search maxLength + 1 characters to find the specified char (space)
+                    //this index gets treated as a length (from index 0) in text.Substring,
+                    //which implicitly removes the space from the resultant string 
+                    try // try to get an index, if the number is negative we catch the error
+                    {
+                        nextSpace = text.LastIndexOf(' ', maxLength);
+                    }
+                    catch (IndexOutOfRangeException e) // we got a negative number here
+                    {
+                        maxLength = 64; // we got a negative number before so lets try again from half of the string
+
+                        nextSpace = text.LastIndexOf(' ', maxLength);
+                    }
+                    
                     text = string.Format(CultureInfo.CurrentCulture, "{0} ...", text.Substring(0, (nextSpace > 0) ? nextSpace : maxLength).Trim());
                 }
 
