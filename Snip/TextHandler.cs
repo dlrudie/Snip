@@ -57,7 +57,7 @@ namespace Winter
                     {
                         maxLength = 64; // we got a negative number before so lets try again from half of the string
 
-                        nextSpace = text.LastIndexOf(' ', maxLength) - ;
+                        nextSpace = text.LastIndexOf(' ', maxLength) - 1;
                     }
 
                     //in the event that we don't find a space, we need to ensure there is space for us to add on in
