@@ -77,11 +77,11 @@ namespace Winter
 
                                 if (jsonSummary != null)
                                 {
-                                    var numberOfResults = jsonSummary.info.num_results;
+                                    var numberOfResults = jsonSummary.tracks.total;
 
                                     if (numberOfResults > 0)
                                     {
-                                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+                                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
 
                                         TextHandler.UpdateText(
                                             jsonSummary[0].name.ToString(),
@@ -185,7 +185,7 @@ namespace Winter
                     var downloadedJson = jsonWebClient.DownloadString(
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "http://ws.spotify.com/search/1/track.json?q={0}",
+                            "https://api.spotify.com/v1/search?q={0}&type=track",
                             HttpUtility.UrlEncode(spotifyTitle)));
 
                     if (!string.IsNullOrEmpty(downloadedJson))
