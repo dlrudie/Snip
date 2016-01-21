@@ -29,3 +29,6 @@ Contributors
 
 * gummi
   * Norwegian translation
+
+* TheLastRar & kamijoutouma
+  * Crash fix for when titles too long
