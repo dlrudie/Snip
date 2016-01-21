@@ -201,6 +201,7 @@ namespace Winter
             }
         }
 
+        // TODO: Re-write this to download the artwork link supplied in the primary JSON file instead of using the old embedded web link.
         private void HandleSpotifyAlbumArtwork(string songTitle)
         {
             string albumId = string.Empty;
@@ -213,7 +214,7 @@ namespace Winter
 
                     if (jsonSummary != null)
                     {
-                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary["tracks"].ToString());
+                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
 
                         foreach (dynamic jsonTrack in jsonSummary)
                         {
@@ -223,7 +224,7 @@ namespace Winter
                             if (foundTitle == modifiedTitle)
                             {
                                 dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
-                                albumId = jsonAlbum.href.ToString();
+                                albumId = jsonAlbum.uri.ToString();
 
                                 break;
                             }
