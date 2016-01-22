@@ -165,9 +165,12 @@ namespace Winter
 
         private void ResetSinceSpotifyIsNotRunning()
         {
-            if (Globals.SaveAlbumArtwork)
+            if (!this.SavedBlankImage)
             {
-                this.SaveBlankImage();
+                if (Globals.SaveAlbumArtwork)
+                {
+                    this.SaveBlankImage();
+                }
             }
 
             TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
@@ -286,6 +289,8 @@ namespace Winter
                             {
                                 webClient.DownloadFileAsync(new Uri(imageUrl), this.DefaultArtworkFilePath);
                             }
+
+                            this.SavedBlankImage = false;
                         }
                     }
                     catch (WebException)

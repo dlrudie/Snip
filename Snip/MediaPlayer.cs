@@ -51,6 +51,8 @@ namespace Winter
 
         public bool NotRunning { get; set; }
 
+        public bool SavedBlankImage { get; set; }
+
         public IntPtr Handle { get; set; }
 
         public StringBuilder Title
@@ -131,6 +133,7 @@ namespace Winter
             try
             {
                 File.WriteAllBytes(this.defaultArtworkFile, this.blankImage);
+                this.SavedBlankImage = true;
             }
             catch (IOException)
             {
