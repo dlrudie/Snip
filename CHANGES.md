@@ -1,5 +1,9 @@
 CHANGES
 =======
+**v5.2.1 (2016-Jan-21):**
+* Fixed an issue where blank artwork would be repeatedly saved if Spotify
+    was not running.
+
 **v5.2.0 (2016-Jan-20):**
 * Spotify deprecated the API Snip was using. Snip now uses the new API.
 * Fixed crash when song titles are too long.
