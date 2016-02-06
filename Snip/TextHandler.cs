@@ -126,6 +126,7 @@ namespace Winter
 
             output = output.Replace(Globals.TrackVariable, title);
             output = output.Replace(Globals.ArtistVariable, artist);
+            output = output.Replace(Globals.NewLineVariable, "\r\n");
 
             if (!string.IsNullOrEmpty(album))
             {

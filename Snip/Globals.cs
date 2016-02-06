@@ -31,6 +31,7 @@ namespace Winter
         public const string TrackVariable = "$t";
         public const string ArtistVariable = "$a";
         public const string AlbumVariable = "$l";
+        public const string NewLineVariable = "$n";
 
         #endregion
 
