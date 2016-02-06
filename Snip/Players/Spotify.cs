@@ -185,6 +185,8 @@ namespace Winter
             {
                 try
                 {
+                    jsonWebClient.Encoding = System.Text.Encoding.UTF8;
+
                     var downloadedJson = jsonWebClient.DownloadString(
                         string.Format(
                             CultureInfo.InvariantCulture,
