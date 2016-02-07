@@ -1,5 +1,19 @@
 CHANGES
 =======
+**v5.3.0 (2016-Feb-06):**
+* JSON is now downloaded as UTF8. This will fix an issue where non-standard
+    characters were showing up wrong.
+* Added the ability to use $n in the output format. This will add a newline
+    wherever used.
+* Changed the way VLC was detected and the text handled. This should fix
+    problems people using VLC in a different language were having.
+* Added the ability for Snip to check if there's a new version available.
+    If a new version is found then the place where Snip shows the current
+    version in the context menu will be replaced with text showing a new
+    version is available. You can click this text to open your web browser to
+    download the new version.
+* Feel free to update translation files and/or submit new languages.
+
 **v5.2.1 (2016-Jan-21):**
 * Fixed an issue where blank artwork would be repeatedly saved if Spotify
     was not running.
