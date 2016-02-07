@@ -45,6 +45,10 @@ namespace Winter
                     Application.Run(new Snip());
                     mutex.ReleaseMutex();
                 }
+                // else
+                // {
+                //     MessageBox.Show("Another instance of " + Application.ProductName + " is already running.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // }
             }
             finally
             {
@@ -53,10 +57,6 @@ namespace Winter
                     mutex.Close();
                 }
             }
-            // else
-            // {
-            //     MessageBox.Show("Another instance of " + Application.ProductName + " is already running.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            // }
         }
     }
 }
