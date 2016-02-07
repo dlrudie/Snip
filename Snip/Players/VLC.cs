@@ -21,86 +21,53 @@
 namespace Winter
 {
     using System;
+    using System.Diagnostics;
     using System.Globalization;
 
     internal sealed class VLC : MediaPlayer
     {
         public override void Update()
         {
-            if (!this.Found)
-            {
-                this.Handle = UnsafeNativeMethods.FindWindow("QWidget", "VLC media player");
+            Process[] processes = Process.GetProcessesByName("vlc");
 
-                this.Found = true;
-                this.NotRunning = false;
-            }
-            else
+            if (processes.Length > 0)
             {
-                // Make sure the process is still valid.
-                if (this.Handle != IntPtr.Zero && this.Handle != null)
+                string vlcTitle = string.Empty;
+
+                foreach (Process process in processes)
                 {
-                    int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title, this.Title.Capacity);
+                    vlcTitle = process.MainWindowTitle;
+                }
 
-                    string vlcTitle = this.Title.ToString();
+                // Check for a hyphen in the title. If a hyphen exists then we need to cut all of the text after the last
+                // hyphen because that's the "VLC media player" text, which can vary based on language.
+                // If no hyphen exists then VLC is not playing anything.
+                int lastHyphen = vlcTitle.LastIndexOf("-", StringComparison.OrdinalIgnoreCase);
 
-                    this.Title.Clear();
+                if (lastHyphen > 0)
+                {
+                    vlcTitle = vlcTitle.Substring(0, lastHyphen).Trim();
 
-                    // If the window title length is 0 then the process handle is not valid.
-                    if (windowTextLength > 0)
+                    if (Globals.SaveAlbumArtwork)
                     {
-                        // Only update the system tray text and text file text if the title changes.
-                        if (vlcTitle != this.LastTitle)
-                        {
-                            if (vlcTitle.Equals("VLC media player"))
-                            {
-                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                            }
-                            else
-                            {
-                                string windowTitleFull = vlcTitle.Replace(" - VLC media player", string.Empty);
-
-                                if (Globals.SaveAlbumArtwork)
-                                {
-                                    this.SaveBlankImage();
-                                }
-
-                                TextHandler.UpdateText(windowTitleFull.Trim());
-                            }
-
-                            this.LastTitle = vlcTitle;
-                        }
+                        this.SaveBlankImage();
                     }
-                    else
-                    {
-                        if (!this.NotRunning)
-                        {
-                            if (Globals.SaveAlbumArtwork)
-                            {
-                                this.SaveBlankImage();
-                            }
 
-                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("VLCIsNotRunning"));
-
-                            this.Found = false;
-                            this.NotRunning = true;
-                        }
-                    }
+                    TextHandler.UpdateText(vlcTitle);
                 }
                 else
                 {
-                    if (!this.NotRunning)
-                    {
-                        if (Globals.SaveAlbumArtwork)
-                        {
-                            this.SaveBlankImage();
-                        }
-
-                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("VLCIsNotRunning"));
-
-                        this.Found = false;
-                        this.NotRunning = true;
-                    }
+                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                 }
+            }
+            else
+            {
+                if (Globals.SaveAlbumArtwork)
+                {
+                    this.SaveBlankImage();
+                }
+
+                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("VLCIsNotRunning"));
             }
         }
 
