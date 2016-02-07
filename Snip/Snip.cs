@@ -65,6 +65,13 @@ namespace Winter
 
             // Register global hotkeys
             this.ToggleHotkeys();
+
+            if (CheckVersion.IsNewVersionAvailable())
+            {
+                this.toolStripMenuItemSnipVersion.Text = Globals.ResourceManager.GetString("NewVersionAvailable");
+                this.toolStripMenuItemSnipVersion.Enabled = true;
+                this.toolStripMenuItemSnipVersion.Click += ToolStripMenuItemSnipVersion_Click;
+            }
         }
 
         #endregion
@@ -525,6 +532,11 @@ namespace Winter
             }
 
             Globals.EnableHotkeys = this.toolStripMenuItemEnableHotkeys.Checked;
+        }
+
+        private void ToolStripMenuItemSnipVersion_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/dlrudie/Snip/releases/latest");
         }
 
         #endregion

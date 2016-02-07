@@ -5,6 +5,11 @@
 ; Main application name.
 SnipForm=Snip
 
+; This text appears in place of the Snip version in the right-click context
+; menu when there is a new version of Snip available.
+; Let's sound excited!
+NewVersionAvailable=New Version Available!
+
 ; Supported media players.  These probably don't need translated unless they
 ; actually have a different name in other countries.
 Spotify=Spotify
