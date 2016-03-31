@@ -191,7 +191,7 @@ namespace Winter
                         string.Format(
                             CultureInfo.InvariantCulture,
                             "https://api.spotify.com/v1/search?q={0}&type=track",
-                            HttpUtility.UrlEncode(spotifyTitle)));
+                            HttpUtility.UrlEncode(spotifyTitle.Replace('/', ' '))));
 
                     if (!string.IsNullOrEmpty(downloadedJson))
                     {
