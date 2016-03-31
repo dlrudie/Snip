@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v5.3.1 (2016-Mar-30):**
+* Fix for crash when using Spotify and a song title had a / in it. This was
+    caused by Spotify's API not liking the use of a /. I now replaced the /
+    with a space in code and it's worked on all songs I've tested so far.
+    This fixes #91 <https://github.com/dlrudie/Snip/issues/91>.
+
 **v5.3.0 (2016-Feb-06):**
 * JSON is now downloaded as UTF8. This will fix an issue where non-standard
     characters were showing up wrong.
