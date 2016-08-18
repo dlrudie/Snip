@@ -83,14 +83,19 @@ namespace Winter
                                     {
                                         jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
 
-                                        TextHandler.UpdateText(
-                                            jsonSummary[0].name.ToString(),
-                                            jsonSummary[0].artists[0].name.ToString(),
-                                            jsonSummary[0].album.name.ToString());
-
-                                        if (Globals.SaveAlbumArtwork)
+                                        foreach (dynamic song in jsonSummary)
                                         {
-                                            this.HandleSpotifyAlbumArtwork(jsonSummary[0].name.ToString());
+                                            if (spotifyTitle.Contains(song.name) && spotifyTitle.Contains(song.artists[0].name))
+                                            {
+                                                TextHandler.UpdateText(song.name.ToString(), song.artists[0].name.ToString(), song.album.name.ToString());
+
+                                                if (Globals.SaveAlbumArtwork)
+                                                {
+                                                    this.HandleSpotifyAlbumArtwork(song.name.ToString());
+                                                }
+
+                                                break;
+                                            }
                                         }
                                     }
                                     else
