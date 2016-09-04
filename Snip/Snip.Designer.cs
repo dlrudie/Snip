@@ -18,7 +18,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAlbumArtwork;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemKeepSpotifyAlbumArtwork;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTiny;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall;
+        // private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall; // Disabling the small size since no small size is provided via Spotify
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMedium;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLarge;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveHistory;
@@ -78,7 +78,7 @@
             this.toolStripMenuItemSaveAlbumArtwork = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemKeepSpotifyAlbumArtwork = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTiny = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSmall = new System.Windows.Forms.ToolStripMenuItem();
+            // this.toolStripMenuItemSmall = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMedium = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemLarge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveHistory = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,7 +201,7 @@
             // 
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemTiny,
-            this.toolStripMenuItemSmall,
+            // this.toolStripMenuItemSmall,
             this.toolStripMenuItemMedium,
             this.toolStripMenuItemLarge});
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.Name = "toolStripMenuItemKeepSpotifyAlbumArtwork";
@@ -220,10 +220,10 @@
             // 
             // toolStripMenuItemSmall
             // 
-            this.toolStripMenuItemSmall.Name = "toolStripMenuItemSmall";
-            this.toolStripMenuItemSmall.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemSmall.Text = Globals.ResourceManager.GetString("ImageResolutionSmall");
-            this.toolStripMenuItemSmall.Click += new System.EventHandler(this.AlbumArtworkResolutionCheck);
+            // this.toolStripMenuItemSmall.Name = "toolStripMenuItemSmall";
+            // this.toolStripMenuItemSmall.Size = new System.Drawing.Size(67, 22);
+            // this.toolStripMenuItemSmall.Text = Globals.ResourceManager.GetString("ImageResolutionSmall");
+            // this.toolStripMenuItemSmall.Click += new System.EventHandler(this.AlbumArtworkResolutionCheck);
             // 
             // toolStripMenuItemMedium
             // 

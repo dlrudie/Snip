@@ -450,10 +450,10 @@ namespace Winter
             {
                 this.ToggleArtworkTiny();
             }
-            else if (sender == this.toolStripMenuItemSmall)
-            {
-                this.ToggleArtworkSmall();
-            }
+            // else if (sender == this.toolStripMenuItemSmall)
+            // {
+                // this.ToggleArtworkSmall();
+            // }
             else if (sender == this.toolStripMenuItemMedium)
             {
                 this.ToggleArtworkMedium();
@@ -467,7 +467,7 @@ namespace Winter
         private void ToggleArtworkTiny()
         {
             this.toolStripMenuItemTiny.Checked = true;
-            this.toolStripMenuItemSmall.Checked = false;
+            // this.toolStripMenuItemSmall.Checked = false;
             this.toolStripMenuItemMedium.Checked = false;
             this.toolStripMenuItemLarge.Checked = false;
 
@@ -477,7 +477,7 @@ namespace Winter
         private void ToggleArtworkSmall()
         {
             this.toolStripMenuItemTiny.Checked = false;
-            this.toolStripMenuItemSmall.Checked = true;
+            // this.toolStripMenuItemSmall.Checked = true;
             this.toolStripMenuItemMedium.Checked = false;
             this.toolStripMenuItemLarge.Checked = false;
 
@@ -487,7 +487,7 @@ namespace Winter
         private void ToggleArtworkMedium()
         {
             this.toolStripMenuItemTiny.Checked = false;
-            this.toolStripMenuItemSmall.Checked = false;
+            // this.toolStripMenuItemSmall.Checked = false;
             this.toolStripMenuItemMedium.Checked = true;
             this.toolStripMenuItemLarge.Checked = false;
 
@@ -497,7 +497,7 @@ namespace Winter
         private void ToggleArtworkLarge()
         {
             this.toolStripMenuItemTiny.Checked = false;
-            this.toolStripMenuItemSmall.Checked = false;
+            // this.toolStripMenuItemSmall.Checked = false;
             this.toolStripMenuItemMedium.Checked = false;
             this.toolStripMenuItemLarge.Checked = true;
 

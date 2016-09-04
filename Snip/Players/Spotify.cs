@@ -92,7 +92,7 @@ namespace Winter
 
                                         if (Globals.SaveAlbumArtwork)
                                         {
-                                            this.HandleSpotifyAlbumArtwork(jsonSummary[mostPopular].name.ToString());
+                                            this.DownloadSpotifyAlbumArtwork(jsonSummary[mostPopular].album);
                                         }
                                     }
                                     else
@@ -229,51 +229,10 @@ namespace Winter
             return keyWithHighestPopularity;
         }
 
-        // TODO: Re-write this to download the artwork link supplied in the primary JSON file instead of using the old embedded web link.
-        private void HandleSpotifyAlbumArtwork(string songTitle)
+        private void DownloadSpotifyAlbumArtwork(dynamic jsonSummary)
         {
-            string albumId = string.Empty;
+            string albumId = jsonSummary.id.ToString();
 
-            try
-            {
-                if (!string.IsNullOrEmpty(this.json))
-                {
-                    dynamic jsonSummary = SimpleJson.DeserializeObject(json);
-
-                    if (jsonSummary != null)
-                    {
-                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
-
-                        foreach (dynamic jsonTrack in jsonSummary)
-                        {
-                            string modifiedTitle = TextHandler.UnifyTitles(songTitle);
-                            string foundTitle = TextHandler.UnifyTitles(jsonTrack.name.ToString());
-
-                            if (foundTitle == modifiedTitle)
-                            {
-                                dynamic jsonAlbum = SimpleJson.DeserializeObject(jsonTrack["album"].ToString());
-                                albumId = jsonAlbum.uri.ToString();
-
-                                break;
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(albumId))
-                        {
-                            albumId = albumId.Substring(albumId.LastIndexOf(':') + 1);
-                            this.DownloadSpotifyAlbumArtwork(albumId);
-                        }
-                    }
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                this.SaveBlankImage();
-            }
-        }
-
-        private void DownloadSpotifyAlbumArtwork(string albumId)
-        {
             string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
             string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
 
@@ -296,27 +255,41 @@ namespace Winter
                 {
                     try
                     {
-                        webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
-                        var downloadedJson = webClient.DownloadString(string.Format(CultureInfo.InvariantCulture, "https://embed.spotify.com/oembed/?url=spotify:album:{0}", albumId));
+                        // This assumes that the Spotify image array will always have three results (which in all of my tests it has so far)
+                        string imageUrl = string.Empty;
 
-                        if (!string.IsNullOrEmpty(downloadedJson))
+                        switch (Globals.ArtworkResolution)
                         {
-                            dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+                            case Globals.AlbumArtworkResolution.Large:
+                                imageUrl = jsonSummary.images[0].url.ToString();
+                                break;
 
-                            string imageUrl = jsonSummary.thumbnail_url.ToString().Replace("cover", string.Format(CultureInfo.InvariantCulture, "{0}", (int)Globals.ArtworkResolution));
+                            case Globals.AlbumArtworkResolution.Medium:
+                                imageUrl = jsonSummary.images[1].url.ToString();
+                                break;
 
-                            if (Globals.KeepSpotifyAlbumArtwork)
-                            {
-                                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
-                                webClient.DownloadFileAsync(new Uri(imageUrl), artworkImagePath, artworkImagePath);
-                            }
-                            else
-                            {
-                                webClient.DownloadFileAsync(new Uri(imageUrl), this.DefaultArtworkFilePath);
-                            }
+                            case Globals.AlbumArtworkResolution.Tiny:
+                                imageUrl = jsonSummary.images[2].url.ToString();
+                                break;
 
-                            this.SavedBlankImage = false;
+                            default:
+                                imageUrl = jsonSummary.images[0].url.ToString();
+                                break;
                         }
+
+                        webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
+
+                        if (Globals.KeepSpotifyAlbumArtwork)
+                        {
+                            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
+                            webClient.DownloadFileAsync(new Uri(imageUrl), artworkImagePath, artworkImagePath);
+                        }
+                        else
+                        {
+                            webClient.DownloadFileAsync(new Uri(imageUrl), this.DefaultArtworkFilePath);
+                        }
+
+                        this.SavedBlankImage = false;
                     }
                     catch (WebException)
                     {
