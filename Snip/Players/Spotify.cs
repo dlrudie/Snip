@@ -83,14 +83,16 @@ namespace Winter
                                     {
                                         jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
 
+                                        int mostPopular = SortResultsByPopularity(jsonSummary);
+
                                         TextHandler.UpdateText(
-                                            jsonSummary[0].name.ToString(),
-                                            jsonSummary[0].artists[0].name.ToString(),
-                                            jsonSummary[0].album.name.ToString());
+                                            jsonSummary[mostPopular].name.ToString(),
+                                            jsonSummary[mostPopular].artists[0].name.ToString(),
+                                            jsonSummary[mostPopular].album.name.ToString());
 
                                         if (Globals.SaveAlbumArtwork)
                                         {
-                                            this.HandleSpotifyAlbumArtwork(jsonSummary[0].name.ToString());
+                                            this.HandleSpotifyAlbumArtwork(jsonSummary[mostPopular].name.ToString());
                                         }
                                     }
                                     else
@@ -204,6 +206,26 @@ namespace Winter
                     this.SaveBlankImage();
                 }
             }
+        }
+
+        {
+            long highestPopularity = 0;
+
+            int currentKey = 0;
+            int keyWithHighestPopularity = 0;
+
+            foreach (dynamic track in jsonSummary)
+            {
+                if (track.popularity > highestPopularity)
+                {
+                    highestPopularity = track.popularity;
+                    keyWithHighestPopularity = currentKey;
+                }
+
+                currentKey++;
+            }
+
+            return keyWithHighestPopularity;
         }
 
         // TODO: Re-write this to download the artwork link supplied in the primary JSON file instead of using the old embedded web link.
