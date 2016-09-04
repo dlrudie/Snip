@@ -1,5 +1,19 @@
 CHANGES
 =======
+**v5.4.0 (2016-Sep-04):**
+* #110 <https://github.com/dlrudie/Snip/issues/110> Implemented Spotify track
+    ID saving. If saving files separately is enabled then a new file,
+    Snip_TrackId.txt, will be created that contains the Spotify track ID.
+* #101 <https://github.com/dlrudie/Snip/issues/101> When Snip queries
+    Spotify's servers for track information it will now use the result with
+    the highest "popularity" rating. This change hopefully will result in
+    more accurate track selection.
+* #100 <https://github.com/dlrudie/Snip/issues/100> Cleaned up Spotify
+    artwork downloading. It will now download the files provided in the main
+    JSON file instead of downloading the JSON for the embedded site and then
+    using the images linked there. This potentially will result in less blank
+    artwork.
+
 **v5.3.1 (2016-Mar-30):**
 * Fix for crash when using Spotify and a song title had a / in it. This was
     caused by Spotify's API not liking the use of a /. I now replaced the /
