@@ -83,7 +83,7 @@ namespace Winter
                                     {
                                         jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
 
-                                        int mostPopular = SelectTrackByPopularity(jsonSummary);
+                                        int mostPopular = SelectTrackByPopularity(jsonSummary, spotifyTitle);
 
                                         TextHandler.UpdateText(
                                             jsonSummary[mostPopular].name.ToString(),
@@ -209,7 +209,7 @@ namespace Winter
             }
         }
 
-        private static int SelectTrackByPopularity(dynamic jsonSummary)
+        private static int SelectTrackByPopularity(dynamic jsonSummary, string windowTitle)
         {
             long highestPopularity = 0;
 
@@ -218,10 +218,13 @@ namespace Winter
 
             foreach (dynamic track in jsonSummary)
             {
-                if (track.popularity > highestPopularity)
+                if (windowTitle.Contains(track.artists[0].name) && windowTitle.Contains(track.name))
                 {
-                    highestPopularity = track.popularity;
-                    keyWithHighestPopularity = currentKey;
+                    if (track.popularity > highestPopularity)
+                    {
+                        highestPopularity = track.popularity;
+                        keyWithHighestPopularity = currentKey;
+                    }
                 }
 
                 currentKey++;
