@@ -88,7 +88,8 @@ namespace Winter
                                         TextHandler.UpdateText(
                                             jsonSummary[mostPopular].name.ToString(),
                                             jsonSummary[mostPopular].artists[0].name.ToString(),
-                                            jsonSummary[mostPopular].album.name.ToString());
+                                            jsonSummary[mostPopular].album.name.ToString(),
+                                            jsonSummary[mostPopular].id.ToString());
 
                                         if (Globals.SaveAlbumArtwork)
                                         {
