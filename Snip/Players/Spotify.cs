@@ -83,7 +83,7 @@ namespace Winter
                                     {
                                         jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
 
-                                        int mostPopular = SortResultsByPopularity(jsonSummary);
+                                        int mostPopular = SelectTrackByPopularity(jsonSummary);
 
                                         TextHandler.UpdateText(
                                             jsonSummary[mostPopular].name.ToString(),
@@ -208,6 +208,7 @@ namespace Winter
             }
         }
 
+        private static int SelectTrackByPopularity(dynamic jsonSummary)
         {
             long highestPopularity = 0;
 
