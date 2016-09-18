@@ -188,13 +188,19 @@ namespace Winter
             {
                 try
                 {
+                    // These characters can cause issues with Spotify's search
+                    // Replace these characters with spaces
+                    // Spotify's search does not seem to care how many spaces there are altogether
+                    spotifyTitle = spotifyTitle.Replace("/", " ");
+                    spotifyTitle = spotifyTitle.Replace(":", " ");
+
                     jsonWebClient.Encoding = System.Text.Encoding.UTF8;
 
                     var downloadedJson = jsonWebClient.DownloadString(
                         string.Format(
                             CultureInfo.InvariantCulture,
                             "https://api.spotify.com/v1/search?q={0}&type=track",
-                            HttpUtility.UrlEncode(spotifyTitle.Replace('/', ' '))));
+                            HttpUtility.UrlEncode(spotifyTitle)));
 
                     if (!string.IsNullOrEmpty(downloadedJson))
                     {
