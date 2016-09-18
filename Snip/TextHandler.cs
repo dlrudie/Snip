@@ -133,6 +133,7 @@ namespace Winter
             output = output.Replace(Globals.TrackVariable, title);
             output = output.Replace(Globals.ArtistVariable, artist);
             output = output.Replace(Globals.NewLineVariable, "\r\n");
+            output = output.Replace(Globals.TrackIdVariable, trackId);
 
             if (!string.IsNullOrEmpty(album))
             {
@@ -158,9 +159,9 @@ namespace Winter
                 // Check if we want to save artist and track to separate files.
                 if (Globals.SaveSeparateFiles)
                 {
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", artist);
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", title);
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", album);
                     File.WriteAllText(@Application.StartupPath + @"\Snip_TrackId.txt", trackId);
                 }
 
@@ -178,21 +179,22 @@ namespace Winter
             {
                 title = title.ToUpper(CultureInfo.InvariantCulture);
 
-                title = title.Replace(@".", string.Empty);
-                title = title.Replace(@"/", string.Empty);
-                title = title.Replace(@"\", string.Empty);
-                title = title.Replace(@",", string.Empty);
-                title = title.Replace(@"'", string.Empty);
-                title = title.Replace(@"(", string.Empty);
-                title = title.Replace(@")", string.Empty);
-                title = title.Replace(@"[", string.Empty);
-                title = title.Replace(@"]", string.Empty);
-                title = title.Replace(@"!", string.Empty);
-                title = title.Replace(@"$", string.Empty);
-                title = title.Replace(@"%", string.Empty);
-                title = title.Replace(@"&", string.Empty);
-                title = title.Replace(@"?", string.Empty);
-                title = title.Replace(@":", string.Empty);
+                // title = title.Replace(@".", " "); // Causes failed search result from Spotify
+                title = title.Replace(@"/", " ");
+                title = title.Replace(@"\", " ");
+                title = title.Replace(@",", " ");
+                // title = title.Replace(@"'", " "); // Causes failed search result from Spotify
+                title = title.Replace(@"(", " ");
+                title = title.Replace(@")", " ");
+                title = title.Replace(@"[", " ");
+                title = title.Replace(@"]", " ");
+                title = title.Replace(@"!", " ");
+                title = title.Replace(@"$", " ");
+                title = title.Replace(@"%", " ");
+                title = title.Replace(@"&", " ");
+                title = title.Replace(@"?", " ");
+                title = title.Replace(@":", " ");
+                title = title.Replace(@"*", " ");
 
                 title = CompactWhitespace(title);
 
