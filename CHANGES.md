@@ -1,5 +1,15 @@
 CHANGES
 =======
+**v5.5.0 (2016-Sep-23):**
+* Fix for song title selection if the album has the same name as the track
+    being played.
+* #116 <https://github.com/dlrudie/Snip/issues/116> Fix for finding titles
+    from Spotify with a : in them (among other characters).
+* Added Spanish (es-CL) translation thanks to NioZero.
+* #110 <https://github.com/dlrudie/Snip/issues/110> Added hidden $i
+    variable. This can be used in the output format settings to display the
+    Spotify track ID.
+
 **v5.4.0 (2016-Sep-04):**
 * #110 <https://github.com/dlrudie/Snip/issues/110> Implemented Spotify track
     ID saving. If saving files separately is enabled then a new file,
