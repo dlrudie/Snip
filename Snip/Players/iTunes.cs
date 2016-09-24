@@ -138,6 +138,10 @@ namespace Winter
 
                 TextHandler.UpdateText(track.Name, track.Artist, track.Album);
             }
+            else if (string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
+            {
+                TextHandler.UpdateText(track.Name);
+            }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
                 TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
