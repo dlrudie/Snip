@@ -32,3 +32,6 @@ Contributors
 
 * TheLastRar & kamijoutouma
   * Crash fix for when titles too long
+
+* Gonzalo Hidalgo (NioZero)
+  * Spanish translation (es-CL)
