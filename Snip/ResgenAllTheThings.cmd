@@ -14,9 +14,10 @@ set fileToResgen[4]="%sourceDir%Resources\Strings.fr-FR"
 set fileToResgen[5]="%sourceDir%Resources\Strings.nb-NO"
 set fileToResgen[6]="%sourceDir%Resources\Strings.nl-NL"
 set fileToResgen[7]="%sourceDir%Resources\Strings.sv-SE"
+set fileToResgen[8]="%sourceDir%Resources\Strings.es-CL"
 
 
-%resgenPath% /compile !fileToResgen[0]!.txt !fileToResgen[1]!.txt !fileToResgen[2]!.txt !fileToResgen[3]!.txt !fileToResgen[4]!.txt !fileToResgen[5]!.txt !fileToResgen[6]!.txt !fileToResgen[7]!.txt
+%resgenPath% /compile !fileToResgen[0]!.txt !fileToResgen[1]!.txt !fileToResgen[2]!.txt !fileToResgen[3]!.txt !fileToResgen[4]!.txt !fileToResgen[5]!.txt !fileToResgen[6]!.txt !fileToResgen[7]!.txt !fileToResgen[8]!.txt
 
 rem for /l %%n in (0,1,6) do (
 rem     copy /Y !fileToResgen[%%n]!.resources "bin\Debug\Resources"
