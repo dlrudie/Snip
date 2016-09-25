@@ -159,9 +159,9 @@ namespace Winter
                 // Check if we want to save artist and track to separate files.
                 if (Globals.SaveSeparateFiles)
                 {
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", artist);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", title);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", album);
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", Globals.ArtistFormat.Replace(Globals.ArtistVariable, artist));
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", Globals.TrackFormat.Replace(Globals.TrackVariable, title));
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", Globals.AlbumFormat.Replace(Globals.AlbumVariable, album));
                     File.WriteAllText(@Application.StartupPath + @"\Snip_TrackId.txt", trackId);
                 }
 
