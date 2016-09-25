@@ -32,6 +32,7 @@ namespace Winter
     internal sealed class Spotify : MediaPlayer
     {
         private string json = string.Empty;
+        private bool downloadingJson = false;
 
         public override void Update()
         {
@@ -193,31 +194,39 @@ namespace Winter
 
         private void DownloadJson(string spotifyTitle)
         {
-            using (WebClient jsonWebClient = new WebClient())
+            // Prevent redownloading JSON if it's already attempting to
+            if (!this.downloadingJson)
             {
-                try
+                this.downloadingJson = true;
+
+                using (WebClient jsonWebClient = new WebClient())
                 {
-                    // There are certain characters that can cause issues with Spotify's search
-                    spotifyTitle = TextHandler.UnifyTitles(spotifyTitle);
-
-                    jsonWebClient.Encoding = System.Text.Encoding.UTF8;
-
-                    var downloadedJson = jsonWebClient.DownloadString(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "https://api.spotify.com/v1/search?q={0}&type=track",
-                            HttpUtility.UrlEncode(spotifyTitle)));
-
-                    if (!string.IsNullOrEmpty(downloadedJson))
+                    try
                     {
-                        this.json = downloadedJson;
+                        // There are certain characters that can cause issues with Spotify's search
+                        spotifyTitle = TextHandler.UnifyTitles(spotifyTitle);
+
+                        jsonWebClient.Encoding = System.Text.Encoding.UTF8;
+
+                        var downloadedJson = jsonWebClient.DownloadString(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "https://api.spotify.com/v1/search?q={0}&type=track",
+                                HttpUtility.UrlEncode(spotifyTitle)));
+
+                        if (!string.IsNullOrEmpty(downloadedJson))
+                        {
+                            this.json = downloadedJson;
+                        }
+                    }
+                    catch (WebException)
+                    {
+                        this.json = string.Empty;
+                        this.SaveBlankImage();
                     }
                 }
-                catch (WebException)
-                {
-                    this.json = string.Empty;
-                    this.SaveBlankImage();
-                }
+
+                this.downloadingJson = false;
             }
         }
 
