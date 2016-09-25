@@ -181,6 +181,12 @@ namespace Winter
                 // Let's see how all lowercase fairs
                 title = title.ToLower(CultureInfo.InvariantCulture);
 
+                // For some unknown reason some versions of Spotify include
+                // "Spotify - " before the track information. I doubt this
+                // particular string would appear in any sane song title, so
+                // let's just remove it.
+                title = title.Replace(@"Spotify - ", " ");
+
                 // title = title.Replace(@".", " "); // Causes failed search result from Spotify
                 title = title.Replace(@"/", " ");
                 title = title.Replace(@"\", " ");
