@@ -73,35 +73,44 @@ namespace Winter
                             {
                                 this.DownloadJson(spotifyTitle);
 
-                                dynamic jsonSummary = SimpleJson.DeserializeObject(this.json);
-
-                                if (jsonSummary != null)
+                                if (!string.IsNullOrEmpty(this.json))
                                 {
-                                    var numberOfResults = jsonSummary.tracks.total;
+                                    dynamic jsonSummary = SimpleJson.DeserializeObject(this.json);
 
-                                    if (numberOfResults > 0)
+                                    if (jsonSummary != null)
                                     {
-                                        jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
+                                        var numberOfResults = jsonSummary.tracks.total;
 
-                                        int mostPopular = SelectTrackByPopularity(jsonSummary, spotifyTitle);
-
-                                        TextHandler.UpdateText(
-                                            jsonSummary[mostPopular].name.ToString(),
-                                            jsonSummary[mostPopular].artists[0].name.ToString(),
-                                            jsonSummary[mostPopular].album.name.ToString(),
-                                            jsonSummary[mostPopular].id.ToString());
-
-                                        if (Globals.SaveAlbumArtwork)
+                                        if (numberOfResults > 0)
                                         {
-                                            this.DownloadSpotifyAlbumArtwork(jsonSummary[mostPopular].album);
+                                            jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
+
+                                            int mostPopular = SelectTrackByPopularity(jsonSummary, spotifyTitle);
+
+                                            TextHandler.UpdateText(
+                                                jsonSummary[mostPopular].name.ToString(),
+                                                jsonSummary[mostPopular].artists[0].name.ToString(),
+                                                jsonSummary[mostPopular].album.name.ToString(),
+                                                jsonSummary[mostPopular].id.ToString());
+
+                                            if (Globals.SaveAlbumArtwork)
+                                            {
+                                                this.DownloadSpotifyAlbumArtwork(jsonSummary[mostPopular].album);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // In the event of an advertisement (or any song that returns 0 results)
+                                            // then we'll just write the whole title as a single string instead.
+                                            TextHandler.UpdateText(spotifyTitle);
                                         }
                                     }
-                                    else
-                                    {
-                                        // In the event of an advertisement (or any song that returns 0 results)
-                                        // then we'll just write the whole title as a single string instead.
-                                        TextHandler.UpdateText(spotifyTitle);
-                                    }
+                                }
+                                else
+                                {
+                                    // For whatever reason the JSON file couldn't download
+                                    // In the event this happens we'll just display Spotify's window title as the track
+                                    TextHandler.UpdateText(spotifyTitle);
                                 }
                             }
 

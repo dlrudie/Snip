@@ -177,7 +177,9 @@ namespace Winter
         {
             if (!string.IsNullOrEmpty(title))
             {
-                title = title.ToUpper(CultureInfo.InvariantCulture);
+                // Spotify's search doesn't like all uppercase letters
+                // Let's see how all lowercase fairs
+                title = title.ToLower(CultureInfo.InvariantCulture);
 
                 // title = title.Replace(@".", " "); // Causes failed search result from Spotify
                 title = title.Replace(@"/", " ");
