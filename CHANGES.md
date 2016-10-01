@@ -1,5 +1,21 @@
 CHANGES
 =======
+**v5.6.0 (2016-Oct-01):**
+* #119 <https://github.com/dlrudie/Snip/issues/119> Fix for separate files
+    not using output format.
+* #118 <https://github.com/dlrudie/Snip/issues/118> Some users of Spotify
+    have "Spotify" in the window title and that breaks the search.
+* Fixed an issue where Snip would repeatedly query Spotify's search until
+    it got a result.
+* #87 <https://github.com/dlrudie/Snip/issues/87> Prevent Snip crashing when
+    an invalid JSON file is downloaded. It will fall back to just showing
+    the window title in this case.
+* #59 <https://github.com/dlrudie/Snip/issues/59> Fixes an issue where songs
+    with no artist in the ID3 tag would not display in Snip when using
+    iTunes.
+* When saving output format it will now update right away instead of waiting
+    for the next song to play.
+
 **v5.5.0 (2016-Sep-23):**
 * Fix for song title selection if the album has the same name as the track
     being played.
