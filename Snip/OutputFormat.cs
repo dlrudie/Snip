@@ -122,6 +122,8 @@ namespace Winter
             registryKey.SetValue("Album Format", this.textBoxAlbumFormat.Text, RegistryValueKind.String);
 
             registryKey.Close();
+
+            Globals.RewriteUpdatedOutputFormat = true;
         }
 
         private void SetDefaults()
@@ -130,6 +132,8 @@ namespace Winter
             this.textBoxSeparatorFormat.Text = Globals.DefaultSeparatorFormat;
             this.textBoxArtistFormat.Text = Globals.DefaultArtistFormat;
             this.textBoxAlbumFormat.Text = Globals.DefaultAlbumFormat;
+
+            Globals.RewriteUpdatedOutputFormat = true;
         }
     }
 }

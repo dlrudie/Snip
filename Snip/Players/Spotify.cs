@@ -59,8 +59,10 @@ namespace Winter
                     {
                         // Only update if the title has actually changed.
                         // This prevents unnecessary calls and downloads.
-                        if (spotifyTitle != this.LastTitle)
+                        if (spotifyTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                         {
+                            Globals.RewriteUpdatedOutputFormat = false;
+
                             if (spotifyTitle == "Spotify")
                             {
                                 if (Globals.SaveAlbumArtwork)

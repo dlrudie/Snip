@@ -64,6 +64,8 @@ namespace Winter
         public static string ArtistFormat { get; set; }
         public static string AlbumFormat { get; set; }
 
+        public static bool RewriteUpdatedOutputFormat { get; set; }
+
         #endregion
 
         #region Enumerations

@@ -61,8 +61,10 @@ namespace Winter
                     if (windowTextLength > 0)
                     {
                         // Only update the system tray text and text file text if the title changes.
-                        if (foobar2000Title != this.LastTitle)
+                        if (foobar2000Title != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                         {
+                            Globals.RewriteUpdatedOutputFormat = false;
+
                             if (foobar2000Title.StartsWith("foobar2000", StringComparison.OrdinalIgnoreCase))
                             {
                                 TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));

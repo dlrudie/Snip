@@ -49,8 +49,10 @@ namespace Winter
                     if (windowTextLength > 0)
                     {
                         // Only update the system tray text and text file text if the title changes.
-                        if (winampTitle != this.LastTitle)
+                        if (winampTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                         {
+                            Globals.RewriteUpdatedOutputFormat = false;
+
                             if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                             {
                                 TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
