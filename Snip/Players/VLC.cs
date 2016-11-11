@@ -53,6 +53,14 @@ namespace Winter
                         this.SaveBlankImage();
                     }
 
+                    // Filter file extension
+                    int lastDot = vlcTitle.LastIndexOf('.');
+
+                    if (lastDot > 0)
+                    {
+                        vlcTitle = vlcTitle.Substring(0, lastDot).Trim();
+                    }
+
                     TextHandler.UpdateText(vlcTitle);
                 }
                 else
