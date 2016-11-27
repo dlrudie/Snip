@@ -127,7 +127,7 @@
             this.toolStripMenuItemSnipVersion.Enabled = false;
             this.toolStripMenuItemSnipVersion.Name = "toolStripMenuItemSnipVersion";
             this.toolStripMenuItemSnipVersion.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemSnipVersion.Text = Globals.ResourceManager.GetString("SnipForm") + ' ' + AssemblyInformation.AssemblyShorterVersion;
+            this.toolStripMenuItemSnipVersion.Text = Globals.ResourceManager.GetString("SnipForm") + AssemblyInformation.AssemblyShorterVersion;
             // 
             // toolStripMenuItemSpotify
             // 

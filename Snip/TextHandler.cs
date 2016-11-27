@@ -179,7 +179,7 @@ namespace Winter
             {
                 // Spotify's search doesn't like all uppercase letters
                 // Let's see how all lowercase fairs
-                title = title.ToLower(CultureInfo.InvariantCulture);
+                title = title.ToLowerInvariant();
 
                 // For some unknown reason some versions of Spotify include
                 // "Spotify - " before the track information. I doubt this

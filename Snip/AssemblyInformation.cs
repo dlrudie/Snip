@@ -81,7 +81,7 @@ namespace Winter
                 Version version = Assembly.GetExecutingAssembly().GetName().Version;
                 string shorterVersion = string.Format(
                     CultureInfo.InvariantCulture,
-                    "v{0}.{1}.{2}",
+                    " v{0}.{1}.{2}",
                     version.Major,
                     version.Minor,
                     version.Build);

@@ -63,7 +63,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>EB069B776C3093E0EB9BC20E7DE4225323521A5E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>954451B7F1C3CACCBB4518A11720C1325840AAED</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.verisign.com/scripts/timestamp.dll</ManifestTimestampUrl>
