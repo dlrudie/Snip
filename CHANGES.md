@@ -1,5 +1,16 @@
 CHANGES
 =======
+**v5.6.5 (2016-Nov-27):**
+* #125 <https://github.com/dlrudie/Snip/issues/125> Fix for filtering out
+    file extensions from VLC's titlebar. Fix provided by Bartosz Wiśniewski
+    (PoprostuRonin)
+* Added Czech translation thanks to jingtongtangflee.
+* #129 <https://github.com/dlrudie/Snip/issues/129> Fix for variables being
+    replaced in track names and artist names when they shouldn't be. Because
+    of this change all variables have been changed from $var to $$var.
+* #124 <https://github.com/dlrudie/Snip/issues/124> Fix for beta versions of
+    foobar2000 not having the version stripped out of the title.
+
 **v5.6.0 (2016-Oct-01):**
 * #119 <https://github.com/dlrudie/Snip/issues/119> Fix for separate files
     not using output format.
