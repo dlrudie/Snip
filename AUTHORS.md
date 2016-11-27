@@ -39,3 +39,6 @@ Contributors
 * Bartosz Wiśniewski (PoprostuRonin)
   * Polish translation
   * VLC file extension filtering
+
+* jingtongtangflee
+  * Czech translation

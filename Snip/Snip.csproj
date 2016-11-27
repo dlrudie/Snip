@@ -188,6 +188,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Strings.cs-CZ.txt" />
     <Content Include="Resources\Strings.pl-PL.txt" />
     <Content Include="Resources\Strings.es-CL.txt" />
     <Content Include="Resources\Strings.nb-NO.txt" />
