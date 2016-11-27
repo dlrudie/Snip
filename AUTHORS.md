@@ -35,3 +35,7 @@ Contributors
 
 * Gonzalo Hidalgo (NioZero)
   * Spanish translation (es-CL)
+  
+* Bartosz Wiśniewski (PoprostuRonin)
+  * Polish translation
+  * VLC file extension filtering

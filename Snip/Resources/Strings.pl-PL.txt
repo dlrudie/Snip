@@ -1,0 +1,126 @@
+#############
+# Snip Form #
+#############
+
+; Main application name.
+SnipForm=Snip
+
+; This text appears in place of the Snip version in the right-click context
+; menu when there is a new version of Snip available.
+; Let's sound excited!
+NewVersionAvailable=Nowa wersja dostępna!
+
+; Supported media players.  These probably don't need translated unless they
+; actually have a different name in other countries.
+Spotify=Spotify
+iTunes=iTunes
+Winamp=Winamp
+foobar2000=foobar2000
+VLC=VLC
+
+; This text is saved to the Snip.txt file when the user switches media players
+; from the right-click context menu.
+SwitchedToSpotify=Przełączono na Spotify
+SwitchedToiTunes=Przełączono na iTunes
+SwitchedToWinamp=Przełączono na Winamp
+SwitchedTofoobar2000=Przełączono na foobar2000
+SwitchedToVLC=Przełączono na VLC
+
+; This text is saved to the Snip.txt file when Snip itself is running but Snip
+; does not detect the selected media player as running.
+SpotifyIsNotRunning=Spotify nie jest obecnie uruchomione
+iTunesNotRunning=iTunes nie jest obecnie uruchomione
+WinampIsNotRunning=Winamp nie jest obecnie uruchomione
+foobar2000IsNotRunning=foobar2000 nie jest obecnie uruchomione
+VLCIsNotRunning=VLC nie jest obecnie uruchomione
+
+; This text is saved to the Snip.txt file when no track is playing in the
+; selected media file or when the user stops/pauses a playing track.
+NoTrackPlaying=Nic nie gra
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will open up the "Set Output Format" form where the user can customize how
+; the text will look when saved to any of the text files.
+SetOutputFormat=Ustaw format wyjścia
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artist information and song information to separate text files
+; on the harddrive.
+SaveInformationSeparately=Zapisuj informacje oddzielnie
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will download and save album artwork for the currently playing track to the
+; harddrive.
+SaveAlbumArtwork=Zapisuj okładkę albumu
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artwork to a subdirectory using the trackid information
+; provided by Spotify as the filename.  Each track will save its own album
+; artwork and the next time that track is played it will use the saved file
+; instead of redownloading it each time.
+KeepSpotifyAlbumArtwork=Przechowywuj okładki Spotify
+
+; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
+; and it refers to the image resolution of the artwork to be downloaded.
+ImageResolutionTiny=Malutki
+ImageResolutionSmall=Mały
+ImageResolutionMedium=Średni
+ImageResolutionLarge=Duży
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will create a file called Snip_History.txt where it will append each track
+; played to the end of the file, effectively creating a play history.
+SaveTrackHistory=Zapisuj historię odtwarzania
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause a popup notification to display on the desktop with the
+; currently playing track title.
+DisplayTrackPopup=Pokazuj powiadomienia
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause Snip.txt to be emptied out when no track is playing.  If this
+; option is disabled then the text from "NoTrackPlaying" will be saved to
+; Snip.txt.
+EmptyFile=Pusty plik gdy nic nie jest odtwarzane
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause Snip to register global hotkeys that can be used to control the
+; selected media player from anywhere.
+EnableHotkeys=Włącz skróty klawiszowe
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will exit the application.
+ExitApplication=Wyjdź
+
+; This text is displayed in a MessageBox pop-up when there is a COM exception
+; caused by trying to load the iTunes COM library.
+iTunesException=Opuść iTunes a następnie ponownie wybierz iTunes w Snip
+
+######################
+# Output Format Form #
+######################
+
+; This text is displayed as the title of the Output Format Form.
+SetOutputFormatForm=Ustaw format wyjścia
+
+; These texts refer to setting how specific output looks when saved to any of
+; the text files.  The $t, $a, and $l variables will be filled in with the
+; track, artist, and album information of the currently playing track.
+SetTrackFormat=Ustaw format utworu ($t):
+SetSeparatorFormat=Ustaw format separatora:
+SetArtistFormat=Ustaw format artysty ($a):
+SetAlbumFormat=Ustaw format albumu ($l):
+
+; This text is displayed on the buttons within this form.  Clicking the
+; Defaults button will restore the output format settings to their default
+; appearance.  Clicking the Save button will save the user-set appearance.
+ButtonDefaults=Domyślne
+ButtonSave=Zapisz
+
+; These will most likely not need to be translated.  However, if your locale
+; uses different dashes or quotation marks then you can alternatively change
+; them here.
+TrackFormat=“$t”
+SeparatorFormat=―
+ArtistFormat=$a
+AlbumFormat=$l
