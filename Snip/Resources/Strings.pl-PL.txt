@@ -104,12 +104,12 @@ iTunesException=Opuść iTunes a następnie ponownie wybierz iTunes w Snip
 SetOutputFormatForm=Ustaw format wyjścia
 
 ; These texts refer to setting how specific output looks when saved to any of
-; the text files.  The $t, $a, and $l variables will be filled in with the
+; the text files.  The $$t, $$a, and $$l variables will be filled in with the
 ; track, artist, and album information of the currently playing track.
-SetTrackFormat=Ustaw format utworu ($t):
+SetTrackFormat=Ustaw format utworu ($$t):
 SetSeparatorFormat=Ustaw format separatora:
-SetArtistFormat=Ustaw format artysty ($a):
-SetAlbumFormat=Ustaw format albumu ($l):
+SetArtistFormat=Ustaw format artysty ($$a):
+SetAlbumFormat=Ustaw format albumu ($$l):
 
 ; This text is displayed on the buttons within this form.  Clicking the
 ; Defaults button will restore the output format settings to their default
@@ -120,7 +120,7 @@ ButtonSave=Zapisz
 ; These will most likely not need to be translated.  However, if your locale
 ; uses different dashes or quotation marks then you can alternatively change
 ; them here.
-TrackFormat=“$t”
+TrackFormat=“$$t”
 SeparatorFormat=―
-ArtistFormat=$a
-AlbumFormat=$l
+ArtistFormat=$$a
+AlbumFormat=$$l

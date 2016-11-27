@@ -104,12 +104,12 @@ iTunesException=Sluit alstublieft iTunes af en selecteer opnieuw iTunes in Snip.
 SetOutputFormatForm=Stel opmaak uitvoer in
 
 ; These texts refer to setting how specific output looks when saved to any of
-; the text files.  The $t, $a, and $l variables will be filled in with the
+; the text files.  The $$t, $$a, and $$l variables will be filled in with the
 ; track, artist, and album information of the currently playing track.
-SetTrackFormat=Stel opmaak Track in ($t):
+SetTrackFormat=Stel opmaak Track in ($$t):
 SetSeparatorFormat=Stel scheidingsteken in:
-SetArtistFormat=Stel opmaak Artiest in ($a):
-SetAlbumFormat=Stel opmaak Album in($l):
+SetArtistFormat=Stel opmaak Artiest in ($$a):
+SetAlbumFormat=Stel opmaak Album in ($$l):
 
 ; This text is displayed on the buttons within this form.  Clicking the
 ; Defaults button will restore the output format settings to their default
@@ -120,7 +120,7 @@ ButtonSave=Opslaan
 ; These will most likely not need to be translated.  However, if your locale
 ; uses different dashes or quotation marks then you can alternatively change
 ; them here.
-TrackFormat=“$t”
+TrackFormat=“$$t”
 SeparatorFormat=―
-ArtistFormat=$a
-AlbumFormat=$l
+ArtistFormat=$$a
+AlbumFormat=$$l
