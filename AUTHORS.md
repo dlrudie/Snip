@@ -42,3 +42,7 @@ Contributors
 
 * jingtongtangflee
   * Czech translation
+  
+* Stathis Galazios (nFin1ty)
+  * Greek translation
+  
