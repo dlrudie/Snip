@@ -45,4 +45,3 @@ Contributors
   
 * Stathis Galazios (nFin1ty)
   * Greek translation
-  
