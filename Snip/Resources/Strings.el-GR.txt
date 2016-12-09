@@ -81,7 +81,7 @@ DisplayTrackPopup=Εμφάνιση ένδειξης τρέχοντος κομμ�
 ; will cause Snip.txt to be emptied out when no track is playing.  If this
 ; option is disabled then the text from "NoTrackPlaying" will be saved to
 ; Snip.txt.
-EmptyFile=Κενό αρχείο εάν δεν αναπαράγεται κανένα κομμάτι
+EmptyFile=Άδειασμα αρχείου εάν δεν αναπαράγεται κανένα κομμάτι
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will cause Snip to register global hotkeys that can be used to control the
