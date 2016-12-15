@@ -42,3 +42,6 @@ Contributors
 
 * jingtongtangflee
   * Czech translation
+  
+* KingCrazy
+  * Fix for VLC player trimming titles prematurely
