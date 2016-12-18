@@ -108,8 +108,8 @@ Backup*/
 UpgradeLog*.XML
 
 # Dopefish
-*.pfx
 *.swp
+codesign.pfx
 Strings.resources
 Strings.*.resources
 SignAllTheThings.cmd
