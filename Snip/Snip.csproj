@@ -72,7 +72,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Snip.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Snip.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -149,7 +149,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
-    <None Include="Snip.pfx" />
+    <None Include="Snip.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Snip.ico" />
