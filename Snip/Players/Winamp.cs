@@ -75,7 +75,7 @@ namespace Winter
                                 {
                                     string artist = windowTitle[0].Trim();
                                     string songTitle = windowTitle[1].Trim();
-				    string albumTitle = windowTitle[2].Trim();
+                                    string albumTitle = windowTitle[2].Trim();
 
                                     TextHandler.UpdateText(songTitle, artist, albumTitle);
                                 }
