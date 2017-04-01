@@ -61,7 +61,7 @@ namespace Winter
                             {
                                 // Winamp window titles look like "#. Artist - Track - Winamp".
                                 // Require that the user use ATF and replace the format with something like:
-                                // %artist% – %title%
+                                // %artist% – %title% – %album%
                                 string windowTitleFull = winampTitle.Replace("- Winamp", string.Empty);
                                 string[] windowTitle = windowTitleFull.Split('–');
 
@@ -75,8 +75,9 @@ namespace Winter
                                 {
                                     string artist = windowTitle[0].Trim();
                                     string songTitle = windowTitle[1].Trim();
+				    string albumTitle = windowTitle[2].Trim();
 
-                                    TextHandler.UpdateText(songTitle, artist);
+                                    TextHandler.UpdateText(songTitle, artist, albumTitle);
                                 }
                                 else
                                 {

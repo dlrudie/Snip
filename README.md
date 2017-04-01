@@ -26,8 +26,8 @@ SUPPORTED FEATURES FOR PLAYERS
 ------------------------------
 * **Spotify:** Artist, Track, Album, Artwork
 * **iTunes:** Artist, Track, Album, Artwork
-* **Winamp:** Artist, Track
-* **foobar2000:** Artist, Track
+* **Winamp:** Artist, Track, Album
+* **foobar2000:** Artist, Track, Album
 * **VLC:** Nothing (It uses whatever the titlebar says)
 
 WINAMP
@@ -49,7 +49,7 @@ Inside Winamp open up the options window.
     when possible" is enabled.
 
 Then you need to edit the formatting to look like this:
-%title% – %artist%
+%title% – %artist% – %album%
 
 Note
 ----
@@ -65,7 +65,7 @@ Inside foobar2000 open up the preferences window.
 
 Expand the Display options and select Default User Interface.  At the bottom
 of the window you will need to change "Window title" to look like this:
-%title% – %artist%
+%title% – %artist% – %album%
 
 Note
 ----

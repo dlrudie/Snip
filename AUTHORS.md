@@ -42,3 +42,6 @@ Contributors
 
 * jingtongtangflee
   * Czech translation
+
+* kaimi
+  * Winamp and Foobar2000 album support

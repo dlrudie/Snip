@@ -71,9 +71,9 @@ namespace Winter
                             }
                             else
                             {
-                                // Winamp window titles look like "[%album artist% - ]['['%album%[ CD%discnumber%][ #%tracknumber%]']' ]%title%[ '//' %track artist%]".
+                                // Foobar2000 window titles look like "[%album artist% - ]['['%album%[ CD%discnumber%][ #%tracknumber%]']' ]%title%[ '//' %track artist%]".
                                 // Require that the user use ATF and replace the format with something like:
-                                // %artist% – %title%
+                                // %artist% – %title% – %album%
                                 string windowTitleFull = System.Text.RegularExpressions.Regex.Replace(foobar2000Title, @"\s+\[foobar2000.+\]", string.Empty);
                                 string[] windowTitle = windowTitleFull.Split('–');
 
@@ -87,8 +87,9 @@ namespace Winter
                                 {
                                     string artist = windowTitle[0].Trim();
                                     string songTitle = windowTitle[1].Trim();
+				    string albumTitle = windowTitle[2].Trim();
 
-                                    TextHandler.UpdateText(songTitle, artist);
+                                    TextHandler.UpdateText(songTitle, artist, albumTitle);
                                 }
                                 else
                                 {
