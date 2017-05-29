@@ -48,17 +48,25 @@ namespace Winter
                 {
                     vlcTitle = vlcTitle.Substring(0, lastHyphen).Trim();
 
+                    string vlcExtension = System.IO.Path.GetExtension(vlcTitle);
+
                     if (Globals.SaveAlbumArtwork)
                     {
                         this.SaveBlankImage();
                     }
 
                     // Filter file extension
-                    int lastDot = vlcTitle.LastIndexOf('.');
-
-                    if (lastDot > 0)
+                    // VLC doesn't always have file extensions show in the title.
+                    // The previous code would sometimes cut song titles prematurely if there was no extension in the title.
+                    // If there's an extension, we'll trim it. Otherwise, we won't do anything to the string.
+                    if (vlcExtension.Length > 0)
                     {
-                        vlcTitle = vlcTitle.Substring(0, lastDot).Trim();
+                        int lastDot = vlcTitle.LastIndexOf(vlcExtension);
+
+                        if (lastDot > 0)
+                        {
+                            vlcTitle = vlcTitle.Substring(0, lastDot).Trim();
+                        }
                     }
 
                     TextHandler.UpdateText(vlcTitle);
