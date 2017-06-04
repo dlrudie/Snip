@@ -58,7 +58,7 @@ SaveAlbumArtwork=Album-Bild speichern
 ; provided by Spotify as the filename.  Each track will save its own album
 ; artwork and the next time that track is played it will use the saved file
 ; instead of redownloading it each time.
-KeepSpotifyAlbumArtwork=Abum-Bild behalten
+KeepSpotifyAlbumArtwork=Album-Bild behalten
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
