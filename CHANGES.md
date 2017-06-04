@@ -1,5 +1,13 @@
 CHANGES
 =======
+**v6.0.0 (2017-Jun-04):**
+* Has it really been this long?
+* #153 <https://github.com/dlrudie/Snip/issues/153> Fix for Spotify's API
+    now requiring authorization
+* Greek translation provided by Stathis Galazios (nFin1ty)
+* Fix for VLC player trimming titles prematurely provided by KingCrazy
+* Fixed spelling in German translations
+
 **v5.6.5 (2016-Nov-27):**
 * #125 <https://github.com/dlrudie/Snip/issues/125> Fix for filtering out
     file extensions from VLC's titlebar. Fix provided by Bartosz Wiśniewski
