@@ -1,6 +1,6 @@
 ﻿#region File Information
 /*
- * Copyright (C) 2012-2016 David Rudie
+ * Copyright (C) 2012-2017 David Rudie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,99 +25,116 @@ namespace Winter
     using System.Globalization;
     using System.IO;
     using System.Net;
+    using System.Timers;
     using System.Web;
     using System.Windows.Forms;
     using SimpleJson;
 
+    using Timer = System.Timers.Timer;
+
     internal sealed class Spotify : MediaPlayer
     {
+        private Timer timer;
         private string json = string.Empty;
         private bool downloadingJson = false;
+        private string token = string.Empty;
+        private double tokenExpiration = 0;
 
         public override void Update()
         {
-            if (!this.Found)
+            // There's no sense in doing anything anymore without a valid token.
+            if (!string.IsNullOrEmpty(this.token))
             {
-                this.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
-
-                this.Found = true;
-                this.NotRunning = false;
-            }
-            else
-            {
-                // Make sure the process is still valid.
-                if (this.Handle != IntPtr.Zero && this.Handle != null)
+                if (!this.Found)
                 {
-                    int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title, this.Title.Capacity);
+                    this.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
 
-                    string spotifyTitle = this.Title.ToString();
-
-                    this.Title.Clear();
-
-                    // If the window title length is 0 then the process handle is not valid.
-                    if (windowTextLength > 0)
+                    this.Found = true;
+                    this.NotRunning = false;
+                }
+                else
+                {
+                    // Make sure the process is still valid.
+                    if (this.Handle != IntPtr.Zero && this.Handle != null)
                     {
-                        // Only update if the title has actually changed.
-                        // This prevents unnecessary calls and downloads.
-                        if (spotifyTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
+                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title, this.Title.Capacity);
+
+                        string spotifyTitle = this.Title.ToString();
+
+                        this.Title.Clear();
+
+                        // If the window title length is 0 then the process handle is not valid.
+                        if (windowTextLength > 0)
                         {
-                            Globals.RewriteUpdatedOutputFormat = false;
-
-                            if (spotifyTitle == "Spotify")
+                            // Only update if the title has actually changed.
+                            // This prevents unnecessary calls and downloads.
+                            if (spotifyTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                             {
-                                if (Globals.SaveAlbumArtwork)
+                                Globals.RewriteUpdatedOutputFormat = false;
+
+                                if (spotifyTitle == "Spotify")
                                 {
-                                    this.SaveBlankImage();
-                                }
-
-                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                            }
-                            else
-                            {
-                                this.DownloadJson(spotifyTitle);
-
-                                if (!string.IsNullOrEmpty(this.json))
-                                {
-                                    dynamic jsonSummary = SimpleJson.DeserializeObject(this.json);
-
-                                    if (jsonSummary != null)
+                                    if (Globals.SaveAlbumArtwork)
                                     {
-                                        var numberOfResults = jsonSummary.tracks.total;
-
-                                        if (numberOfResults > 0)
-                                        {
-                                            jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
-
-                                            int mostPopular = SelectTrackByPopularity(jsonSummary, spotifyTitle);
-
-                                            TextHandler.UpdateText(
-                                                jsonSummary[mostPopular].name.ToString(),
-                                                jsonSummary[mostPopular].artists[0].name.ToString(),
-                                                jsonSummary[mostPopular].album.name.ToString(),
-                                                jsonSummary[mostPopular].id.ToString());
-
-                                            if (Globals.SaveAlbumArtwork)
-                                            {
-                                                this.DownloadSpotifyAlbumArtwork(jsonSummary[mostPopular].album);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // In the event of an advertisement (or any song that returns 0 results)
-                                            // then we'll just write the whole title as a single string instead.
-                                            TextHandler.UpdateText(spotifyTitle);
-                                        }
+                                        this.SaveBlankImage();
                                     }
+
+                                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                                 }
                                 else
                                 {
-                                    // For whatever reason the JSON file couldn't download
-                                    // In the event this happens we'll just display Spotify's window title as the track
-                                    TextHandler.UpdateText(spotifyTitle);
-                                }
-                            }
+                                    this.DownloadJson(spotifyTitle);
 
-                            this.LastTitle = spotifyTitle;
+                                    if (!string.IsNullOrEmpty(this.json))
+                                    {
+                                        dynamic jsonSummary = SimpleJson.DeserializeObject(this.json);
+
+                                        if (jsonSummary != null)
+                                        {
+                                            var numberOfResults = jsonSummary.tracks.total;
+
+                                            if (numberOfResults > 0)
+                                            {
+                                                jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
+
+                                                int mostPopular = SelectTrackByPopularity(jsonSummary, spotifyTitle);
+
+                                                TextHandler.UpdateText(
+                                                    jsonSummary[mostPopular].name.ToString(),
+                                                    jsonSummary[mostPopular].artists[0].name.ToString(),
+                                                    jsonSummary[mostPopular].album.name.ToString(),
+                                                    jsonSummary[mostPopular].id.ToString());
+
+                                                if (Globals.SaveAlbumArtwork)
+                                                {
+                                                    this.DownloadSpotifyAlbumArtwork(jsonSummary[mostPopular].album);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // In the event of an advertisement (or any song that returns 0 results)
+                                                // then we'll just write the whole title as a single string instead.
+                                                TextHandler.UpdateText(spotifyTitle);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // For whatever reason the JSON file couldn't download
+                                        // In the event this happens we'll just display Spotify's window title as the track
+                                        TextHandler.UpdateText(spotifyTitle);
+                                    }
+                                }
+
+                                this.LastTitle = spotifyTitle;
+                            }
+                        }
+                        else
+                        {
+                            if (!this.NotRunning)
+                            {
+                                this.ResetSinceSpotifyIsNotRunning();
+                            }
                         }
                     }
                     else
@@ -128,19 +145,30 @@ namespace Winter
                         }
                     }
                 }
-                else
-                {
-                    if (!this.NotRunning)
-                    {
-                        this.ResetSinceSpotifyIsNotRunning();
-                    }
-                }
             }
+        }
+
+        public override void Load()
+        {
+            base.Load();
+
+            // Get the initial token.
+            AuthorizeSessionWithSpotify(null, null);
+
+            // Note: The initial timer will not fire until after the timer has elapsed the first time.
+            timer = new Timer(tokenExpiration * 1000); // Timer is in milliseconds. Multiply by 1000 to convert value to seconds.
+            timer.Elapsed += AuthorizeSessionWithSpotify;
+            timer.AutoReset = true; // Once the token expires another token should be retrieved.
+            timer.Enabled = true;
         }
 
         public override void Unload()
         {
             base.Unload();
+            this.token = string.Empty;
+            this.tokenExpiration = 0;
+            timer.Stop();
+            timer.Dispose();
         }
 
         public override void ChangeToNextTrack()
@@ -209,6 +237,8 @@ namespace Winter
                         spotifyTitle = TextHandler.UnifyTitles(spotifyTitle);
 
                         jsonWebClient.Encoding = System.Text.Encoding.UTF8;
+
+                        jsonWebClient.Headers.Add(string.Format("Authorization: Bearer {0}", this.token));
 
                         var downloadedJson = jsonWebClient.DownloadString(
                             string.Format(
@@ -351,6 +381,41 @@ namespace Winter
                 WebRequest webRequest = base.GetWebRequest(address);
                 webRequest.Timeout = WebClientTimeoutSeconds * 60 * 1000;
                 return webRequest;
+            }
+        }
+
+        private void AuthorizeSessionWithSpotify(Object source, ElapsedEventArgs e)
+        {
+            using (WebClient jsonWebClient = new WebClient())
+            {
+                try
+                {
+                    jsonWebClient.Encoding = System.Text.Encoding.UTF8;
+
+                    // Pull token from external site that contains the client id and client secret.
+                    // This way the two are not visible in the source code.
+                    string downloadedJson = jsonWebClient.DownloadString("https://impas.se/snip/authorization.php?client=SNIP");
+
+                    if (!string.IsNullOrEmpty(downloadedJson))
+                    {
+                        dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                        if (jsonSummary != null)
+                        {
+                            this.token = jsonSummary.access_token.ToString();
+
+                            if (this.tokenExpiration < 1)
+                            {
+                                this.tokenExpiration = Convert.ToDouble((long)jsonSummary.expires_in);
+                            }
+                        }
+                    }
+                }
+                catch (WebException)
+                {
+                    this.token = string.Empty;
+                    this.tokenExpiration = 0;
+                }
             }
         }
     }
