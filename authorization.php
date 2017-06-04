@@ -8,15 +8,16 @@ if (isset($_GET["client"]) && $_GET["client"] == "SNIP")
     if (file_exists($tokenFile))
     {
         $modTime = filemtime($tokenFile);
-        $changed = time() - ($modTime - 1); // -1 to account for file starting at 0
+        $difference = time() - ($modTime - 1); // -1 to account for file starting at 0
 
-        if ($changed >= $expiration)
+        if ($difference >= $expiration)
         {
             ObtainToken($tokenFile);
+            echo file_get_contents($tokenFile);
         }
         else
         {
-            echo file_get_contents($tokenFile);
+            echo str_replace($expiration, $expiration - $difference, file_get_contents($tokenFile));
         }
     }
     else
