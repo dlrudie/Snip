@@ -94,3 +94,9 @@ HOTKEYS
 Note
 ----
 Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, and VLC.
+
+DONATIONS
+=========
+Snip is free; however, I've received a lot of requests from people wishing
+to donate. If you'd like to donate it's entirely up to you. You may donate
+here: [PayPal](https://paypal.me/thedopefish)
