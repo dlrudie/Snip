@@ -403,11 +403,7 @@ namespace Winter
                         if (jsonSummary != null)
                         {
                             this.token = jsonSummary.access_token.ToString();
-
-                            if (this.tokenExpiration < 1)
-                            {
-                                this.tokenExpiration = Convert.ToDouble((long)jsonSummary.expires_in);
-                            }
+                            this.tokenExpiration = Convert.ToDouble((long)jsonSummary.expires_in);
                         }
                     }
                 }
