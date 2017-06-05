@@ -5,22 +5,21 @@ Project Page: [Snip](https://github.com/dlrudie/Snip)
 
 ABOUT
 =====
-This is a small application that sits in the system tray and updates a text
+This small application sits in the system tray and updates a text
 file with the currently playing audio track.
 
 It supports Spotify, iTunes, Winamp, foobar2000, and VLC.
 
-If you choose to use iTunes then Snip will automatically launch iTunes.  This
-is the behavior of the COM API and there's nothing I can do about it.  If you
-only use Spotify then you don't have to worry about it.
+If you choose to use iTunes, Snip will automatically launch it. (This
+is the behavior of the COM API and there's nothing I can do about it.) If you
+only use Spotify, you don't have to worry about it.
 
 To switch between players just right-click on the icon in the system tray.
 
-Snip will write a generic format output to a file called Snip.txt within the
-same folder as Snip.exe.  If you choose to save information to separate files
-then the files will be called Snip_Arist.txt, Snip_Track.txt, Snip_Album.txt,
-and if you choose to save track history then it will be saved to a file
-called Snip_History.txt.
+Snip will write a generic format output to a file called `Snip.txt` within the
+same folder as `Snip.exe`.  If you choose to save information to separate files, 
+the files will be called `Snip_Artist.txt`, `Snip_Track.txt`, `Snip_Album.txt`, 
+and `Snip_History.txt` (track history).
 
 SUPPORTED FEATURES FOR PLAYERS
 ------------------------------
@@ -49,7 +48,7 @@ Inside Winamp open up the options window.
     when possible" is enabled.
 
 Then you need to edit the formatting to look like this:
-%title% – %artist%
+`%title% – %artist%`
 
 Note
 ----
@@ -65,7 +64,7 @@ Inside foobar2000 open up the preferences window.
 
 Expand the Display options and select Default User Interface.  At the bottom
 of the window you will need to change "Window title" to look like this:
-%title% – %artist%
+`%title% – %artist%`
 
 Note
 ----
