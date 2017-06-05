@@ -392,6 +392,9 @@ namespace Winter
                 {
                     jsonWebClient.Encoding = System.Text.Encoding.UTF8;
 
+                    // I may as well identify what's requesting the token.
+                    jsonWebClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
+
                     // Pull token from external site that contains the client id and client secret.
                     // This way the two are not visible in the source code.
                     string downloadedJson = jsonWebClient.DownloadString("https://impas.se/snip/authorization.php?client=SNIP");
