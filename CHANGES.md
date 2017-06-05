@@ -1,5 +1,8 @@
 CHANGES
 =======
+**v6.0.1 (2017-Jun-04):**
+* Fixed Spotify not working after 60 minutes.
+
 **v6.0.0 (2017-Jun-04):**
 * Has it really been this long?
 * #153 <https://github.com/dlrudie/Snip/issues/153> Fix for Spotify's API
