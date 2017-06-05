@@ -17,7 +17,9 @@ only use Spotify, you don't have to worry about it.
 To switch between players just right-click on the icon in the system tray.
 
 Snip will write a generic format output to a file called `Snip.txt` within the
-same folder as `Snip.exe`.  If you choose to save information to separate files, the files will be called `Snip_Artist.txt`, `Snip_Track.txt`, `Snip_Album.txt`, and `Snip_History.txt` (track history).
+same folder as `Snip.exe`.  If you choose to save information to separate files, 
+the files will be called `Snip_Artist.txt`, `Snip_Track.txt`, `Snip_Album.txt`, 
+and `Snip_History.txt` (track history).
 
 SUPPORTED FEATURES FOR PLAYERS
 ------------------------------
