@@ -39,6 +39,7 @@ namespace Winter
                     vlcTitle = process.MainWindowTitle;
                 }
 
+
                 // Check for a hyphen in the title. If a hyphen exists then we need to cut all of the text after the last
                 // hyphen because that's the "VLC media player" text, which can vary based on language.
                 // If no hyphen exists then VLC is not playing anything.
@@ -48,22 +49,28 @@ namespace Winter
                 {
                     vlcTitle = vlcTitle.Substring(0, lastHyphen).Trim();
 
-                    string vlcExtension = System.IO.Path.GetExtension(vlcTitle);
-
                     if (Globals.SaveAlbumArtwork)
                     {
                         this.SaveBlankImage();
                     }
 
                     // Filter file extension
-                    // VLC doesn't always have file extensions show in the title.
-                    // The previous code would sometimes cut song titles prematurely if there was no extension in the title.
-                    // If there's an extension, we'll trim it. Otherwise, we won't do anything to the string.
-                    if (vlcExtension.Length > 0)
-                    {
-                        int lastDot = vlcTitle.LastIndexOf(vlcExtension);
+                    // Using the previous method of using System.IO.Path to grab the file extension caused some problems.
+                    // It treated the title as a path, restricting what characters were allowed in the titles.
+                    // I changed it back to a similar version of the old method, however I'm checking to see if the index
+                    // Now we'll check if the section of the title after the dot is greater than 4 characters, and less than 5 (the dot is included)
+                    // This is done because common file extensions are typically 3 characters long, with some exceptions like flac and aiff being 4.
+                    // Additionally, we'll check if there's a space anywhere after the last dot. Extensions will not have spaces in them.
 
-                        if (lastDot > 0)
+                    // Alternatively, you can use System.IO.Path, make it system dependent, and replace characters like " and | with
+                    // equivalents.
+                    //
+
+                    int lastDot = vlcTitle.LastIndexOf(".");
+                    if (lastDot > 0)
+                    {
+                        string vlcTitleExtension = vlcTitle.Substring(lastDot);
+                        if (vlcTitleExtension.Length >= 4 && vlcTitleExtension.Length <= 5 && !vlcTitleExtension.Contains(" "))
                         {
                             vlcTitle = vlcTitle.Substring(0, lastDot).Trim();
                         }
