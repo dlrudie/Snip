@@ -66,7 +66,7 @@ namespace Winter
                     // equivalents.
                     //
 
-                    int lastDot = vlcTitle.LastIndexOf(".");
+                    int lastDot = vlcTitle.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
                     if (lastDot > 0)
                     {
                         string vlcTitleExtension = vlcTitle.Substring(lastDot);
