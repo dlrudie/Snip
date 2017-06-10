@@ -34,6 +34,8 @@ namespace Winter
 
     internal sealed class Spotify : MediaPlayer
     {
+        private const string AUTHORIZATIONKEY = "";
+
         private Timer timer;
         private string json = string.Empty;
         private bool downloadingJson = false;
@@ -156,7 +158,15 @@ namespace Winter
             AuthorizeSessionWithSpotify(null, null);
 
             // Note: The initial timer will not fire until after the timer has elapsed the first time.
-            timer = new Timer(tokenExpiration * 1000); // Timer is in milliseconds. Multiply by 1000 to convert value to seconds.
+            // If something failed and the expiration is 0, default to one second interval attempts until successful.
+            if (this.tokenExpiration <= 0)
+            {
+                timer = new Timer(1000);
+            }
+            else
+            {
+                timer = new Timer(this.tokenExpiration * 1000); // Timer is in milliseconds. Multiply by 1000 to convert value to seconds.
+            }
             timer.Elapsed += AuthorizeSessionWithSpotify;
             timer.AutoReset = true; // Once the token expires another token should be retrieved.
             timer.Enabled = true;
@@ -238,7 +248,7 @@ namespace Winter
 
                         jsonWebClient.Encoding = System.Text.Encoding.UTF8;
 
-                        jsonWebClient.Headers.Add(string.Format("Authorization: Bearer {0}", this.token));
+                        jsonWebClient.Headers.Add(string.Format(CultureInfo.InvariantCulture, "Authorization: Bearer {0}", this.token));
 
                         var downloadedJson = jsonWebClient.DownloadString(
                             string.Format(
@@ -386,18 +396,23 @@ namespace Winter
 
         private void AuthorizeSessionWithSpotify(Object source, ElapsedEventArgs e)
         {
+            // TODO: implement supporting Spotify's rate limiting
+            // It will return a status code 429. There will be a header set called "Retry-After"
+            // That header contains the amount of seconds before you should retry
+            // Use that retry-after amount to update timer interval for retry
             using (WebClient jsonWebClient = new WebClient())
             {
                 try
                 {
                     jsonWebClient.Encoding = System.Text.Encoding.UTF8;
 
-                    // I may as well identify what's requesting the token.
+                    jsonWebClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                    jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", AUTHORIZATIONKEY));
                     jsonWebClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
 
-                    // Pull token from external site that contains the client id and client secret.
-                    // This way the two are not visible in the source code.
-                    string downloadedJson = jsonWebClient.DownloadString("https://impas.se/snip/authorization.php?client=SNIP");
+                    string parameters = "grant_type=client_credentials";
+
+                    string downloadedJson = jsonWebClient.UploadString("https://accounts.spotify.com/api/token", "POST", parameters);
 
                     if (!string.IsNullOrEmpty(downloadedJson))
                     {
@@ -407,7 +422,19 @@ namespace Winter
                         {
                             this.token = jsonSummary.access_token.ToString();
                             this.tokenExpiration = Convert.ToDouble((long)jsonSummary.expires_in);
+
+                            // Check if the timer has been created yet, and if it has update
+                            // the timer interval.
+                            if (this.timer != null)
+                            {
+                                this.timer.Interval = this.tokenExpiration * 1000.0;
+                            }
                         }
+                    }
+                    else
+                    {
+                        this.token = string.Empty;
+                        this.tokenExpiration = 0;
                     }
                 }
                 catch (WebException)
