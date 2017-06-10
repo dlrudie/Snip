@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v6.0.5 (2017-Jun-10):**
+* Reverted/fixed some VLC code until a proper fix can be made. Fix provided
+    by KingCrazy.
+* Changed how Snip gets the authorization tokens from Spotify. It's now per
+    user instead of one central server token.
+
 **v6.0.2 (2017-Jun-04):**
 * Added a user-agent to Snip's Spotify code
 
