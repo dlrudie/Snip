@@ -25,159 +25,526 @@ namespace Winter
     using System.Globalization;
     using System.IO;
     using System.Net;
+    using System.Text;
     using System.Timers;
-    using System.Web;
     using System.Windows.Forms;
     using SimpleJson;
 
     using Timer = System.Timers.Timer;
 
-    internal sealed class Spotify : MediaPlayer
+    internal sealed class Spotify : MediaPlayer, IDisposable
     {
-        private Timer timer;
-        private string json = string.Empty;
-        private bool downloadingJson = false;
-        private string token = string.Empty;
-        private double tokenExpiration = 0;
+        #region Fields
 
-        public override void Update()
-        {
-            // There's no sense in doing anything anymore without a valid token.
-            if (!string.IsNullOrEmpty(this.token))
-            {
-                if (!this.Found)
-                {
-                    this.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
+        private Timer updateOAuthTokenTimer;
+        private Timer updateCSRFTokenTimer;
+        private Timer updateAuthorizationTokenTimer;
+        private Timer contactSpotifyLocalServerTimer;
 
-                    this.Found = true;
-                    this.NotRunning = false;
-                }
-                else
-                {
-                    // Make sure the process is still valid.
-                    if (this.Handle != IntPtr.Zero && this.Handle != null)
-                    {
-                        int windowTextLength = UnsafeNativeMethods.GetWindowText(this.Handle, this.Title, this.Title.Capacity);
+        private string oauthToken = string.Empty;
+        private string csrfToken = string.Empty;
+        private string authorizationToken = string.Empty;
+        private double authorizationTokenExpiration = 0;
 
-                        string spotifyTitle = this.Title.ToString();
+        private bool spotifyWindowFound = false;
 
-                        this.Title.Clear();
+        #endregion
 
-                        // If the window title length is 0 then the process handle is not valid.
-                        if (windowTextLength > 0)
-                        {
-                            // Only update if the title has actually changed.
-                            // This prevents unnecessary calls and downloads.
-                            if (spotifyTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
-                            {
-                                Globals.RewriteUpdatedOutputFormat = false;
-
-                                if (spotifyTitle == "Spotify")
-                                {
-                                    if (Globals.SaveAlbumArtwork)
-                                    {
-                                        this.SaveBlankImage();
-                                    }
-
-                                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                                }
-                                else
-                                {
-                                    this.DownloadJson(spotifyTitle);
-
-                                    if (!string.IsNullOrEmpty(this.json))
-                                    {
-                                        dynamic jsonSummary = SimpleJson.DeserializeObject(this.json);
-
-                                        if (jsonSummary != null)
-                                        {
-                                            var numberOfResults = jsonSummary.tracks.total;
-
-                                            if (numberOfResults > 0)
-                                            {
-                                                jsonSummary = SimpleJson.DeserializeObject(jsonSummary.tracks["items"].ToString());
-
-                                                int mostPopular = SelectTrackByPopularity(jsonSummary, spotifyTitle);
-
-                                                TextHandler.UpdateText(
-                                                    jsonSummary[mostPopular].name.ToString(),
-                                                    jsonSummary[mostPopular].artists[0].name.ToString(),
-                                                    jsonSummary[mostPopular].album.name.ToString(),
-                                                    jsonSummary[mostPopular].id.ToString());
-
-                                                if (Globals.SaveAlbumArtwork)
-                                                {
-                                                    this.DownloadSpotifyAlbumArtwork(jsonSummary[mostPopular].album);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // In the event of an advertisement (or any song that returns 0 results)
-                                                // then we'll just write the whole title as a single string instead.
-                                                TextHandler.UpdateText(spotifyTitle);
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // For whatever reason the JSON file couldn't download
-                                        // In the event this happens we'll just display Spotify's window title as the track
-                                        TextHandler.UpdateText(spotifyTitle);
-                                    }
-                                }
-
-                                this.LastTitle = spotifyTitle;
-                            }
-                        }
-                        else
-                        {
-                            if (!this.NotRunning)
-                            {
-                                this.ResetSinceSpotifyIsNotRunning();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!this.NotRunning)
-                        {
-                            this.ResetSinceSpotifyIsNotRunning();
-                        }
-                    }
-                }
-            }
-        }
+        #region Methods
 
         public override void Load()
         {
             base.Load();
 
-            // Get the initial token.
-            AuthorizeSessionWithSpotify(null, null);
+            // Retrieve OAuth token from Spotify
+            // I'm not sure on how long before this token expires so I'm default it to
+            // obtain a new token every hour.
+            this.updateOAuthTokenTimer = new Timer(3600 * 1000);
+            this.updateOAuthTokenTimer.Elapsed += this.UpdateOAuthTokenTimer_Elapsed;
+            this.updateOAuthTokenTimer.AutoReset = true;
+            this.updateOAuthTokenTimer.Enabled = true;
+            this.UpdateOAuthTokenTimer_Elapsed(null, null); // Get initial token
 
-            // Note: The initial timer will not fire until after the timer has elapsed the first time.
-            // If something failed and the expiration is 0, default to one second interval attempts until successful.
-            if (this.tokenExpiration <= 0)
-            {
-                timer = new Timer(1000);
-            }
-            else
-            {
-                timer = new Timer(this.tokenExpiration * 1000); // Timer is in milliseconds. Multiply by 1000 to convert value to seconds.
-            }
-            timer.Elapsed += AuthorizeSessionWithSpotify;
-            timer.AutoReset = true; // Once the token expires another token should be retrieved.
-            timer.Enabled = true;
+            // Retrieve CSRF token from local Spotify client
+            // I'm not sure on how long before this token expires so I'm default it to
+            // obtain a new token every hour.
+            this.updateCSRFTokenTimer = new Timer(3600 * 1000);
+            this.updateCSRFTokenTimer.Elapsed += this.UpdateCSRFTokenTimer_Elapsed;
+            this.updateCSRFTokenTimer.AutoReset = true;
+            this.updateCSRFTokenTimer.Enabled = true;
+            this.UpdateCSRFTokenTimer_Elapsed(null, null); // Get initial token
+
+            // Set up the authorization token
+            // As of 2017 May 29 an authorization token is required for all API endpoints
+            // Default to 1 second in the event the token fails to be obtained
+            this.updateAuthorizationTokenTimer = new Timer(1000);
+            this.updateAuthorizationTokenTimer.Elapsed += this.UpdateAuthorizationTokenTimer_Elapsed;
+            this.updateAuthorizationTokenTimer.AutoReset = true;
+            this.updateAuthorizationTokenTimer.Enabled = true;
+            this.UpdateAuthorizationTokenTimer_Elapsed(null, null); // Get initial token
+
+            // This is the main timer that will gather all of the information from Spotify
+            // Set to a second so it updates frequently but not ridiculously
+            this.contactSpotifyLocalServerTimer = new Timer(1000);
+            this.contactSpotifyLocalServerTimer.Elapsed += this.ContactSpotifyLocalServerTimer_Elapsed;
+            this.contactSpotifyLocalServerTimer.AutoReset = true;
+            this.contactSpotifyLocalServerTimer.Enabled = true;
         }
 
         public override void Unload()
         {
             base.Unload();
-            this.token = string.Empty;
-            this.tokenExpiration = 0;
-            timer.Stop();
-            timer.Dispose();
+            this.oauthToken = string.Empty;
+            this.csrfToken = string.Empty;
+            this.authorizationToken = string.Empty;
+            this.authorizationTokenExpiration = 0;
+            this.updateOAuthTokenTimer.Stop();
+            this.updateCSRFTokenTimer.Stop();
+            this.updateAuthorizationTokenTimer.Stop();
+            this.contactSpotifyLocalServerTimer.Stop();
         }
+
+        public void Dispose()
+        {
+            if (this.contactSpotifyLocalServerTimer != null)
+            {
+                this.contactSpotifyLocalServerTimer.Dispose();
+                this.contactSpotifyLocalServerTimer = null;
+            }
+
+            if (this.updateAuthorizationTokenTimer != null)
+            {
+                this.updateAuthorizationTokenTimer.Dispose();
+                this.updateAuthorizationTokenTimer = null;
+            }
+
+            if (this.updateCSRFTokenTimer != null)
+            {
+                this.updateCSRFTokenTimer.Dispose();
+                this.updateCSRFTokenTimer = null;
+            }
+
+            if (this.updateOAuthTokenTimer != null)
+            {
+                this.updateOAuthTokenTimer.Dispose();
+                this.updateOAuthTokenTimer = null;
+            }
+        }
+
+        private void UpdateOAuthTokenTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            string downloadedJson = this.DownloadJson("https://open.spotify.com/token", SpotifyAddressContactType.Default);
+
+            // Set the token to be blank until filled
+            this.oauthToken = string.Empty;
+
+            if (!string.IsNullOrEmpty(downloadedJson))
+            {
+                dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                if (jsonSummary != null)
+                {
+                    this.oauthToken = jsonSummary.t.ToString();
+                }
+            }
+        }
+
+        private void UpdateAuthorizationTokenTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // TODO:
+            // Implement retry if token expired (just in case)
+            //
+            // JSON result if expired:
+            // {
+            //   "error": {
+            //     "status": 401,
+            //     "message": "The access token expired"
+            //   }
+            // }
+
+            string downloadedJson = this.DownloadJson("https://accounts.spotify.com/api/token", SpotifyAddressContactType.Authorization);
+
+            // Set the token to be blank until filled
+            this.authorizationToken = string.Empty;
+            this.authorizationTokenExpiration = 0;
+
+            if (!string.IsNullOrEmpty(downloadedJson))
+            {
+                dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                if (jsonSummary != null)
+                {
+                    this.authorizationToken = jsonSummary.access_token.ToString();
+                    this.authorizationTokenExpiration = Convert.ToDouble((long)jsonSummary.expires_in);
+
+                    this.updateAuthorizationTokenTimer.Interval = this.authorizationTokenExpiration * 1000.0;
+                }
+            }
+        }
+
+        private void UpdateCSRFTokenTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // *.spotilocal.com redirects to localhost
+            string spotilocalAddress = "http://snip.spotilocal.com";
+
+            // While the web server accepts connections on ports 4370, 4371, and 4380 I've only
+            // ever seen it return a result on port 4380
+            int spotifyPort = 4380;
+
+            // CSRF token path
+            string csrfAddress = "/simplecsrf/token.json";
+
+            string downloadedJson = this.DownloadJson(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0}:{1}{2}",
+                    spotilocalAddress,
+                    spotifyPort,
+                    csrfAddress),
+                SpotifyAddressContactType.CSRF);
+
+            // Set the token to be blank until filled
+            this.csrfToken = string.Empty;
+
+            if (!string.IsNullOrEmpty(downloadedJson))
+            {
+                dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                if (jsonSummary != null)
+                {
+                    // If Spotify is not running this value will not be set
+                    if (jsonSummary.running == null)
+                    {
+                        this.csrfToken = jsonSummary.token.ToString();
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(this.csrfToken))
+            {
+                this.ResetSnipSinceSpotifyIsNotRunning();
+            }
+        }
+
+        private void ContactSpotifyLocalServerTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            string trackInformation = this.GetTrackInformation();
+
+            // We should only be here if Spotify actually is running
+            if (!string.IsNullOrEmpty(trackInformation))
+            {
+                // Get the handle so that hotkeys can be used
+                this.GetSpotifyWindowHandle();
+
+                dynamic jsonSummary = SimpleJson.DeserializeObject(trackInformation);
+
+                if (jsonSummary != null)
+                {
+                    bool spotifyPlaying = (bool)jsonSummary.playing;
+
+                    if (!spotifyPlaying)
+                    {
+                        this.ResetSnipSinceSpotifyIsNotPlaying();
+                    }
+                    else
+                    {
+                        string fullTrackId = jsonSummary.track.track_resource.uri.ToString();
+                        string trackId = fullTrackId.Substring(fullTrackId.LastIndexOf(':') + 1); // + 1 to not include :
+
+                        // Only update if the title has changed or the user updates how the output format should look
+                        if (trackId != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
+                        {
+                            Globals.RewriteUpdatedOutputFormat = false;
+
+                            string downloadedJson = this.DownloadJson(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "https://api.spotify.com/v1/tracks/{0}",
+                                    trackId),
+                                SpotifyAddressContactType.API);
+
+                            jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                            // If there are multiple artists we want to join all of them together for display
+                            string artists = string.Empty;
+
+                            foreach (dynamic artist in jsonSummary.artists)
+                            {
+                                artists += artist.name.ToString() + ", ";
+                            }
+
+                            artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
+
+                            TextHandler.UpdateText(
+                                jsonSummary.name.ToString(),
+                                artists,
+                                jsonSummary.album.name.ToString(),
+                                jsonSummary.id.ToString());
+
+                            if (Globals.SaveAlbumArtwork)
+                            {
+                                this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
+                            }
+
+                            // Set the last title to the track id as these are unique values that only change when the track changes
+                            this.LastTitle = trackId;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GetSpotifyWindowHandle()
+        {
+            if (!this.spotifyWindowFound)
+            {
+                this.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
+                if (this.Handle != IntPtr.Zero && this.Handle != null)
+                {
+                    this.spotifyWindowFound = true;
+                }
+            }
+        }
+
+        private string GetTrackInformation()
+        {
+            // No sense in doing anything if the tokens aren't valid or set yet
+            if (!string.IsNullOrEmpty(this.oauthToken) && !string.IsNullOrEmpty(this.csrfToken))
+            {
+                // *.spotilocal.com redirects to localhost
+                string spotilocalAddress = "http://snip.spotilocal.com";
+
+                // While the web server accepts connections on ports 4370, 4371, and 4380 I've only
+                // ever seen it return a result on port 4380
+                int spotifyPort = 4380;
+
+                string csrfAddress = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "/remote/status.json?oauth={0}&csrf={1}",
+                    oauthToken,
+                    csrfToken);
+
+                string downloadedJson = this.DownloadJson(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}:{1}{2}",
+                        spotilocalAddress,
+                        spotifyPort,
+                        csrfAddress),
+                    SpotifyAddressContactType.CSRF);
+
+                if (!string.IsNullOrEmpty(downloadedJson))
+                {
+                    return downloadedJson;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        private void DownloadSpotifyAlbumArtwork(dynamic jsonSummary)
+        {
+            string albumId = jsonSummary.id.ToString();
+
+            string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
+            string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
+
+            if (!Directory.Exists(artworkDirectory))
+            {
+                Directory.CreateDirectory(artworkDirectory);
+            }
+
+            FileInfo fileInfo = new FileInfo(artworkImagePath);
+
+            if (fileInfo.Exists && fileInfo.Length > 0)
+            {
+                fileInfo.CopyTo(this.DefaultArtworkFilePath, true);
+
+                this.SavedBlankImage = false;
+            }
+            else
+            {
+                using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
+                {
+                    try
+                    {
+                        Uri imageUrl = SelectAlbumArtworkSizeToDownload(jsonSummary);
+
+                        webClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
+
+                        if (Globals.KeepSpotifyAlbumArtwork)
+                        {
+                            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
+                            webClient.DownloadFileAsync(imageUrl, artworkImagePath, artworkImagePath);
+                        }
+                        else
+                        {
+                            webClient.DownloadFileAsync(imageUrl, this.DefaultArtworkFilePath);
+                        }
+
+                        this.SavedBlankImage = false;
+                    }
+                    catch (WebException)
+                    {
+                        this.SaveBlankImage();
+                    }
+                }
+            }
+        }
+
+        private string DownloadJson(string jsonAddress, SpotifyAddressContactType spotifyAddressContactType)
+        {
+            using (WebClient jsonWebClient = new WebClient())
+            {
+                try
+                {
+                    // Authorization uses POST instead of GET
+                    bool usePostMethodInsteadOfGet = false;
+                    string postParameters = string.Empty;
+
+                    // Modify HTTP headers based on what's being contacted
+                    switch (spotifyAddressContactType)
+                    {
+                        case SpotifyAddressContactType.Authorization:
+                            usePostMethodInsteadOfGet = true;
+                            postParameters = "grant_type=client_credentials";
+                            jsonWebClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                            jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", ApplicationKeys.Spotify));
+                            break;
+
+                        case SpotifyAddressContactType.CSRF:
+                            jsonWebClient.Headers.Add("Origin", "https://open.spotify.com");
+                            break;
+
+                        case SpotifyAddressContactType.Status:
+                            jsonWebClient.Headers.Add("Origin", "https://open.spotify.com");
+                            break;
+
+                        case SpotifyAddressContactType.API:
+                            jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Bearer {0}", this.authorizationToken));
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    // Let's be respectful and identify ourself
+                    jsonWebClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
+
+                    jsonWebClient.Encoding = Encoding.UTF8;
+
+                    string downloadedJson = string.Empty;
+                    if (usePostMethodInsteadOfGet)
+                    {
+                        downloadedJson = jsonWebClient.UploadString(jsonAddress, "POST", postParameters);
+                    }
+                    else
+                    {
+                        downloadedJson = jsonWebClient.DownloadString(jsonAddress);
+                    }
+
+                    if (!string.IsNullOrEmpty(downloadedJson))
+                    {
+                        return downloadedJson;
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                }
+                catch (WebException)
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        private void DownloadSpotifyFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                try
+                {
+                    File.Copy((string)e.UserState, this.DefaultArtworkFilePath, true);
+                }
+                catch (IOException)
+                {
+                    this.SaveBlankImage();
+                }
+            }
+        }
+
+        private void ResetSnipSinceSpotifyIsNotPlaying()
+        {
+            // Prevent writing a blank image if we already did
+            if (!this.SavedBlankImage)
+            {
+                if (Globals.SaveAlbumArtwork)
+                {
+                    this.SaveBlankImage();
+                }
+            }
+
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+
+            this.LastTitle = string.Empty;
+        }
+
+        private void ResetSnipSinceSpotifyIsNotRunning()
+        {
+            if (this.spotifyWindowFound)
+            {
+                this.spotifyWindowFound = false;
+            }
+
+            // Prevent writing a blank image if we already did
+            if (!this.SavedBlankImage)
+            {
+                if (Globals.SaveAlbumArtwork)
+                {
+                    this.SaveBlankImage();
+                }
+            }
+
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+        }
+
+        private static Uri SelectAlbumArtworkSizeToDownload(dynamic jsonSummary)
+        {
+            // This assumes that the Spotify image array will always have three results (which in all of my tests it has so far)
+            string imageUrl = string.Empty;
+
+            switch (Globals.ArtworkResolution)
+            {
+                case Globals.AlbumArtworkResolution.Large:
+                    imageUrl = jsonSummary.images[0].url.ToString();
+                    break;
+
+                case Globals.AlbumArtworkResolution.Medium:
+                    imageUrl = jsonSummary.images[1].url.ToString();
+                    break;
+
+                case Globals.AlbumArtworkResolution.Tiny:
+                    imageUrl = jsonSummary.images[2].url.ToString();
+                    break;
+
+                default:
+                    imageUrl = jsonSummary.images[2].url.ToString();
+                    break;
+            }
+
+            return new Uri(imageUrl);
+        }
+
+        #endregion
+
+        #region Player Control Methods
 
         public override void ChangeToNextTrack()
         {
@@ -214,170 +581,22 @@ namespace Winter
             UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.StopTrack));
         }
 
-        private void ResetSinceSpotifyIsNotRunning()
+        #endregion
+
+        #region Enumerations
+
+        private enum SpotifyAddressContactType
         {
-            if (!this.SavedBlankImage)
-            {
-                if (Globals.SaveAlbumArtwork)
-                {
-                    this.SaveBlankImage();
-                }
-            }
-
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
-
-            this.Found = false;
-            this.NotRunning = true;
+            Authorization,
+            CSRF,
+            Status,
+            API,
+            Default
         }
 
-        private void DownloadJson(string spotifyTitle)
-        {
-            // Prevent redownloading JSON if it's already attempting to
-            if (!this.downloadingJson)
-            {
-                this.downloadingJson = true;
+        #endregion
 
-                using (WebClient jsonWebClient = new WebClient())
-                {
-                    try
-                    {
-                        // There are certain characters that can cause issues with Spotify's search
-                        spotifyTitle = TextHandler.UnifyTitles(spotifyTitle);
-
-                        jsonWebClient.Encoding = System.Text.Encoding.UTF8;
-
-                        jsonWebClient.Headers.Add(string.Format(CultureInfo.InvariantCulture, "Authorization: Bearer {0}", this.token));
-
-                        var downloadedJson = jsonWebClient.DownloadString(
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "https://api.spotify.com/v1/search?q={0}&type=track",
-                                HttpUtility.UrlEncode(spotifyTitle)));
-
-                        if (!string.IsNullOrEmpty(downloadedJson))
-                        {
-                            this.json = downloadedJson;
-                        }
-                    }
-                    catch (WebException)
-                    {
-                        this.json = string.Empty;
-                        this.SaveBlankImage();
-                    }
-                }
-
-                this.downloadingJson = false;
-            }
-        }
-
-        private static int SelectTrackByPopularity(dynamic jsonSummary, string windowTitle)
-        {
-            long highestPopularity = 0;
-
-            int currentKey = 0;
-            int keyWithHighestPopularity = 0;
-
-            foreach (dynamic track in jsonSummary)
-            {
-                if (windowTitle.Contains(track.artists[0].name) && windowTitle.Contains(track.name))
-                {
-                    if (track.popularity > highestPopularity)
-                    {
-                        highestPopularity = track.popularity;
-                        keyWithHighestPopularity = currentKey;
-                    }
-                }
-
-                currentKey++;
-            }
-
-            return keyWithHighestPopularity;
-        }
-
-        private void DownloadSpotifyAlbumArtwork(dynamic jsonSummary)
-        {
-            string albumId = jsonSummary.id.ToString();
-
-            string artworkDirectory = @Application.StartupPath + @"\SpotifyArtwork";
-            string artworkImagePath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.jpg", artworkDirectory, albumId);
-
-            if (!Directory.Exists(artworkDirectory))
-            {
-                Directory.CreateDirectory(artworkDirectory);
-            }
-
-            FileInfo fileInfo = new FileInfo(artworkImagePath);
-
-            if (fileInfo.Exists && fileInfo.Length > 0)
-            {
-                fileInfo.CopyTo(this.DefaultArtworkFilePath, true);
-            }
-            else
-            {
-                this.SaveBlankImage();
-
-                using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
-                {
-                    try
-                    {
-                        // This assumes that the Spotify image array will always have three results (which in all of my tests it has so far)
-                        string imageUrl = string.Empty;
-
-                        switch (Globals.ArtworkResolution)
-                        {
-                            case Globals.AlbumArtworkResolution.Large:
-                                imageUrl = jsonSummary.images[0].url.ToString();
-                                break;
-
-                            case Globals.AlbumArtworkResolution.Medium:
-                                imageUrl = jsonSummary.images[1].url.ToString();
-                                break;
-
-                            case Globals.AlbumArtworkResolution.Tiny:
-                                imageUrl = jsonSummary.images[2].url.ToString();
-                                break;
-
-                            default:
-                                imageUrl = jsonSummary.images[0].url.ToString();
-                                break;
-                        }
-
-                        webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
-
-                        if (Globals.KeepSpotifyAlbumArtwork)
-                        {
-                            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadSpotifyFileCompleted);
-                            webClient.DownloadFileAsync(new Uri(imageUrl), artworkImagePath, artworkImagePath);
-                        }
-                        else
-                        {
-                            webClient.DownloadFileAsync(new Uri(imageUrl), this.DefaultArtworkFilePath);
-                        }
-
-                        this.SavedBlankImage = false;
-                    }
-                    catch (WebException)
-                    {
-                        this.SaveBlankImage();
-                    }
-                }
-            }
-        }
-
-        private void DownloadSpotifyFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                try
-                {
-                    File.Copy((string)e.UserState, this.DefaultArtworkFilePath, true);
-                }
-                catch (IOException)
-                {
-                    this.SaveBlankImage();
-                }
-            }
-        }
+        #region Classes
 
         private class WebClientWithShortTimeout : WebClient
         {
@@ -392,55 +611,6 @@ namespace Winter
             }
         }
 
-        private void AuthorizeSessionWithSpotify(Object source, ElapsedEventArgs e)
-        {
-            // TODO: implement supporting Spotify's rate limiting
-            // It will return a status code 429. There will be a header set called "Retry-After"
-            // That header contains the amount of seconds before you should retry
-            // Use that retry-after amount to update timer interval for retry
-            using (WebClient jsonWebClient = new WebClient())
-            {
-                try
-                {
-                    jsonWebClient.Encoding = System.Text.Encoding.UTF8;
-
-                    jsonWebClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                    jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", ApplicationKeys.Spotify));
-                    jsonWebClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
-
-                    string parameters = "grant_type=client_credentials";
-
-                    string downloadedJson = jsonWebClient.UploadString("https://accounts.spotify.com/api/token", "POST", parameters);
-
-                    if (!string.IsNullOrEmpty(downloadedJson))
-                    {
-                        dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
-
-                        if (jsonSummary != null)
-                        {
-                            this.token = jsonSummary.access_token.ToString();
-                            this.tokenExpiration = Convert.ToDouble((long)jsonSummary.expires_in);
-
-                            // Check if the timer has been created yet, and if it has update
-                            // the timer interval.
-                            if (this.timer != null)
-                            {
-                                this.timer.Interval = this.tokenExpiration * 1000.0;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this.token = string.Empty;
-                        this.tokenExpiration = 0;
-                    }
-                }
-                catch (WebException)
-                {
-                    this.token = string.Empty;
-                    this.tokenExpiration = 0;
-                }
-            }
-        }
+        #endregion
     }
 }
