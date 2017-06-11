@@ -57,15 +57,16 @@ namespace Winter
                     // Filter file extension
                     // Using the previous method of using System.IO.Path to grab the file extension caused some problems.
                     // It treated the title as a path, restricting what characters were allowed in the titles.
-                    // I changed it back to a similar version of the old method, however I'm checking to see if the index
+                    // I changed it back to a similar version of the old method.
                     // Now we'll check if the section of the title after the dot is greater than 4 characters, and less than 5 (the dot is included)
                     // This is done because common file extensions are typically 3 characters long, with some exceptions like flac and aiff being 4.
                     // Additionally, we'll check if there's a space anywhere after the last dot. Extensions will not have spaces in them.
-
+                    //
                     // Alternatively, you can use System.IO.Path, make it system dependent, and replace characters like " and | with
                     // equivalents.
                     //
-
+                    // TODO:
+                    // It may be best to just remove common extensions by name, i.e. cut off ".mp3", ".flac", etc.
                     int lastDot = vlcTitle.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
                     if (lastDot > 0)
                     {
