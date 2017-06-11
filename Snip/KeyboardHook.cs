@@ -3,6 +3,7 @@
 namespace Winter
 {
     using System;
+    using System.Globalization;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
@@ -93,8 +94,9 @@ namespace Winter
                     // know that the default or chosen hotkey will not work.
                     MessageBox.Show(
                         string.Format(
-                            "This hotkey is already registered\n" +
-                            "globally and will be skipped:\n\n{0}, {1}",
+                            CultureInfo.InvariantCulture,
+                            "This hotkey is already registered by another\n" +
+                            "application and will be skipped:\n\n{0}, {1}",
                             modifier.ToString("G"),
                             key.ToString()),
                         Globals.ResourceManager.GetString("SnipForm"),
