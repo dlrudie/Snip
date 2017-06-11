@@ -1,5 +1,10 @@
 CHANGES
 =======
+**v6.1.0 (2017-Jun-11):**
+* Rewrote Spotify code to take advantage of the local web server instead of
+    searching for track information using Spotify's window title.
+* Lots of code changes and cleanups behind the scenes.
+
 **v6.0.5 (2017-Jun-10):**
 * Reverted/fixed some VLC code until a proper fix can be made. Fix provided
     by KingCrazy.
