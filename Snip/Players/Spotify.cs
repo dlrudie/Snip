@@ -212,17 +212,18 @@ namespace Winter
 
                 if (jsonSummary != null)
                 {
-                    // If Spotify is not running this value will not be set
+                    // If Spotify is running this value will be null
                     if (jsonSummary.running == null)
                     {
                         this.csrfToken = jsonSummary.token.ToString();
+                        this.updateCSRFTokenTimer.Interval = 3600 * 1000; // We got what we wanted
+                    }
+                    else
+                    {
+                        this.ResetSnipSinceSpotifyIsNotRunning();
+                        this.updateCSRFTokenTimer.Interval = 1000; // Run continously until token is obtained
                     }
                 }
-            }
-
-            if (string.IsNullOrEmpty(this.csrfToken))
-            {
-                this.ResetSnipSinceSpotifyIsNotRunning();
             }
         }
 
@@ -240,7 +241,7 @@ namespace Winter
 
                 if (jsonSummary != null)
                 {
-                    bool spotifyPlaying = (bool)jsonSummary.playing;
+                    bool spotifyPlaying = Convert.ToBoolean(jsonSummary.playing);
 
                     if (!spotifyPlaying)
                     {
@@ -335,7 +336,20 @@ namespace Winter
 
                 if (!string.IsNullOrEmpty(downloadedJson))
                 {
-                    return downloadedJson;
+                    // Check if Spotify is still running
+                    dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                    // If Spotify is running this value will be null
+                    if (Convert.ToBoolean(jsonSummary.running))
+                    {
+                        return downloadedJson;
+                    }
+                    else
+                    {
+                        this.ResetSnipSinceSpotifyIsNotRunning();
+                        this.updateCSRFTokenTimer.Interval = 1000; // Run continously until token is obtained
+                        return string.Empty;
+                    }
                 }
                 else
                 {
