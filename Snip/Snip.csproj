@@ -91,6 +91,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationKeys.cs" />
     <Compile Include="AssemblyInformation.cs" />
     <Compile Include="CheckVersion.cs" />
     <Compile Include="Globals.cs" />

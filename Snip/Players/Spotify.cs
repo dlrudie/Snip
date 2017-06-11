@@ -34,8 +34,6 @@ namespace Winter
 
     internal sealed class Spotify : MediaPlayer
     {
-        private const string AUTHORIZATIONKEY = "";
-
         private Timer timer;
         private string json = string.Empty;
         private bool downloadingJson = false;
@@ -407,7 +405,7 @@ namespace Winter
                     jsonWebClient.Encoding = System.Text.Encoding.UTF8;
 
                     jsonWebClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                    jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", AUTHORIZATIONKEY));
+                    jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", ApplicationKeys.Spotify));
                     jsonWebClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
 
                     string parameters = "grant_type=client_credentials";
