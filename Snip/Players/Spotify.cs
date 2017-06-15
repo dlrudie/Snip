@@ -48,6 +48,8 @@ namespace Winter
 
         private bool spotifyWindowFound = false;
 
+        private bool snipReset = false;
+
         #endregion
 
         #region Methods
@@ -94,6 +96,8 @@ namespace Winter
         public override void Unload()
         {
             base.Unload();
+            this.snipReset = false;
+            this.spotifyWindowFound = false;
             this.oauthToken = string.Empty;
             this.csrfToken = string.Empty;
             this.authorizationToken = string.Empty;
@@ -289,6 +293,8 @@ namespace Winter
 
                             // Set the last title to the track id as these are unique values that only change when the track changes
                             this.LastTitle = trackId;
+
+                            this.snipReset = false;
                         }
                     }
                 }
@@ -496,18 +502,23 @@ namespace Winter
 
         private void ResetSnipSinceSpotifyIsNotPlaying()
         {
-            // Prevent writing a blank image if we already did
-            if (!this.SavedBlankImage)
+            if (!this.snipReset)
             {
-                if (Globals.SaveAlbumArtwork)
+                // Prevent writing a blank image if we already did
+                if (!this.SavedBlankImage)
                 {
-                    this.SaveBlankImage();
+                    if (Globals.SaveAlbumArtwork)
+                    {
+                        this.SaveBlankImage();
+                    }
                 }
+
+                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+
+                this.LastTitle = string.Empty;
+
+                this.snipReset = true;
             }
-
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
-
-            this.LastTitle = string.Empty;
         }
 
         private void ResetSnipSinceSpotifyIsNotRunning()
