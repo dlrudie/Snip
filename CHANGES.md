@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v6.5.0 (2017-Jun-14):**
+* Added support for Google Play Music Desktop Player
+* Added option to toggle song text as how it appears, all upper case, or all
+    lower case. There are six new hidden variables to suppor this. They are:
+    $$ut, $$lt, $$ua, $$la, $$ul, $$ll
+
 **v6.1.0 (2017-Jun-11):**
 * Rewrote Spotify code to take advantage of the local web server instead of
     searching for track information using Spotify's window title.

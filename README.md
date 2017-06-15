@@ -8,7 +8,13 @@ ABOUT
 This small application sits in the system tray and updates a text
 file with the currently playing audio track.
 
-It supports Spotify, iTunes, Winamp, foobar2000, and VLC.
+It supports the following media players:
+* [Spotify](https://www.spotify.com/)
+* [iTunes](https://www.apple.com/itunes/)
+* [Winamp](http://www.winamp.com/)
+* [foobar2000](http://www.foobar2000.org/)
+* [VLC](http://www.videolan.org/vlc/)
+* [Google Play Music Desktop Player](https://www.googleplaymusicdesktopplayer.com/)
 
 If you choose to use iTunes, Snip will automatically launch it. (This
 is the behavior of the COM API and there's nothing I can do about it.) If you
@@ -28,6 +34,7 @@ SUPPORTED FEATURES FOR PLAYERS
 * **Winamp:** Artist, Track
 * **foobar2000:** Artist, Track
 * **VLC:** Nothing (It uses whatever the titlebar says)
+* **Google Play Music Desktop Player:** Artist, Track, Album, Artwork
 
 WINAMP
 ======
@@ -79,6 +86,11 @@ determine if VLC is running.  If the title bar is anything different then it
 will not be found.  If a track is currently playing when you start Snip you
 just have to push stop and Snip will find VLC.
 
+GOOGLE PLAY MUSIC DESKTOP PLAYER
+================================
+Snip utilizes GPMDP's JSON API. Make sure "Enable JSON API" has a checkmark
+next to it under Desktop Settings.
+
 HOTKEYS
 =======
 * **Next Track:** Ctrl, Alt, ]
@@ -92,7 +104,8 @@ HOTKEYS
 
 Note
 ----
-Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, and VLC.
+Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, VLC, and
+Google Play Music Desktop Player.
 
 DONATIONS
 =========
