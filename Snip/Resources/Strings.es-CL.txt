@@ -17,6 +17,7 @@ iTunes=iTunes
 Winamp=Winamp
 foobar2000=foobar2000
 VLC=VLC
+GPMDP=GPMDP
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
@@ -25,6 +26,7 @@ SwitchedToiTunes=Se cambió a iTunes
 SwitchedToWinamp=Se cambió a Winamp
 SwitchedTofoobar2000=Se cambió a foobar2000
 SwitchedToVLC=Se cambió a VLC
+SwitchedToGPMDP=Se cambió a GPMDP
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
@@ -33,6 +35,7 @@ iTunesNotRunning=iTunes no se está ejecutando
 WinampIsNotRunning=Winamp no se está ejecutando
 foobar2000IsNotRunning=foobar2000 no se está ejecutando
 VLCIsNotRunning=VLC no se está ejecutando
+GPMDPIsNotRunning=GPMDP no se está ejecutando
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.

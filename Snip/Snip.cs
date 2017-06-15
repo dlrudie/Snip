@@ -153,6 +153,10 @@ namespace Winter
                 case Globals.MediaPlayerSelection.VLC:
                     this.ToggleVLC();
                     break;
+
+                case Globals.MediaPlayerSelection.GPMDP:
+                    this.ToggleGPMDP();
+                    break;
             }
 
             this.toolStripMenuItemSaveSeparateFiles.Checked = Globals.SaveSeparateFiles;
@@ -235,6 +239,10 @@ namespace Winter
             {
                 this.ToggleVLC();
             }
+            else if (sender == this.toolStripMenuItemGPMDP)
+            {
+                this.ToggleGPMDP();
+            }
         }
 
         private void ToggleSpotify()
@@ -244,6 +252,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemGPMDP.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Spotify();
@@ -260,6 +269,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemGPMDP.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new iTunes();
@@ -276,6 +286,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = true;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemGPMDP.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Winamp();
@@ -292,6 +303,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = true;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemGPMDP.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new foobar2000();
@@ -308,6 +320,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = true;
+            this.toolStripMenuItemGPMDP.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new VLC();
@@ -315,6 +328,23 @@ namespace Winter
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
             TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToVLC"));
+        }
+
+        private void ToggleGPMDP()
+        {
+            this.toolStripMenuItemSpotify.Checked = false;
+            this.toolStripMenuItemItunes.Checked = false;
+            this.toolStripMenuItemWinamp.Checked = false;
+            this.toolStripMenuItemFoobar2000.Checked = false;
+            this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemGPMDP.Checked = true;
+
+            Globals.CurrentPlayer.Unload();
+            Globals.CurrentPlayer = new GPMDP();
+            Globals.CurrentPlayer.Load();
+
+            Globals.PlayerSelection = Globals.MediaPlayerSelection.GPMDP;
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToGPMDP"));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)

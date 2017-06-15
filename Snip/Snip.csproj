@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="MediaPlayer.cs" />
     <Compile Include="Players\foobar2000.cs" />
+    <Compile Include="Players\GPMDP.cs" />
     <Compile Include="Players\Spotify.cs" />
     <Compile Include="Players\iTunes.cs" />
     <Compile Include="Players\VLC.cs" />
