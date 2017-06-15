@@ -131,13 +131,19 @@ namespace Winter
             string output = Globals.TrackFormat + Globals.SeparatorFormat + Globals.ArtistFormat;
 
             output = output.Replace(Globals.TrackVariable, title);
+            output = output.Replace(Globals.TrackVariableUppercase, title.ToUpper());
+            output = output.Replace(Globals.TrackVariableLowercase, title.ToLower());
             output = output.Replace(Globals.ArtistVariable, artist);
+            output = output.Replace(Globals.ArtistVariableUppercase, artist.ToUpper());
+            output = output.Replace(Globals.ArtistVariableLowercase, artist.ToLower());
             output = output.Replace(Globals.NewLineVariable, "\r\n");
             output = output.Replace(Globals.TrackIdVariable, trackId);
 
             if (!string.IsNullOrEmpty(album))
             {
                 output = output.Replace(Globals.AlbumVariable, album);
+                output = output.Replace(Globals.AlbumVariableUppercase, album.ToUpper());
+                output = output.Replace(Globals.AlbumVariableLowercase, album.ToLower());
             }
 
             if (output != lastTextToWrite)
