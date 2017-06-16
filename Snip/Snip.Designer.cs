@@ -22,6 +22,7 @@
         // private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall; // Disabling the small size since no small size is provided via Spotify
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMedium;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLarge;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCacheSpotifyMetadata;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveHistory;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDisplayTrackPopup;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEmptyFileIfNoTrackPlaying;
@@ -83,6 +84,7 @@
             // this.toolStripMenuItemSmall = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMedium = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemLarge = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCacheSpotifyMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveHistory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDisplayTrackPopup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemEmptyFileIfNoTrackPlaying = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,6 +118,7 @@
             this.toolStripMenuItemSaveSeparateFiles,
             this.toolStripMenuItemSaveAlbumArtwork,
             this.toolStripMenuItemKeepSpotifyAlbumArtwork,
+            this.toolStripMenuItemCacheSpotifyMetadata,
             this.toolStripMenuItemSaveHistory,
             this.toolStripMenuItemDisplayTrackPopup,
             this.toolStripMenuItemEmptyFileIfNoTrackPlaying,
@@ -248,6 +251,13 @@
             this.toolStripMenuItemLarge.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemLarge.Text = Globals.ResourceManager.GetString("ImageResolutionLarge");
             this.toolStripMenuItemLarge.Click += new System.EventHandler(this.AlbumArtworkResolutionCheck);
+            // 
+            // toolStripMenuItemCacheSpotifyMetadata
+            // 
+            this.toolStripMenuItemCacheSpotifyMetadata.Name = "toolStripMenuItemCacheSpotifyMetadata";
+            this.toolStripMenuItemCacheSpotifyMetadata.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemCacheSpotifyMetadata.Text = Globals.ResourceManager.GetString("CacheSpotifyMetadata");
+            this.toolStripMenuItemCacheSpotifyMetadata.Click += new System.EventHandler(this.ToolStripMenuItemCacheSpotifyMetadata_Click);
             // 
             // toolStripMenuItemSaveHistory
             // 

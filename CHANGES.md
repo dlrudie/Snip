@@ -1,9 +1,19 @@
 CHANGES
 =======
+**vX.X.X (XXXX-XXX-XX):**
+* Added option to cache Spotify track information. This option is enabled by
+    default.
+* Changed Snip to remember settings for all major versions in the future.
+    This means that anything Snip v6.x.x will share settings. If a new
+    feature or option were added that would break compatibility it will
+    force Snip to bump up to the next major version. I also removed my name
+    from the registry path so it will now just be located under Snip.
+* Fixed possible uppercase/lowercase issues based on user's locale setting.
+
 **v6.5.0 (2017-Jun-14):**
 * Added support for Google Play Music Desktop Player
 * Added option to toggle song text as how it appears, all upper case, or all
-    lower case. There are six new hidden variables to suppor this. They are:
+    lower case. There are six new hidden variables to support this. They are:
     $$ut, $$lt, $$ua, $$la, $$ul, $$ll
 
 **v6.1.0 (2017-Jun-11):**

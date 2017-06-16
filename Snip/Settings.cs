@@ -31,10 +31,9 @@ namespace Winter
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "SOFTWARE\\{0}\\{1}\\{2}",
-                    AssemblyInformation.AssemblyAuthor,
+                    "SOFTWARE\\{0}\\{1}",
                     AssemblyInformation.AssemblyTitle,
-                    AssemblyInformation.AssemblyVersion));
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major));
 
             registryKey.SetValue("Player", (int)Globals.PlayerSelection);
 
@@ -66,6 +65,15 @@ namespace Winter
             }
 
             registryKey.SetValue("Album Artwork Resolution", (int)Globals.ArtworkResolution);
+
+            if (Globals.CacheSpotifyMetadata)
+            {
+                registryKey.SetValue("Cache Spotify Metadata", "true");
+            }
+            else
+            {
+                registryKey.SetValue("Cache Spotify Metadata", "false");
+            }
 
             if (Globals.SaveHistory)
             {
@@ -152,6 +160,16 @@ namespace Winter
 
                 Globals.ArtworkResolution = (Globals.AlbumArtworkResolution)registryKey.GetValue("Album Artwork Resolution", Globals.AlbumArtworkResolution.Tiny);
 
+                bool cacheSpotifyMetadata = Convert.ToBoolean(registryKey.GetValue("Cache Spotify Metadata", true), CultureInfo.InvariantCulture);
+                if (cacheSpotifyMetadata)
+                {
+                    Globals.CacheSpotifyMetadata = true;
+                }
+                else
+                {
+                    Globals.CacheSpotifyMetadata = false;
+                }
+
                 bool saveHistoryChecked = Convert.ToBoolean(registryKey.GetValue("Save History", false), CultureInfo.InvariantCulture);
                 if (saveHistoryChecked)
                 {
@@ -209,6 +227,7 @@ namespace Winter
                 Globals.SaveAlbumArtwork = false;
                 Globals.KeepSpotifyAlbumArtwork = false;
                 Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
+                Globals.CacheSpotifyMetadata = true;
                 Globals.SaveHistory = false;
                 Globals.DisplayTrackPopup = false;
                 Globals.EmptyFileIfNoTrackPlaying = true;

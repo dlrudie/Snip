@@ -21,7 +21,6 @@
 namespace Winter
 {
     using System;
-    using System.Drawing;
     using System.Globalization;
     using System.Resources;
     using System.Windows.Forms;
@@ -182,6 +181,7 @@ namespace Winter
                     break;
             }
 
+            this.toolStripMenuItemCacheSpotifyMetadata.Checked = Globals.CacheSpotifyMetadata;
             this.toolStripMenuItemSaveHistory.Checked = Globals.SaveHistory;
             this.toolStripMenuItemDisplayTrackPopup.Checked = Globals.DisplayTrackPopup;
             this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = Globals.EmptyFileIfNoTrackPlaying;
@@ -387,6 +387,20 @@ namespace Winter
             }
 
             Globals.KeepSpotifyAlbumArtwork = this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked;
+        }
+
+        private void ToolStripMenuItemCacheSpotifyMetadata_Click(object sender, EventArgs e)
+        {
+            if (this.toolStripMenuItemCacheSpotifyMetadata.Checked)
+            {
+                this.toolStripMenuItemCacheSpotifyMetadata.Checked = false;
+            }
+            else
+            {
+                this.toolStripMenuItemCacheSpotifyMetadata.Checked = true;
+            }
+
+            Globals.CacheSpotifyMetadata = this.toolStripMenuItemCacheSpotifyMetadata.Checked;
         }
 
         private void ToolStripMenuItemSaveHistory_Click(object sender, EventArgs e)

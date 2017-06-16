@@ -261,14 +261,23 @@ namespace Winter
                         {
                             Globals.RewriteUpdatedOutputFormat = false;
 
-                            string downloadedJson = this.DownloadJson(
-                                string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "https://api.spotify.com/v1/tracks/{0}",
-                                    trackId),
-                                SpotifyAddressContactType.API);
+                            string json = string.Empty;
 
-                            jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+                            if (Globals.CacheSpotifyMetadata)
+                            {
+                                json = this.ReadCachedJson(trackId);
+                            }
+                            else
+                            {
+                                json = this.DownloadJson(
+                                    string.Format(
+                                        CultureInfo.InvariantCulture,
+                                        "https://api.spotify.com/v1/tracks/{0}",
+                                        trackId),
+                                    SpotifyAddressContactType.API);
+                            }
+
+                            jsonSummary = SimpleJson.DeserializeObject(json);
 
                             // If there are multiple artists we want to join all of them together for display
                             string artists = string.Empty;
@@ -497,6 +506,47 @@ namespace Winter
                 {
                     this.SaveBlankImage();
                 }
+            }
+        }
+
+        private string ReadCachedJson(string trackId)
+        {
+            string json = string.Empty;
+
+            string metadataDirectory = @Application.StartupPath + @"\SpotifyMetadata";
+            string metadataJsonPath = string.Format(CultureInfo.InvariantCulture, @"{0}\{1}.json", metadataDirectory, trackId);
+
+            if (!Directory.Exists(metadataDirectory))
+            {
+                Directory.CreateDirectory(metadataDirectory);
+            }
+
+            if (File.Exists(metadataJsonPath))
+            {
+                json = File.ReadAllText(metadataJsonPath, Encoding.UTF8);
+            }
+            else
+            {
+                json = this.DownloadJson(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "https://api.spotify.com/v1/tracks/{0}",
+                        trackId),
+                    SpotifyAddressContactType.API);
+
+                if (!string.IsNullOrEmpty(json))
+                {
+                    File.WriteAllText(metadataJsonPath, json, Encoding.UTF8);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                return json;
+            }
+            else
+            {
+                return string.Empty;
             }
         }
 

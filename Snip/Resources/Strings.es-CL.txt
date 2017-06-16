@@ -70,6 +70,11 @@ ImageResolutionSmall=Pequeño
 ImageResolutionMedium=Mediano
 ImageResolutionLarge=Grande
 
+; This option is used to enable caching the JSON metadata that Snip
+; downloads from Spotify. It allows Snip to read the data straight from the
+; saved cache instead of downloading it each time.
+CacheSpotifyMetadata=Cache Spotify Metadata
+
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will create a file called Snip_History.txt where it will append each track
 ; played to the end of the file, effectively creating a play history.
