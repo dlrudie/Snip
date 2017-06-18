@@ -18,6 +18,7 @@ Winamp=Winamp
 foobar2000=foobar2000
 VLC=VLC
 GPMDP=GPMDP
+quodlibet=quodlibet
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
@@ -27,6 +28,7 @@ SwitchedToWinamp=Bytte till Winamp
 SwitchedTofoobar2000=Bytte till foobar2000
 SwitchedToVLC=Bytte till VLC
 SwitchedToGPMDP=Bytte till GPMDP
+SwitchedToQuodlibet=Bytte till quodlibet
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
@@ -36,6 +38,7 @@ WinampIsNotRunning=Winamp körs inte just nu
 foobar2000IsNotRunning=foobar2000 körs inte just nu
 VLCIsNotRunning=VLC körs inte just nu
 GPMDPIsNotRunning=GPMDP körs inte just nu
+QuodlibetIsNotRunning=quodlibet körs inte just nu
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.

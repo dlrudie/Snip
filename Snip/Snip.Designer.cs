@@ -12,6 +12,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFoobar2000;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVlc;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGPMDP;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemQuodlibet;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -74,6 +75,7 @@
             this.toolStripMenuItemFoobar2000 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemVlc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGPMDP = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemQuodlibet = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -112,6 +114,7 @@
             this.toolStripMenuItemFoobar2000,
             this.toolStripMenuItemVlc,
             this.toolStripMenuItemGPMDP,
+            this.toolStripMenuItemQuodlibet,
             this.toolStripSeparator1,
             this.toolStripMenuItemSetFormat,
             this.toolStripSeparator2,
@@ -171,6 +174,13 @@
             this.toolStripMenuItemVlc.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemVlc.Text = Globals.ResourceManager.GetString("VLC");
             this.toolStripMenuItemVlc.Click += new System.EventHandler(this.PlayerSelectionCheck);
+            // 
+            // toolStripMenuItemQuodlibet
+            // 
+            this.toolStripMenuItemQuodlibet.Name = "toolStripMenuItemQuodlibet";
+            this.toolStripMenuItemQuodlibet.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemQuodlibet.Text = Globals.ResourceManager.GetString("quodlibet");
+            this.toolStripMenuItemQuodlibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
             //
             // toolStripMenuItemGPMDP
             //
