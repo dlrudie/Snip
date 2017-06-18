@@ -95,7 +95,8 @@ namespace Winter
             Winamp = 2,
             foobar2000 = 3,
             VLC = 4,
-            GPMDP = 5
+            GPMDP = 5,
+            quodlibet = 6
         }
 
         public enum MediaCommand : int
