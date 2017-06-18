@@ -9,6 +9,7 @@ CHANGES
     force Snip to bump up to the next major version. I also removed my name
     from the registry path so it will now just be located under Snip.
 * Fixed possible uppercase/lowercase issues based on user's locale setting.
+* Added Quod Libet player support (Support added by Jay Lapham).
 
 **v6.5.0 (2017-Jun-14):**
 * Added support for Google Play Music Desktop Player

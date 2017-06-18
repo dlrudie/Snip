@@ -48,3 +48,6 @@ Contributors
 
 * KingCrazy
   * Fix for VLC player trimming titles prematurely
+
+* Jay Lapham (jaylapham)
+  * Added support for Quod Libet player

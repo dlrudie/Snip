@@ -15,6 +15,7 @@ It supports the following media players:
 * [foobar2000](http://www.foobar2000.org/)
 * [VLC](http://www.videolan.org/vlc/)
 * [Google Play Music Desktop Player](https://www.googleplaymusicdesktopplayer.com/)
+* [Quod Libet](https://quodlibet.readthedocs.io/)
 
 If you choose to use iTunes, Snip will automatically launch it. (This
 is the behavior of the COM API and there's nothing I can do about it.) If you
@@ -35,6 +36,7 @@ SUPPORTED FEATURES FOR PLAYERS
 * **foobar2000:** Artist, Track
 * **VLC:** Nothing (It uses whatever the titlebar says)
 * **Google Play Music Desktop Player:** Artist, Track, Album, Artwork
+* **Quod Libet:** Nothing (It uses whatever the titlebar says)
 
 WINAMP
 ======
@@ -85,6 +87,12 @@ Snip looks for the window class and "VLC media player" window title to
 determine if VLC is running.  If the title bar is anything different then it
 will not be found.  If a track is currently playing when you start Snip you
 just have to push stop and Snip will find VLC.
+
+Quod Libet
+==========
+Snip looks for the window class "quodlibet" to determine if Quod Libet is
+running.  Once the window is found it will just read the titlebar and output
+the text in it.
 
 GOOGLE PLAY MUSIC DESKTOP PLAYER
 ================================
