@@ -325,7 +325,7 @@ namespace Winter
         private string GetTrackInformation()
         {
             // No sense in doing anything if the tokens aren't valid or set yet
-            if (!string.IsNullOrEmpty(this.oauthToken) && !string.IsNullOrEmpty(this.csrfToken))
+            if (!string.IsNullOrEmpty(this.oauthToken) || !string.IsNullOrEmpty(this.csrfToken))
             {
                 // *.spotilocal.com redirects to localhost
                 string spotilocalAddress = "http://snip.spotilocal.com";
@@ -359,22 +359,13 @@ namespace Winter
                     {
                         return downloadedJson;
                     }
-                    else
-                    {
-                        this.ResetSnipSinceSpotifyIsNotRunning();
-                        this.updateCSRFTokenTimer.Interval = 1000; // Run continously until token is obtained
-                        return string.Empty;
-                    }
-                }
-                else
-                {
-                    return string.Empty;
                 }
             }
-            else
-            {
-                return string.Empty;
-            }
+
+            // We should only be here if all else failed, which means it probably can't connect to SpotifyWebHelper
+            this.ResetSnipSinceSpotifyIsNotRunning();
+            this.updateCSRFTokenTimer.Interval = 1000; // Run continously until token is obtained
+            return string.Empty;
         }
 
         private void DownloadSpotifyAlbumArtwork(dynamic jsonSummary)
