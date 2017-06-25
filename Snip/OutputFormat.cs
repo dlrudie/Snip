@@ -29,10 +29,6 @@ namespace Winter
 
     public partial class OutputFormat : Form
     {
-        private readonly string assemblyTitle = AssemblyInformation.AssemblyTitle;
-        private readonly string assemblyAuthor = AssemblyInformation.AssemblyAuthor;
-        private readonly string assemblyVersion = AssemblyInformation.AssemblyVersion;
-
         private string trackFormat;
         private string separatorFormat;
         private string artistFormat;
