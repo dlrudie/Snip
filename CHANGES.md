@@ -1,6 +1,6 @@
 CHANGES
 =======
-**vX.X.X (XXXX-XXX-XX):**
+**v6.8.0 (2017-Jun-25):**
 * Added option to cache Spotify track information. This option is enabled by
     default.
 * Changed Snip to remember settings for all major versions in the future.
