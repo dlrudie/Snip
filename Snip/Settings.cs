@@ -22,6 +22,7 @@ namespace Winter
 {
     using System;
     using System.Globalization;
+    using System.Reflection;
     using Microsoft.Win32;
 
     public static class Settings
@@ -33,7 +34,7 @@ namespace Winter
                     CultureInfo.InvariantCulture,
                     "SOFTWARE\\{0}\\{1}",
                     AssemblyInformation.AssemblyTitle,
-                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major));
+                    Assembly.GetExecutingAssembly().GetName().Version.Major));
 
             registryKey.SetValue("Player", (int)Globals.PlayerSelection);
 
@@ -119,10 +120,9 @@ namespace Winter
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "SOFTWARE\\{0}\\{1}\\{2}",
-                    AssemblyInformation.AssemblyAuthor,
+                    "SOFTWARE\\{0}\\{1}",
                     AssemblyInformation.AssemblyTitle,
-                    AssemblyInformation.AssemblyVersion));
+                    Assembly.GetExecutingAssembly().GetName().Version.Major));
 
             if (registryKey != null)
             {

@@ -22,6 +22,7 @@ namespace Winter
 {
     using System;
     using System.Globalization;
+    using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
     using Microsoft.Win32;
@@ -501,10 +502,9 @@ namespace Winter
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "SOFTWARE\\{0}\\{1}\\{2}",
-                    AssemblyInformation.AssemblyAuthor,
+                    "SOFTWARE\\{0}\\{1}",
                     AssemblyInformation.AssemblyTitle,
-                    AssemblyInformation.AssemblyVersion));
+                    Assembly.GetExecutingAssembly().GetName().Version.Major));
 
             if (registryKey != null)
             {

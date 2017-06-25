@@ -22,8 +22,8 @@ namespace Winter
 {
     using System;
     using System.Globalization;
+    using System.Reflection;
     using System.Resources;
-    using System.Text;
     using System.Windows.Forms;
     using Microsoft.Win32;
 
@@ -77,10 +77,9 @@ namespace Winter
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.assemblyAuthor,
-                    this.assemblyTitle,
-                    this.assemblyVersion));
+                    "SOFTWARE\\{0}\\{1}",
+                    AssemblyInformation.AssemblyTitle,
+                    Assembly.GetExecutingAssembly().GetName().Version.Major));
 
             if (registryKey != null)
             {
@@ -108,10 +107,9 @@ namespace Winter
             RegistryKey registryKey = Registry.CurrentUser.CreateSubKey(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "SOFTWARE\\{0}\\{1}\\{2}",
-                    this.assemblyAuthor,
-                    this.assemblyTitle,
-                    this.assemblyVersion));
+                    "SOFTWARE\\{0}\\{1}",
+                    AssemblyInformation.AssemblyTitle,
+                    Assembly.GetExecutingAssembly().GetName().Version.Major));
 
             registryKey.SetValue("Track Format", this.textBoxTrackFormat.Text, RegistryValueKind.String);
 
