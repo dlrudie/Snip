@@ -10,6 +10,8 @@ CHANGES
     from the registry path so it will now just be located under Snip.
 * Fixed possible uppercase/lowercase issues based on user's locale setting.
 * Added Quod Libet player support (Support added by Jay Lapham).
+* Changed Spotify player check behavior. If it can't connect to the local
+    web service it will now show that Spotify is not running.
 
 **v6.5.0 (2017-Jun-14):**
 * Added support for Google Play Music Desktop Player
