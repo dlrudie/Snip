@@ -174,22 +174,31 @@ namespace Winter
                 if (Globals.SaveSeparateFiles)
                 {
                     string artistOutput = Globals.ArtistFormat;
-                    artistOutput = artistOutput.Replace(Globals.ArtistVariableUppercase, artist.ToUpper(CultureInfo.CurrentCulture));
-                    artistOutput = artistOutput.Replace(Globals.ArtistVariableLowercase, artist.ToLower(CultureInfo.CurrentCulture));
-                    artistOutput = artistOutput.Replace(Globals.ArtistVariable, artist);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", artistOutput);
+                    if (!string.IsNullOrEmpty(artist))
+                    {
+                        artistOutput = artistOutput.Replace(Globals.ArtistVariableUppercase, artist.ToUpper(CultureInfo.CurrentCulture));
+                        artistOutput = artistOutput.Replace(Globals.ArtistVariableLowercase, artist.ToLower(CultureInfo.CurrentCulture));
+                        artistOutput = artistOutput.Replace(Globals.ArtistVariable, artist);
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Artist.txt", artistOutput);
+                    }
 
                     string trackOutput = Globals.TrackFormat;
-                    trackOutput = trackOutput.Replace(Globals.TrackVariableUppercase, title.ToUpper(CultureInfo.CurrentCulture));
-                    trackOutput = trackOutput.Replace(Globals.TrackVariableLowercase, title.ToLower(CultureInfo.CurrentCulture));
-                    trackOutput = trackOutput.Replace(Globals.TrackVariable, title);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", trackOutput);
+                    if (!string.IsNullOrEmpty(title))
+                    {
+                        trackOutput = trackOutput.Replace(Globals.TrackVariableUppercase, title.ToUpper(CultureInfo.CurrentCulture));
+                        trackOutput = trackOutput.Replace(Globals.TrackVariableLowercase, title.ToLower(CultureInfo.CurrentCulture));
+                        trackOutput = trackOutput.Replace(Globals.TrackVariable, title);
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Track.txt", trackOutput);
+                    }
 
                     string albumOutput = Globals.AlbumFormat;
-                    albumOutput = albumOutput.Replace(Globals.AlbumVariableUppercase, album.ToUpper(CultureInfo.CurrentCulture));
-                    albumOutput = albumOutput.Replace(Globals.AlbumVariableLowercase, album.ToLower(CultureInfo.CurrentCulture));
-                    albumOutput = albumOutput.Replace(Globals.AlbumVariable, album);
-                    File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", albumOutput);
+                    if (!string.IsNullOrEmpty(album))
+                    {
+                        albumOutput = albumOutput.Replace(Globals.AlbumVariableUppercase, album.ToUpper(CultureInfo.CurrentCulture));
+                        albumOutput = albumOutput.Replace(Globals.AlbumVariableLowercase, album.ToLower(CultureInfo.CurrentCulture));
+                        albumOutput = albumOutput.Replace(Globals.AlbumVariable, album);
+                        File.WriteAllText(@Application.StartupPath + @"\Snip_Album.txt", albumOutput);
+                    }
 
                     File.WriteAllText(@Application.StartupPath + @"\Snip_TrackId.txt", trackId);
                 }
