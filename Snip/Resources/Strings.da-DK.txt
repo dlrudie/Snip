@@ -1,0 +1,137 @@
+#############
+# Snip Form #
+#############
+
+; Main application name.
+SnipForm=Snip
+
+; This text appears in place of the Snip version in the right-click context
+; menu when there is a new version of Snip available.
+; Let's sound excited!
+NewVersionAvailable=Ny version tilgængelig!
+
+; Supported media players.  These probably don't need translated unless they
+; actually have a different name in other countries.
+Spotify=Spotify
+iTunes=iTunes
+Winamp=Winamp
+foobar2000=foobar2000
+VLC=VLC
+GPMDP=GPMDP
+quodlibet=quodlibet
+
+; This text is saved to the Snip.txt file when the user switches media players
+; from the right-click context menu.
+SwitchedToSpotify=Skiftede til Spotify
+SwitchedToiTunes=Skiftede til iTunes
+SwitchedToWinamp=Skiftede til Winamp
+SwitchedTofoobar2000=Skiftede til foobar2000
+SwitchedToVLC=Skiftede til VLC
+SwitchedToGPMDP=Skiftede til GPMDP
+SwitchedToQuodlibet=Skiftede til quodlibet
+
+; This text is saved to the Snip.txt file when Snip itself is running but Snip
+; does not detect the selected media player as running.
+SpotifyIsNotRunning=Spotify køre ikke i øjeblikket
+iTunesNotRunning=iTunes køre ikke i øjeblikket
+WinampIsNotRunning=Winamp køre ikke i øjeblikket
+foobar2000IsNotRunning=foobar2000 køre ikke i øjeblikket
+VLCIsNotRunning=VLC køre ikke i øjeblikket
+GPMDPIsNotRunning=GPMDP køre ikke i øjeblikket
+QuodlibetIsNotRunning=quodlibet køre ikke i øjeblikket
+
+; This text is saved to the Snip.txt file when no track is playing in the
+; selected media file or when the user stops/pauses a playing track.
+NoTrackPlaying=Ingen sang afspilles i øjeblikket
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will open up the "Set Output Format" form where the user can customize how
+; the text will look when saved to any of the text files.
+SetOutputFormat=Ændre output formatet
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artist information and song information to separate text files
+; on the harddrive.
+SaveInformationSeparately=Gem information separat
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will download and save album artwork for the currently playing track to the
+; harddrive.
+SaveAlbumArtwork=Gem album cover
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artwork to a subdirectory using the trackid information
+; provided by Spotify as the filename.  Each track will save its own album
+; artwork and the next time that track is played it will use the saved file
+; instead of redownloading it each time.
+KeepSpotifyAlbumArtwork=Behold Spotify album cover
+
+; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
+; and it refers to the image resolution of the artwork to be downloaded.
+ImageResolutionTiny=Lille bitte
+ImageResolutionSmall=Lille
+ImageResolutionMedium=Medium
+ImageResolutionLarge=Stor
+
+; This option is used to enable caching the JSON metadata that Snip
+; downloads from Spotify. It allows Snip to read the data straight from the
+; saved cache instead of downloading it each time.
+CacheSpotifyMetadata=Cache Spotify Metadata
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will create a file called Snip_History.txt where it will append each track
+; played to the end of the file, effectively creating a play history.
+SaveTrackHistory=Gem sang historik
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause a popup notification to display on the desktop with the
+; currently playing track title.
+DisplayTrackPopup=Vis sang popup
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause Snip.txt to be emptied out when no track is playing.  If this
+; option is disabled then the text from "NoTrackPlaying" will be saved to
+; Snip.txt.
+EmptyFile=Tom fil hvis intet afspilles
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause Snip to register global hotkeys that can be used to control the
+; selected media player from anywhere.
+EnableHotkeys=Aktiver Hotkeys
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will exit the application.
+ExitApplication=Afslut
+
+; This text is displayed in a MessageBox pop-up when there is a COM exception
+; caused by trying to load the iTunes COM library.
+iTunesException=Luk venligst iTunes og vælg iTunes fra Snips menu igen.
+
+######################
+# Output Format Form #
+######################
+
+; This text is displayed as the title of the Output Format Form.
+SetOutputFormatForm=Ændre output formatet
+
+; These texts refer to setting how specific output looks when saved to any of
+; the text files.  The $$t, $$a, and $$l variables will be filled in with the
+; track, artist, and album information of the currently playing track.
+SetTrackFormat=Indstil sang format ($$t):
+SetSeparatorFormat=Separatorformat:
+SetArtistFormat=Kunstner format ($$a):
+SetAlbumFormat=Album format ($$l):
+
+; This text is displayed on the buttons within this form.  Clicking the
+; Defaults button will restore the output format settings to their default
+; appearance.  Clicking the Save button will save the user-set appearance.
+ButtonDefaults=Standard
+ButtonSave=Gem
+
+; These will most likely not need to be translated.  However, if your locale
+; uses different dashes or quotation marks then you can alternatively change
+; them here.
+TrackFormat=“$$t”
+SeparatorFormat=―
+ArtistFormat=$$a
+AlbumFormat=$$l
