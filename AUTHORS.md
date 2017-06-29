@@ -51,3 +51,6 @@ Contributors
 
 * Jay Lapham (jaylapham)
   * Added support for Quod Libet player
+  
+* Jens Møller
+  * Danish translation
