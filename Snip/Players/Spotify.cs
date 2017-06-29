@@ -189,11 +189,13 @@ namespace Winter
         private void UpdateCSRFTokenTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             // *.spotilocal.com redirects to localhost
-            string spotilocalAddress = "http://snip.spotilocal.com";
+            string spotilocalAddress = "https://snip.spotilocal.com";
 
-            // While the web server accepts connections on ports 4370, 4371, and 4380 I've only
-            // ever seen it return a result on port 4380
-            int spotifyPort = 4380;
+            // After doing some research SpotifyWebHelper uses several ports
+            // 4370 - 4379 = https
+            // 4380 - 4389 = http
+            // However I've only ever personally seen SpotifyWebHelper listen on ports 4370, 4371, 4380, and 4381.
+            int spotifyPort = 4371; // 4371 seems to be the most successful port from what I've found on Google
 
             // CSRF token path
             string csrfAddress = "/simplecsrf/token.json";
@@ -328,11 +330,13 @@ namespace Winter
             if (!string.IsNullOrEmpty(this.oauthToken) || !string.IsNullOrEmpty(this.csrfToken))
             {
                 // *.spotilocal.com redirects to localhost
-                string spotilocalAddress = "http://snip.spotilocal.com";
+                string spotilocalAddress = "https://snip.spotilocal.com";
 
-                // While the web server accepts connections on ports 4370, 4371, and 4380 I've only
-                // ever seen it return a result on port 4380
-                int spotifyPort = 4380;
+                // After doing some research SpotifyWebHelper uses several ports
+                // 4370 - 4379 = https
+                // 4380 - 4389 = http
+                // However I've only ever personally seen SpotifyWebHelper listen on ports 4370, 4371, 4380, and 4381.
+                int spotifyPort = 4371; // 4371 seems to be the most successful port from what I've found on Google
 
                 string csrfAddress = string.Format(
                     CultureInfo.InvariantCulture,
