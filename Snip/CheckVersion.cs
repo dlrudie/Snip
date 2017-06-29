@@ -23,8 +23,6 @@ namespace Winter
     using System;
     using System.Net;
     using System.Reflection;
-    using System.Web;
-    using System.Windows.Forms;
     using SimpleJson;
 
     public static class CheckVersion

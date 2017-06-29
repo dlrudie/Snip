@@ -21,7 +21,6 @@
 namespace Winter
 {
     using System;
-    using System.Globalization;
 
     internal sealed class Winamp : MediaPlayer
     {

@@ -20,7 +20,6 @@
 
 namespace Winter
 {
-    using System;
     using System.Resources;
     using System.Windows.Forms;
 

@@ -22,7 +22,6 @@ namespace Winter
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
 
     internal sealed class VLC : MediaPlayer
     {
