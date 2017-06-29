@@ -179,6 +179,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Strings.da-DK.txt" />
     <Content Include="Resources\Strings.el-GR.txt" />
     <Content Include="Resources\Strings.cs-CZ.txt" />
     <Content Include="Resources\Strings.pl-PL.txt" />
