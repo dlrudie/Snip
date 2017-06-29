@@ -1,5 +1,10 @@
 CHANGES
 =======
+**v6.9.0 (2017-Jun-28):**
+* Danish translation provided by Jens Møller.
+* Changed the port that Snip uses to get a token from SpotifyWebHelper. This
+    should hopefully allow more users to successfully obtain a token.
+
 **v6.8.0 (2017-Jun-25):**
 * Added option to cache Spotify track information. This option is enabled by
     default.
