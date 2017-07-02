@@ -8,7 +8,7 @@ ABOUT
 This is a small application that sits in the system tray and updates a text
 file with the currently playing audio track.
 
-It supports Spotify, iTunes, Winamp, foobar2000, and VLC.
+It supports Spotify, iTunes, Winamp, foobar2000, VLC and mps-youtube.
 
 If you choose to use iTunes then Snip will automatically launch iTunes.  This
 is the behavior of the COM API and there's nothing I can do about it.  If you
@@ -29,6 +29,7 @@ SUPPORTED FEATURES FOR PLAYERS
 * **Winamp:** Artist, Track
 * **foobar2000:** Artist, Track
 * **VLC:** Nothing (It uses whatever the titlebar says)
+* **mps-youtube:** Nothing (It uses whatever the titlebar says)
 
 WINAMP
 ======
@@ -80,6 +81,14 @@ determine if VLC is running.  If the title bar is anything different then it
 will not be found.  If a track is currently playing when you start Snip you
 just have to push stop and Snip will find VLC.
 
+Mps-youtube
+===
+Mpsyt needs to be started using directly using the .exe file witch is located in your the 
+scripts folder of your python installation.
+For python version **3.X** the default directory is `C:\python3X\scripts\mpsyt.exe`
+Similarly to VLC the song information is taken straight from the window title, that is 
+whatever title the youtube video has.
+
 HOTKEYS
 =======
 * **Next Track:** Ctrl, Alt, ]
@@ -93,4 +102,4 @@ HOTKEYS
 
 Note
 ----
-Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, and VLC.
+Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000,mps-youtube and VLC.

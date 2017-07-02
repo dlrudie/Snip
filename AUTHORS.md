@@ -42,3 +42,6 @@ Contributors
 
 * jingtongtangflee
   * Czech translation
+
+* Xobust (Alexander Bladh)
+  * Mps-youtube support
