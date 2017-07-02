@@ -29,8 +29,27 @@ namespace Winter
                 // if mpsyt was ran from console there will exist 
                 if(windowTitle.Length > 0)
                 {
+                    // Remove the '- mpsyt' part of the window title to recive the song title
+                    int lastHyphen = windowTitle.LastIndexOf("-", StringComparison.OrdinalIgnoreCase);
 
-                }else
+                    //If we find a hyphen a track is playing there is no track playing
+                    if (lastHyphen > 0)
+                    {
+                        string songTitle = windowTitle.Substring(0, lastHyphen).Trim();
+
+                        if (Globals.SaveAlbumArtwork)
+                        {
+                            this.SaveBlankImage();
+                        }
+
+                        TextHandler.UpdateText(songTitle);
+                    }
+                    else
+                    {
+                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                    }
+                }
+                else
                 {
                     TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("MpsNoTitleFound"));
                 }
