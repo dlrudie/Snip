@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Winter
+﻿namespace Winter
 {
     using System;
     using System.Diagnostics;
+    using System.Threading;
 
     internal sealed class mpsyt : MediaPlayer
     {
@@ -23,6 +18,7 @@ namespace Winter
                 foreach (Process process in processes)
                 {
                     windowTitle = process.MainWindowTitle;
+                    this.Handle = process.MainWindowHandle;
                 }
 
                 // We need to check if the title exists,
@@ -65,37 +61,39 @@ namespace Winter
 
         public override void ChangeToNextTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.NextTrack));
+            //We need to sleep a few ms to wait for the ctrl+alt to be depressed
+            Thread.Sleep(Globals.wmCharDelay);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.Char, (IntPtr)'>', IntPtr.Zero);
         }
 
         public override void ChangeToPreviousTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PreviousTrack));
+            Thread.Sleep(Globals.wmCharDelay);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.Char, (IntPtr)'<', IntPtr.Zero);
         }
 
         public override void IncreasePlayerVolume()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeUp));
+            Thread.Sleep(Globals.wmCharDelay);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.Char, (IntPtr)'0', IntPtr.Zero);
         }
 
         public override void DecreasePlayerVolume()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.VolumeDown));
-        }
-
-        public override void MutePlayerAudio()
-        {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.MuteTrack));
+            Thread.Sleep(Globals.wmCharDelay);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.Char, (IntPtr)'9', IntPtr.Zero);
         }
 
         public override void PlayOrPauseTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.PlayPauseTrack));
+            Thread.Sleep(Globals.wmCharDelay);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.Char, (IntPtr)' ', IntPtr.Zero);
         }
 
         public override void StopTrack()
         {
-            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.AppCommand, IntPtr.Zero, new IntPtr((long)Globals.MediaCommand.StopTrack));
+            Thread.Sleep(Globals.wmCharDelay);
+            UnsafeNativeMethods.SendMessage(this.Handle, (uint)Globals.WindowMessage.Char, (IntPtr)'q', IntPtr.Zero);
         }
     }
 }

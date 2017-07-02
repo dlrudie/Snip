@@ -34,6 +34,9 @@ namespace Winter
         public const string NewLineVariable = "$$n";
         public const string TrackIdVariable = "$$i";
 
+        // Delay when using WM_Char in ms
+        public const int wmCharDelay = 700;
+
         #endregion
 
         #region Properties
@@ -101,11 +104,15 @@ namespace Winter
             NextTrack = 0xB0000
         }
 
+
         public enum WindowMessage : int
         {
             None = 0x0,
             Hotkey = 0x312,
-            AppCommand = 0x319
+            AppCommand = 0x319,
+            KeyDown = 0x0100,
+            KeyUp = 0x0101,
+            Char = 0x0102
         }
 
         #endregion
