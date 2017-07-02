@@ -25,7 +25,16 @@ namespace Winter
                     windowTitle = process.MainWindowTitle;
                 }
 
-                System.Console.WriteLine(windowTitle);
+                // We need to check if the title exists,
+                // if mpsyt was ran from console there will exist 
+                if(windowTitle.Length > 0)
+                {
+
+                }else
+                {
+                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("MpsNoTitleFound"));
+                }
+            
 
             }
         }
