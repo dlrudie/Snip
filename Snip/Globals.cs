@@ -85,7 +85,8 @@ namespace Winter
             iTunes = 1,
             Winamp = 2,
             foobar2000 = 3,
-            VLC = 4
+            VLC = 4,
+            mpsyt = 5
         }
 
         public enum MediaCommand : int

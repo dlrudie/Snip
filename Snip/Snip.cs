@@ -234,6 +234,9 @@ namespace Winter
             else if (sender == this.toolStripMenuItemVlc)
             {
                 this.ToggleVLC();
+            }else if (sender == this.toolStripMenuItemMpsyt)
+            {
+                this.Togglempsyt();
             }
         }
 
@@ -260,6 +263,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemMpsyt.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new iTunes();
@@ -276,6 +280,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = true;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemMpsyt.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Winamp();
@@ -292,6 +297,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = true;
             this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemMpsyt.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new foobar2000();
@@ -308,6 +314,7 @@ namespace Winter
             this.toolStripMenuItemWinamp.Checked = false;
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = true;
+            this.toolStripMenuItemMpsyt.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new VLC();
@@ -317,6 +324,24 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToVLC"));
         }
 
+        private void Togglempsyt()
+        {
+            this.toolStripMenuItemSpotify.Checked = false;
+            this.toolStripMenuItemItunes.Checked = false;
+            this.toolStripMenuItemWinamp.Checked = false;
+            this.toolStripMenuItemFoobar2000.Checked = false;
+            this.toolStripMenuItemVlc.Checked = false;
+            this.toolStripMenuItemMpsyt.Checked = true;
+
+            Globals.CurrentPlayer.Unload();
+            Globals.CurrentPlayer = new mpsyt();
+            Globals.CurrentPlayer.Load();
+
+            Globals.PlayerSelection = Globals.MediaPlayerSelection.mpsyt;
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedTompsyt"));
+        }
+
+  
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
         {
             if (this.toolStripMenuItemSaveSeparateFiles.Checked)
