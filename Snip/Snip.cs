@@ -153,6 +153,10 @@ namespace Winter
                 case Globals.MediaPlayerSelection.VLC:
                     this.ToggleVLC();
                     break;
+
+                case Globals.MediaPlayerSelection.mpsyt:
+                    this.Togglempsyt();
+                    break;
             }
 
             this.toolStripMenuItemSaveSeparateFiles.Checked = Globals.SaveSeparateFiles;
