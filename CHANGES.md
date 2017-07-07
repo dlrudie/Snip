@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v6.9.1 (2017-Jul-06):**
+* Czech translation corrections by jingtongtangflee.
+* Snip will now loop through various ports to find the correct port to
+    connect with Spotify.
+* Changed snip.spotilocal.com to 127.0.0.1.
+
 **v6.9.0 (2017-Jun-28):**
 * Danish translation provided by Jens Møller.
 * Changed the port that Snip uses to get a token from SpotifyWebHelper. This
