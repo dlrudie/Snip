@@ -330,7 +330,7 @@ namespace Winter
             if (this.spotifyPort <= 0)
             {
                 // *.spotilocal.com redirects to localhost
-                string localAddress = "://snip.spotilocal.com";
+                string localAddress = "://127.0.0.1";
 
                 // After doing some research SpotifyWebHelper uses several ports
                 // 4370 - 4379 = https
