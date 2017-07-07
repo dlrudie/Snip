@@ -53,11 +53,6 @@ namespace Winter
                     {
                         string songTitle = windowTitle.Substring(0, lastHyphen).Trim();
 
-                        if (Globals.SaveAlbumArtwork)
-                        {
-                            this.SaveBlankImage();
-                        }
-
                         TextHandler.UpdateText(songTitle);
                     }
                     else
@@ -67,7 +62,7 @@ namespace Winter
                 }
                 else
                 {
-                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("MpsNoTitleFound"));
+                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                 }
             
 
