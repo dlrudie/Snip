@@ -238,7 +238,8 @@ namespace Winter
             else if (sender == this.toolStripMenuItemVlc)
             {
                 this.ToggleVLC();
-            }else if (sender == this.toolStripMenuItemMpsyt)
+            }
+            else if (sender == this.toolStripMenuItemMpsyt)
             {
                 this.Togglempsyt();
             }
@@ -344,7 +345,6 @@ namespace Winter
             Globals.PlayerSelection = Globals.MediaPlayerSelection.mpsyt;
             TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedTompsyt"));
         }
-
   
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
         {

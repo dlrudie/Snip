@@ -1,6 +1,6 @@
 ﻿#region File Information
 /*
- * Copyright (C) 2012-2016 David Rudie
+ * Copyright (C) 2012-2017 David Rudie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,13 +42,13 @@ namespace Winter
                 }
 
                 // We need to check if the title exists,
-                // if mpsyt was ran from console there will exist 
-                if(windowTitle.Length > 0)
+                // (if mpsyt was ran from console then it whon't exist)
+                if (windowTitle.Length > 0)
                 {
-                    // Remove the '- mpsyt' part of the window title to recive the song title
+                    // Remove the '- mpsyt' part of the window title to receive the song title
                     int lastHyphen = windowTitle.LastIndexOf("-", StringComparison.OrdinalIgnoreCase);
 
-                    //If we find a hyphen a track is playing there is no track playing
+                    //If we find a hyphen we can asume that a track is playing
                     if (lastHyphen > 0)
                     {
                         string songTitle = windowTitle.Substring(0, lastHyphen).Trim();

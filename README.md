@@ -8,7 +8,7 @@ ABOUT
 This is a small application that sits in the system tray and updates a text
 file with the currently playing audio track.
 
-It supports Spotify, iTunes, Winamp, foobar2000, VLC and mps-youtube.
+It supports Spotify, iTunes, Winamp, foobar2000, VLC, and mps-youtube.
 
 If you choose to use iTunes then Snip will automatically launch iTunes.  This
 is the behavior of the COM API and there's nothing I can do about it.  If you
@@ -102,4 +102,4 @@ HOTKEYS
 
 Note
 ----
-Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000,mps-youtube and VLC.
+Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, mps-youtube and VLC.
