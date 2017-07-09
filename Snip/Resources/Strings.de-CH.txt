@@ -18,31 +18,24 @@ Winamp=Winamp
 foobar2000=foobar2000
 VLC=VLC
 GPMDP=GPMDP
-quodlibet=quodlibet
+QuodLibet=Quod Libet
+WindowsMediaPlayer=Windows Media Player
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
-SwitchedToSpotify=Auf Spotify gewechselt
-SwitchedToiTunes=Auf iTunes gewechselt
-SwitchedToWinamp=Auf Winamp gewechselt
-SwitchedTofoobar2000=Auf foobar2000 gewechselt
-SwitchedToVLC=Auf VLC gewechselt
-SwitchedToGPMDP=Auf GPMDP gewechselt
-SwitchedToQuodlibet=Auf quodlibet gewechselt
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+SwitchedToPlayer=Auf {0} gewechselt
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
-SpotifyIsNotRunning=Spotify läuft im Moment nicht
-iTunesNotRunning=iTunes läuft im Moment nicht
-WinampIsNotRunning=Winamp läuft gerade nicht
-foobar2000IsNotRunning=foobar2000 läuft gerade nicht
-VLCIsNotRunning=VLC läuft gerade nicht
-GPMDPIsNotRunning=GPMDP läuft gerade nicht
-QuodlibetIsNotRunning=quodlibet läuft gerade nicht
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+PlayerIsNotRunning={0} läuft im moment nicht
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.
-NoTrackPlaying=Im Moment wird kein Track abgespielt
+NoTrackPlaying=Im moment wird kein Track abgespielt
 
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will open up the "Set Output Format" form where the user can customize how
@@ -68,7 +61,6 @@ KeepSpotifyAlbumArtwork=Album-Bild behalten
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
-ImageResolutionTiny=Winzig
 ImageResolutionSmall=Klein
 ImageResolutionMedium=Mittel
 ImageResolutionLarge=Gross

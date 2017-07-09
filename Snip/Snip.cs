@@ -158,8 +158,8 @@ namespace Winter
                     this.ToggleGPMDP();
                     break;
 
-                case Globals.MediaPlayerSelection.quodlibet:
-                    this.ToggleQuodlibet();
+                case Globals.MediaPlayerSelection.QuodLibet:
+                    this.ToggleQuodLibet();
                     break;
             }
 
@@ -169,10 +169,6 @@ namespace Winter
 
             switch (Globals.ArtworkResolution)
             {
-                case Globals.AlbumArtworkResolution.Tiny:
-                    this.ToggleArtworkTiny();
-                    break;
-
                 case Globals.AlbumArtworkResolution.Small:
                     this.ToggleArtworkSmall();
                     break;
@@ -248,9 +244,9 @@ namespace Winter
             {
                 this.ToggleGPMDP();
             }
-            else if (sender == this.toolStripMenuItemQuodlibet)
+            else if (sender == this.toolStripMenuItemQuodLibet)
             {
-                this.ToggleQuodlibet();
+                this.ToggleQuodLibet();
             }
         }
 
@@ -262,14 +258,18 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
             this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodlibet.Checked = false;
+            this.toolStripMenuItemQuodLibet.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Spotify();
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.Spotify;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToSpotify"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("Spotify")));
         }
 
         private void ToggleiTunes()
@@ -280,14 +280,18 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
             this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodlibet.Checked = false;
+            this.toolStripMenuItemQuodLibet.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new iTunes();
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.iTunes;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToiTunes"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("iTunes")));
         }
 
         private void ToggleWinamp()
@@ -298,14 +302,18 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
             this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodlibet.Checked = false;
+            this.toolStripMenuItemQuodLibet.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new Winamp();
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.Winamp;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToWinamp"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("Winamp")));
         }
 
         private void Togglefoobar2000()
@@ -316,14 +324,18 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = true;
             this.toolStripMenuItemVlc.Checked = false;
             this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodlibet.Checked = false;
+            this.toolStripMenuItemQuodLibet.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new foobar2000();
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.foobar2000;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedTofoobar2000"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("foobar2000")));
         }
 
         private void ToggleVLC()
@@ -334,14 +346,18 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = true;
             this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodlibet.Checked = false;
+            this.toolStripMenuItemQuodLibet.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new VLC();
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToVLC"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("VLC")));
         }
 
         private void ToggleGPMDP()
@@ -352,17 +368,21 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
             this.toolStripMenuItemGPMDP.Checked = true;
-            this.toolStripMenuItemQuodlibet.Checked = false;
+            this.toolStripMenuItemQuodLibet.Checked = false;
 
             Globals.CurrentPlayer.Unload();
             Globals.CurrentPlayer = new GPMDP();
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = Globals.MediaPlayerSelection.GPMDP;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToGPMDP"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("GPMDP")));
         }
 
-        private void ToggleQuodlibet()
+        private void ToggleQuodLibet()
         {
             this.toolStripMenuItemSpotify.Checked = false;
             this.toolStripMenuItemItunes.Checked = false;
@@ -370,14 +390,18 @@ namespace Winter
             this.toolStripMenuItemFoobar2000.Checked = false;
             this.toolStripMenuItemVlc.Checked = false;
             this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodlibet.Checked = true;
+            this.toolStripMenuItemQuodLibet.Checked = true;
 
             Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new quodlibet();
+            Globals.CurrentPlayer = new QuodLibet();
             Globals.CurrentPlayer.Load();
 
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.quodlibet;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SwitchedToQuodlibet"));
+            Globals.PlayerSelection = Globals.MediaPlayerSelection.QuodLibet;
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                    Globals.ResourceManager.GetString("QuodLibet")));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
@@ -522,14 +546,10 @@ namespace Winter
         
         private void AlbumArtworkResolutionCheck(object sender, EventArgs e)
         {
-            if (sender == this.toolStripMenuItemTiny)
+            if (sender == this.toolStripMenuItemSmall)
             {
-                this.ToggleArtworkTiny();
+                this.ToggleArtworkSmall();
             }
-            // else if (sender == this.toolStripMenuItemSmall)
-            // {
-                // this.ToggleArtworkSmall();
-            // }
             else if (sender == this.toolStripMenuItemMedium)
             {
                 this.ToggleArtworkMedium();
@@ -540,20 +560,9 @@ namespace Winter
             }
         }
 
-        private void ToggleArtworkTiny()
-        {
-            this.toolStripMenuItemTiny.Checked = true;
-            // this.toolStripMenuItemSmall.Checked = false;
-            this.toolStripMenuItemMedium.Checked = false;
-            this.toolStripMenuItemLarge.Checked = false;
-
-            Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
-        }
-
         private void ToggleArtworkSmall()
         {
-            this.toolStripMenuItemTiny.Checked = false;
-            // this.toolStripMenuItemSmall.Checked = true;
+            this.toolStripMenuItemSmall.Checked = true;
             this.toolStripMenuItemMedium.Checked = false;
             this.toolStripMenuItemLarge.Checked = false;
 
@@ -562,8 +571,7 @@ namespace Winter
 
         private void ToggleArtworkMedium()
         {
-            this.toolStripMenuItemTiny.Checked = false;
-            // this.toolStripMenuItemSmall.Checked = false;
+            this.toolStripMenuItemSmall.Checked = false;
             this.toolStripMenuItemMedium.Checked = true;
             this.toolStripMenuItemLarge.Checked = false;
 
@@ -572,8 +580,7 @@ namespace Winter
 
         private void ToggleArtworkLarge()
         {
-            this.toolStripMenuItemTiny.Checked = false;
-            // this.toolStripMenuItemSmall.Checked = false;
+            this.toolStripMenuItemSmall.Checked = false;
             this.toolStripMenuItemMedium.Checked = false;
             this.toolStripMenuItemLarge.Checked = true;
 

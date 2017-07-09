@@ -12,15 +12,14 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFoobar2000;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVlc;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGPMDP;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemQuodlibet;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemQuodLibet;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSeparateFiles;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAlbumArtwork;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemKeepSpotifyAlbumArtwork;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTiny;
-        // private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall; // Disabling the small size since no small size is provided via Spotify
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmall;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMedium;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLarge;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCacheSpotifyMetadata;
@@ -75,15 +74,14 @@
             this.toolStripMenuItemFoobar2000 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemVlc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGPMDP = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemQuodlibet = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemQuodLibet = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSaveSeparateFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveAlbumArtwork = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemKeepSpotifyAlbumArtwork = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemTiny = new System.Windows.Forms.ToolStripMenuItem();
-            // this.toolStripMenuItemSmall = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSmall = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMedium = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemLarge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCacheSpotifyMetadata = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,7 +112,7 @@
             this.toolStripMenuItemFoobar2000,
             this.toolStripMenuItemVlc,
             this.toolStripMenuItemGPMDP,
-            this.toolStripMenuItemQuodlibet,
+            this.toolStripMenuItemQuodLibet,
             this.toolStripSeparator1,
             this.toolStripMenuItemSetFormat,
             this.toolStripSeparator2,
@@ -175,12 +173,12 @@
             this.toolStripMenuItemVlc.Text = Globals.ResourceManager.GetString("VLC");
             this.toolStripMenuItemVlc.Click += new System.EventHandler(this.PlayerSelectionCheck);
             // 
-            // toolStripMenuItemQuodlibet
+            // toolStripMenuItemQuodLibet
             // 
-            this.toolStripMenuItemQuodlibet.Name = "toolStripMenuItemQuodlibet";
-            this.toolStripMenuItemQuodlibet.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemQuodlibet.Text = Globals.ResourceManager.GetString("quodlibet");
-            this.toolStripMenuItemQuodlibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
+            this.toolStripMenuItemQuodLibet.Name = "toolStripMenuItemQuodLibet";
+            this.toolStripMenuItemQuodLibet.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemQuodLibet.Text = Globals.ResourceManager.GetString("QuodLibet");
+            this.toolStripMenuItemQuodLibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
             //
             // toolStripMenuItemGPMDP
             //
@@ -223,8 +221,7 @@
             // toolStripMenuItemKeepSpotifyAlbumArtwork
             // 
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemTiny,
-            // this.toolStripMenuItemSmall,
+            this.toolStripMenuItemSmall,
             this.toolStripMenuItemMedium,
             this.toolStripMenuItemLarge});
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.Name = "toolStripMenuItemKeepSpotifyAlbumArtwork";
@@ -232,21 +229,14 @@
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.Text = Globals.ResourceManager.GetString("KeepSpotifyAlbumArtwork");
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.Click += new System.EventHandler(this.ToolStripMenuItemKeepSpotifyAlbumArtwork_Click);
             // 
-            // toolStripMenuItemTiny
-            // 
-            this.toolStripMenuItemTiny.Checked = true;
-            this.toolStripMenuItemTiny.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemTiny.Name = "toolStripMenuItemTiny";
-            this.toolStripMenuItemTiny.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemTiny.Text = Globals.ResourceManager.GetString("ImageResolutionTiny");
-            this.toolStripMenuItemTiny.Click += new System.EventHandler(this.AlbumArtworkResolutionCheck);
-            // 
             // toolStripMenuItemSmall
             // 
-            // this.toolStripMenuItemSmall.Name = "toolStripMenuItemSmall";
-            // this.toolStripMenuItemSmall.Size = new System.Drawing.Size(67, 22);
-            // this.toolStripMenuItemSmall.Text = Globals.ResourceManager.GetString("ImageResolutionSmall");
-            // this.toolStripMenuItemSmall.Click += new System.EventHandler(this.AlbumArtworkResolutionCheck);
+            this.toolStripMenuItemSmall.Checked = true;
+            this.toolStripMenuItemSmall.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemSmall.Name = "toolStripMenuItemSmall";
+            this.toolStripMenuItemSmall.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemSmall.Text = Globals.ResourceManager.GetString("ImageResolutionSmall");
+            this.toolStripMenuItemSmall.Click += new System.EventHandler(this.AlbumArtworkResolutionCheck);
             // 
             // toolStripMenuItemMedium
             // 

@@ -158,7 +158,7 @@ namespace Winter
                     Globals.KeepSpotifyAlbumArtwork = false;
                 }
 
-                Globals.ArtworkResolution = (Globals.AlbumArtworkResolution)registryKey.GetValue("Album Artwork Resolution", Globals.AlbumArtworkResolution.Tiny);
+                Globals.ArtworkResolution = (Globals.AlbumArtworkResolution)registryKey.GetValue("Album Artwork Resolution", Globals.AlbumArtworkResolution.Small);
 
                 bool cacheSpotifyMetadata = Convert.ToBoolean(registryKey.GetValue("Cache Spotify Metadata", true), CultureInfo.InvariantCulture);
                 if (cacheSpotifyMetadata)
@@ -226,7 +226,7 @@ namespace Winter
                 Globals.SaveSeparateFiles = false;
                 Globals.SaveAlbumArtwork = false;
                 Globals.KeepSpotifyAlbumArtwork = false;
-                Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Tiny;
+                Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Small;
                 Globals.CacheSpotifyMetadata = true;
                 Globals.SaveHistory = false;
                 Globals.DisplayTrackPopup = false;

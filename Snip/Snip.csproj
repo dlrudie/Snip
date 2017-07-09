@@ -113,7 +113,7 @@
     <Compile Include="Players\iTunes.cs" />
     <Compile Include="Players\VLC.cs" />
     <Compile Include="Players\Winamp.cs" />
-    <Compile Include="Players\quodlibet.cs" />
+    <Compile Include="Players\QuodLibet.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -18,27 +18,20 @@ Winamp=Winamp
 foobar2000=foobar2000
 VLC=VLC
 GPMDP=GPMDP
-quodlibet=quodlibet
+QuodLibet=Quod Libet
+WindowsMediaPlayer=Windows Media Player
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
-SwitchedToSpotify=Přepnuto na Spotify
-SwitchedToiTunes=Přepnuto na iTunes
-SwitchedToWinamp=Přepnuto na Winamp
-SwitchedTofoobar2000=Přepnuto na foobar2000
-SwitchedToVLC=Přepnuto na VLC
-SwitchedToGPMDP=Přepnuto na GPMDP
-SwitchedToQuodlibet=Přepnuto na quodlibet
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+SwitchedToPlayer=Přepnuto na {0}
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
-SpotifyIsNotRunning=Spotify není spuštěno
-iTunesNotRunning=iTunes není spuštěno
-WinampIsNotRunning=Winamp není spuštěn
-foobar2000IsNotRunning=foobar2000 není spuštěn
-VLCIsNotRunning=VLC není spuštěno
-GPMDPIsNotRunning=GPMDP není spuštěn
-QuodlibetIsNotRunning=quodlibet není spuštěn
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+PlayerIsNotRunning={0} není spuštěno
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.
@@ -68,7 +61,6 @@ KeepSpotifyAlbumArtwork=Zachovat obaly alba ze Spotify na disku
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
-ImageResolutionTiny=Drobná velikost
 ImageResolutionSmall=Malá velikost
 ImageResolutionMedium=Střední velikost
 ImageResolutionLarge=Velká velikost

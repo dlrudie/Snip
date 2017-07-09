@@ -26,6 +26,7 @@ namespace Winter
     using System.IO;
     using System.Net;
     using System.Text;
+    using System.Threading;
     using System.Timers;
     using System.Windows.Forms;
     using SimpleJson;
@@ -50,9 +51,9 @@ namespace Winter
 
         private bool snipReset = false;
 
-        private bool spotifyPortDetectionInProgress = false;
-        private int spotifyPort = 0;
-        private string spotilocalAddress = string.Empty;
+        private volatile bool spotifyPortDetectionInProgress = false;
+        private volatile int spotifyPort = 0;
+        private volatile string spotilocalAddress = string.Empty;
 
         #endregion
 
@@ -235,10 +236,7 @@ namespace Winter
             }
             else
             {
-                if (!this.spotifyPortDetectionInProgress)
-                {
-                    this.DetectSpotifyWebHelperPort();
-                }
+                this.DetectSpotifyWebHelperPort();
             }
         }
 
@@ -323,9 +321,19 @@ namespace Winter
 
         private void DetectSpotifyWebHelperPort()
         {
-            // Prevent excess detections
-            this.spotifyPortDetectionInProgress = true;
+            if (!this.spotifyPortDetectionInProgress)
+            {
+                // We're attempting to detect the correct port
+                this.spotifyPortDetectionInProgress = true;
 
+                // This thread will set the detection progress to false when complete
+                Thread detectSpotifyWebHelperPortThread = new Thread(this.DetectSpotifyWebHelperPortThread);
+                detectSpotifyWebHelperPortThread.Start();
+            }
+        }
+
+        private void DetectSpotifyWebHelperPortThread()
+        {
             // No need to repeat finding the port if it's already found
             if (this.spotifyPort <= 0)
             {
@@ -383,6 +391,7 @@ namespace Winter
                     this.spotilocalAddress = string.Empty;
                 }
 
+                // We're done here
                 this.spotifyPortDetectionInProgress = false;
             }
         }
@@ -435,10 +444,7 @@ namespace Winter
                 }
                 else
                 {
-                    if (!this.spotifyPortDetectionInProgress)
-                    {
-                        this.DetectSpotifyWebHelperPort();
-                    }
+                    this.DetectSpotifyWebHelperPort();
                 }
             }
 
@@ -658,7 +664,11 @@ namespace Winter
                 }
             }
 
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                    Globals.ResourceManager.GetString("Spotify")));
         }
 
         private static Uri SelectAlbumArtworkSizeToDownload(dynamic jsonSummary)
@@ -676,7 +686,7 @@ namespace Winter
                     imageUrl = jsonSummary.images[1].url.ToString();
                     break;
 
-                case Globals.AlbumArtworkResolution.Tiny:
+                case Globals.AlbumArtworkResolution.Small:
                     imageUrl = jsonSummary.images[2].url.ToString();
                     break;
 
