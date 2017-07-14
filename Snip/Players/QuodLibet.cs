@@ -22,8 +22,9 @@ namespace Winter
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
 
-    internal sealed class quodlibet : MediaPlayer
+    internal sealed class QuodLibet : MediaPlayer
     {
         public override void Update()
         {
@@ -31,21 +32,21 @@ namespace Winter
 
             if (processes.Length > 0)
             {
-                string quodlibetTitle = string.Empty;
+                string quodLibetTitle = string.Empty;
 
                 foreach (Process process in processes)
                 {
-                    quodlibetTitle = process.MainWindowTitle;
+                    quodLibetTitle = process.MainWindowTitle;
                 }
 
                 // Check for a hyphen in the title. If a hyphen exists then we need to cut all of the text after the last
                 // hyphen because that's the "quodlibet" text, which can vary based on language.
                 // If no hyphen exists then quodlibet is not playing anything.
-                int lastHyphen = quodlibetTitle.LastIndexOf("-", StringComparison.OrdinalIgnoreCase);
+                int lastHyphen = quodLibetTitle.LastIndexOf("-", StringComparison.OrdinalIgnoreCase);
 
                 if (lastHyphen > 0)
                 {
-                    quodlibetTitle = quodlibetTitle.Substring(0, lastHyphen).Trim();
+                    quodLibetTitle = quodLibetTitle.Substring(0, lastHyphen).Trim();
 
                     if (Globals.SaveAlbumArtwork)
                     {
@@ -65,17 +66,17 @@ namespace Winter
                     //
                     // TODO:
                     // It may be best to just remove common extensions by name, i.e. cut off ".mp3", ".flac", etc.
-                    int lastDot = quodlibetTitle.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
+                    int lastDot = quodLibetTitle.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
                     if (lastDot > 0)
                     {
-                        string quodlibetTitleExtension = quodlibetTitle.Substring(lastDot);
-                        if (quodlibetTitleExtension.Length >= 4 && quodlibetTitleExtension.Length <= 5 && !quodlibetTitleExtension.Contains(" "))
+                        string quodLibetTitleExtension = quodLibetTitle.Substring(lastDot);
+                        if (quodLibetTitleExtension.Length >= 4 && quodLibetTitleExtension.Length <= 5 && !quodLibetTitleExtension.Contains(" "))
                         {
-                            quodlibetTitle = quodlibetTitle.Substring(0, lastDot).Trim();
+                            quodLibetTitle = quodLibetTitle.Substring(0, lastDot).Trim();
                         }
                     }
 
-                    TextHandler.UpdateText(quodlibetTitle);
+                    TextHandler.UpdateText(quodLibetTitle);
                 }
                 else
                 {
@@ -89,7 +90,11 @@ namespace Winter
                     this.SaveBlankImage();
                 }
 
-                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("QuodlibetIsNotRunning"));
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                        Globals.ResourceManager.GetString("QuodLibet")));
             }
         }
 

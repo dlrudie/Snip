@@ -20,7 +20,6 @@
 
 namespace Winter
 {
-    using System;
     using System.Globalization;
     using System.Windows.Forms;
     using iTunesLib;
@@ -195,7 +194,11 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("iTunesNotRunning"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                    Globals.ResourceManager.GetString("iTunes")));
         }
     }
 }

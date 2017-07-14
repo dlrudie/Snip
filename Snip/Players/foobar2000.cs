@@ -108,7 +108,11 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
+                            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                                    Globals.ResourceManager.GetString("foobar2000")));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -124,7 +128,11 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("foobar2000IsNotRunning"));
+                        TextHandler.UpdateTextAndEmptyFilesMaybe(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                                Globals.ResourceManager.GetString("foobar2000")));
 
                         this.Found = false;
                         this.NotRunning = true;

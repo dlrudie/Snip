@@ -26,6 +26,7 @@ namespace Winter
     using System.IO;
     using System.Net;
     using System.Text;
+    using System.Threading;
     using System.Timers;
     using System.Windows.Forms;
     using SimpleJson;
@@ -50,6 +51,10 @@ namespace Winter
 
         private bool snipReset = false;
 
+        private volatile bool spotifyPortDetectionInProgress = false;
+        private volatile int spotifyPort = 0;
+        private volatile string spotilocalAddress = string.Empty;
+
         #endregion
 
         #region Methods
@@ -57,6 +62,8 @@ namespace Winter
         public override void Load()
         {
             base.Load();
+
+            this.DetectSpotifyWebHelperPort();
 
             // Retrieve OAuth token from Spotify
             // I'm not sure on how long before this token expires so I'm default it to
@@ -106,6 +113,8 @@ namespace Winter
             this.updateCSRFTokenTimer.Stop();
             this.updateAuthorizationTokenTimer.Stop();
             this.contactSpotifyLocalServerTimer.Stop();
+            this.spotifyPort = 0;
+            this.spotilocalAddress = string.Empty;
         }
 
         public void Dispose()
@@ -188,46 +197,46 @@ namespace Winter
 
         private void UpdateCSRFTokenTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            // *.spotilocal.com redirects to localhost
-            string spotilocalAddress = "http://snip.spotilocal.com";
-
-            // While the web server accepts connections on ports 4370, 4371, and 4380 I've only
-            // ever seen it return a result on port 4380
-            int spotifyPort = 4380;
-
-            // CSRF token path
-            string csrfAddress = "/simplecsrf/token.json";
-
-            string downloadedJson = this.DownloadJson(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}:{1}{2}",
-                    spotilocalAddress,
-                    spotifyPort,
-                    csrfAddress),
-                SpotifyAddressContactType.CSRF);
-
-            // Set the token to be blank until filled
-            this.csrfToken = string.Empty;
-
-            if (!string.IsNullOrEmpty(downloadedJson))
+            if (this.spotifyPort > 0)
             {
-                dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+                // CSRF token path
+                string csrfAddress = "/simplecsrf/token.json";
 
-                if (jsonSummary != null)
+                string downloadedJson = this.DownloadJson(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}:{1}{2}",
+                        this.spotilocalAddress,
+                        this.spotifyPort,
+                        csrfAddress),
+                    SpotifyAddressContactType.CSRF);
+
+                // Set the token to be blank until filled
+                this.csrfToken = string.Empty;
+
+                if (!string.IsNullOrEmpty(downloadedJson))
                 {
-                    // If Spotify is running this value will be null
-                    if (jsonSummary.running == null)
+                    dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                    if (jsonSummary != null)
                     {
-                        this.csrfToken = jsonSummary.token.ToString();
-                        this.updateCSRFTokenTimer.Interval = 3600 * 1000; // We got what we wanted
-                    }
-                    else
-                    {
-                        this.ResetSnipSinceSpotifyIsNotRunning();
-                        this.updateCSRFTokenTimer.Interval = 1000; // Run continously until token is obtained
+                        // If Spotify is running this value will be null
+                        if (jsonSummary.running == null)
+                        {
+                            this.csrfToken = jsonSummary.token.ToString();
+                            this.updateCSRFTokenTimer.Interval = 3600 * 1000; // We got what we wanted
+                        }
+                        else
+                        {
+                            this.ResetSnipSinceSpotifyIsNotRunning();
+                            this.updateCSRFTokenTimer.Interval = 1000; // Run continously until token is obtained
+                        }
                     }
                 }
+            }
+            else
+            {
+                this.DetectSpotifyWebHelperPort();
             }
         }
 
@@ -310,6 +319,83 @@ namespace Winter
             }
         }
 
+        private void DetectSpotifyWebHelperPort()
+        {
+            if (!this.spotifyPortDetectionInProgress)
+            {
+                // We're attempting to detect the correct port
+                this.spotifyPortDetectionInProgress = true;
+
+                // This thread will set the detection progress to false when complete
+                Thread detectSpotifyWebHelperPortThread = new Thread(this.DetectSpotifyWebHelperPortThread);
+                detectSpotifyWebHelperPortThread.Start();
+            }
+        }
+
+        private void DetectSpotifyWebHelperPortThread()
+        {
+            // No need to repeat finding the port if it's already found
+            if (this.spotifyPort <= 0)
+            {
+                // *.spotilocal.com redirects to localhost
+                string localAddress = "://127.0.0.1";
+
+                // After doing some research SpotifyWebHelper uses several ports
+                // 4370 - 4379 = https
+                // 4380 - 4389 = http
+                // However I've only ever personally seen SpotifyWebHelper listen on ports 4370, 4371, 4380, and 4381.
+
+                string versionAddress = "/service/version.json?service=remote";
+
+                for (int port = 4370; port < 4390; port++)
+                {
+                    string addressPrefix = string.Empty;
+
+                    if (port >= 4370 && port <= 4379)
+                    {
+                        addressPrefix = "https";
+                    }
+                    else
+                    {
+                        addressPrefix = "http";
+                    }
+
+                    string downloadedJson = this.DownloadJson(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "{0}:{1}{2}",
+                            addressPrefix + localAddress,
+                            port,
+                            versionAddress),
+                        SpotifyAddressContactType.CSRF);
+
+                    if (!string.IsNullOrEmpty(downloadedJson))
+                    {
+                        dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                        if (jsonSummary != null)
+                        {
+                            if (jsonSummary.version != null)
+                            {
+                                this.spotifyPort = port;
+                                this.spotilocalAddress = addressPrefix + localAddress;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (this.spotifyPort <= 0)
+                {
+                    // "We ain't found shit"
+                    this.spotilocalAddress = string.Empty;
+                }
+
+                // We're done here
+                this.spotifyPortDetectionInProgress = false;
+            }
+        }
+
         private void GetSpotifyWindowHandle()
         {
             if (!this.spotifyWindowFound)
@@ -327,38 +413,38 @@ namespace Winter
             // No sense in doing anything if the tokens aren't valid or set yet
             if (!string.IsNullOrEmpty(this.oauthToken) || !string.IsNullOrEmpty(this.csrfToken))
             {
-                // *.spotilocal.com redirects to localhost
-                string spotilocalAddress = "http://snip.spotilocal.com";
-
-                // While the web server accepts connections on ports 4370, 4371, and 4380 I've only
-                // ever seen it return a result on port 4380
-                int spotifyPort = 4380;
-
-                string csrfAddress = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "/remote/status.json?oauth={0}&csrf={1}",
-                    oauthToken,
-                    csrfToken);
-
-                string downloadedJson = this.DownloadJson(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0}:{1}{2}",
-                        spotilocalAddress,
-                        spotifyPort,
-                        csrfAddress),
-                    SpotifyAddressContactType.CSRF);
-
-                if (!string.IsNullOrEmpty(downloadedJson))
+                if (this.spotifyPort > 0)
                 {
-                    // Check if Spotify is still running
-                    dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+                    string csrfAddress = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "/remote/status.json?oauth={0}&csrf={1}",
+                        oauthToken,
+                        csrfToken);
 
-                    // If Spotify is running this value will be null
-                    if (Convert.ToBoolean(jsonSummary.running))
+                    string downloadedJson = this.DownloadJson(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "{0}:{1}{2}",
+                            this.spotilocalAddress,
+                            this.spotifyPort,
+                            csrfAddress),
+                        SpotifyAddressContactType.CSRF);
+
+                    if (!string.IsNullOrEmpty(downloadedJson))
                     {
-                        return downloadedJson;
+                        // Check if Spotify is still running
+                        dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                        // If Spotify is running this value will be null
+                        if (Convert.ToBoolean(jsonSummary.running))
+                        {
+                            return downloadedJson;
+                        }
                     }
+                }
+                else
+                {
+                    this.DetectSpotifyWebHelperPort();
                 }
             }
 
@@ -420,7 +506,7 @@ namespace Winter
 
         private string DownloadJson(string jsonAddress, SpotifyAddressContactType spotifyAddressContactType)
         {
-            using (WebClient jsonWebClient = new WebClient())
+            using (WebClientWithShortTimeout jsonWebClient = new WebClientWithShortTimeout())
             {
                 try
                 {
@@ -578,7 +664,11 @@ namespace Winter
                 }
             }
 
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("SpotifyIsNotRunning"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                    Globals.ResourceManager.GetString("Spotify")));
         }
 
         private static Uri SelectAlbumArtworkSizeToDownload(dynamic jsonSummary)
@@ -596,7 +686,7 @@ namespace Winter
                     imageUrl = jsonSummary.images[1].url.ToString();
                     break;
 
-                case Globals.AlbumArtworkResolution.Tiny:
+                case Globals.AlbumArtworkResolution.Small:
                     imageUrl = jsonSummary.images[2].url.ToString();
                     break;
 

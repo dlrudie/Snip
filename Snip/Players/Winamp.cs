@@ -96,7 +96,11 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
-                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("WinampIsNotRunning"));
+                            TextHandler.UpdateTextAndEmptyFilesMaybe(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                                    Globals.ResourceManager.GetString("Winamp")));
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -112,7 +116,11 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
-                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("WinampIsNotRunning"));
+                        TextHandler.UpdateTextAndEmptyFilesMaybe(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                                Globals.ResourceManager.GetString("Winamp")));
 
                         this.Found = false;
                         this.NotRunning = true;

@@ -22,7 +22,6 @@ namespace Winter
 {
     using System;
     using System.Runtime.InteropServices;
-    using System.Security;
     using System.Text;
 
     internal static class UnsafeNativeMethods

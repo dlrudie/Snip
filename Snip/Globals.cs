@@ -20,7 +20,6 @@
 
 namespace Winter
 {
-    using System;
     using System.Resources;
     using System.Windows.Forms;
 
@@ -82,7 +81,6 @@ namespace Winter
         public enum AlbumArtworkResolution : int
         {
             None = 0,       // Compatibility
-            Tiny = 60,      // A tiny thumbnail with the size of 60x60.
             Small = 120,    // A small thumbnail with the size of 120x120.
             Medium = 300,   // A medium thumbnail with the size of 300x300.
             Large = 640     // A large thumbnail with the size of 640x640.
@@ -96,7 +94,8 @@ namespace Winter
             foobar2000 = 3,
             VLC = 4,
             GPMDP = 5,
-            quodlibet = 6
+            QuodLibet = 6,
+            WindowsMediaPlayer = 7
         }
 
         public enum MediaCommand : int

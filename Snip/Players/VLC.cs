@@ -91,7 +91,11 @@ namespace Winter
                     this.SaveBlankImage();
                 }
 
-                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("VLCIsNotRunning"));
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("PlayerIsNotRunning"),
+                        Globals.ResourceManager.GetString("VLC")));
             }
         }
 

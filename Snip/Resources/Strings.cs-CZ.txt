@@ -18,27 +18,20 @@ Winamp=Winamp
 foobar2000=foobar2000
 VLC=VLC
 GPMDP=GPMDP
-quodlibet=quodlibet
+QuodLibet=Quod Libet
+WindowsMediaPlayer=Windows Media Player
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
-SwitchedToSpotify=Přepnuto na Spotify
-SwitchedToiTunes=Přepnuto na iTunes
-SwitchedToWinamp=Přepnuto na Winamp
-SwitchedTofoobar2000=Přepnuto na foobar2000
-SwitchedToVLC=Přepnuto na VLC
-SwitchedToGPMDP=Přepnuto na GPMDP
-SwitchedToQuodlibet=Přepnuto na quodlibet
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+SwitchedToPlayer=Přepnuto na {0}
 
 ; This text is saved to the Snip.txt file when Snip itself is running but Snip
 ; does not detect the selected media player as running.
-SpotifyIsNotRunning=Spotify není spuštěno
-iTunesNotRunning=iTunes není spuštěno
-WinampIsNotRunning=Winamp není spuštěn
-foobar2000IsNotRunning=foobar2000 není spuštěn
-VLCIsNotRunning=VLC není spuštěno
-GPMDPIsNotRunning=GPMDP není spuštěno
-QuodlibetIsNotRunning=quodlibet není spuštěno
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+PlayerIsNotRunning={0} není spuštěno
 
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.
@@ -64,11 +57,10 @@ SaveAlbumArtwork=Ukládat obal alba
 ; provided by Spotify as the filename.  Each track will save its own album
 ; artwork and the next time that track is played it will use the saved file
 ; instead of redownloading it each time.
-KeepSpotifyAlbumArtwork=Ukládat obaly alba ze Spotify na disk
+KeepSpotifyAlbumArtwork=Zachovat obaly alba ze Spotify na disku
 
 ; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
 ; and it refers to the image resolution of the artwork to be downloaded.
-ImageResolutionTiny=Drobná velikost
 ImageResolutionSmall=Malá velikost
 ImageResolutionMedium=Střední velikost
 ImageResolutionLarge=Velká velikost
@@ -76,17 +68,17 @@ ImageResolutionLarge=Velká velikost
 ; This option is used to enable caching the JSON metadata that Snip
 ; downloads from Spotify. It allows Snip to read the data straight from the
 ; saved cache instead of downloading it each time.
-CacheSpotifyMetadata=Cache Spotify Metadata
+CacheSpotifyMetadata=Ukládat data ze Spotify do mezipaměti
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will create a file called Snip_History.txt where it will append each track
 ; played to the end of the file, effectively creating a play history.
-SaveTrackHistory=Uložit historii stop
+SaveTrackHistory=Ukládat historii stop
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will cause a popup notification to display on the desktop with the
 ; currently playing track title.
-DisplayTrackPopup=Ukazovat pop-up stopy
+DisplayTrackPopup=Zobrazovat pop-up stopy
 
 ; This text is displayed on the right-click context menu and, when enabled,
 ; will cause Snip.txt to be emptied out when no track is playing.  If this
@@ -105,7 +97,7 @@ ExitApplication=Ukončit
 
 ; This text is displayed in a MessageBox pop-up when there is a COM exception
 ; caused by trying to load the iTunes COM library.
-iTunesException=Please exit iTunes and reselect iTunes from within Snip.
+iTunesException=Zavřete, prosím, iTunes a vyberte jej znovu z nabídky
 
 ######################
 # Output Format Form #

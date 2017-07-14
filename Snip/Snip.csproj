@@ -83,6 +83,9 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -110,7 +113,7 @@
     <Compile Include="Players\iTunes.cs" />
     <Compile Include="Players\VLC.cs" />
     <Compile Include="Players\Winamp.cs" />
-    <Compile Include="Players\quodlibet.cs" />
+    <Compile Include="Players\QuodLibet.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,6 +182,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Strings.da-DK.txt" />
     <Content Include="Resources\Strings.el-GR.txt" />
     <Content Include="Resources\Strings.cs-CZ.txt" />
     <Content Include="Resources\Strings.pl-PL.txt" />
