@@ -1,0 +1,129 @@
+#############
+# Snip Form #
+#############
+
+; Main application name.
+SnipForm=Snip
+
+; This text appears in place of the Snip version in the right-click context
+; menu when there is a new version of Snip available.
+; Let's sound excited!
+NewVersionAvailable=有新版本!
+
+; Supported media players.  These probably don't need translated unless they
+; actually have a different name in other countries.
+Spotify=Spotify
+iTunes=iTunes
+Winamp=Winamp
+foobar2000=foobar2000
+VLC=VLC
+GPMDP=GPMDP
+QuodLibet=Quod Libet
+WindowsMediaPlayer=Windows Media Player
+
+; This text is saved to the Snip.txt file when the user switches media players
+; from the right-click context menu.
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+SwitchedToPlayer=切換播放器至 {0}
+
+; This text is saved to the Snip.txt file when Snip itself is running but Snip
+; does not detect the selected media player as running.
+; Do NOT remove the {0}. The {0} is replaced with the name of the current
+; media player.
+PlayerIsNotRunning={0} 目前不在執行中
+
+; This text is saved to the Snip.txt file when no track is playing in the
+; selected media file or when the user stops/pauses a playing track.
+NoTrackPlaying=無歌曲播放中
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will open up the "Set Output Format" form where the user can customize how
+; the text will look when saved to any of the text files.
+SetOutputFormat=設定輸出格式
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artist information and song information to separate text files
+; on the harddrive.
+SaveInformationSeparately=資訊分開儲存
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will download and save album artwork for the currently playing track to the
+; harddrive.
+SaveAlbumArtwork=下載專輯圖片
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will save the artwork to a subdirectory using the trackid information
+; provided by Spotify as the filename.  Each track will save its own album
+; artwork and the next time that track is played it will use the saved file
+; instead of redownloading it each time.
+KeepSpotifyAlbumArtwork=保留專輯圖片
+
+; These texts are displayed under a sub-menu of "Keep Spotify Album Artwork"
+; and it refers to the image resolution of the artwork to be downloaded.
+ImageResolutionSmall=小
+ImageResolutionMedium=中
+ImageResolutionLarge=大
+
+; This option is used to enable caching the JSON metadata that Snip
+; downloads from Spotify. It allows Snip to read the data straight from the
+; saved cache instead of downloading it each time.
+CacheSpotifyMetadata=快取 Spotify 資料
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will create a file called Snip_History.txt where it will append each track
+; played to the end of the file, effectively creating a play history.
+SaveTrackHistory=儲存歌曲歷史記錄
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause a popup notification to display on the desktop with the
+; currently playing track title.
+DisplayTrackPopup=顯示歌曲氣球提示視窗
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause Snip.txt to be emptied out when no track is playing.  If this
+; option is disabled then the text from "NoTrackPlaying" will be saved to
+; Snip.txt.
+EmptyFile=無歌曲播放時清空檔案
+
+; This text is displayed on the right-click context menu and, when enabled,
+; will cause Snip to register global hotkeys that can be used to control the
+; selected media player from anywhere.
+EnableHotkeys=啟用快捷鍵
+
+; This text is displayed on the right-click context menu and, when clicked,
+; will exit the application.
+ExitApplication=離開
+
+; This text is displayed in a MessageBox pop-up when there is a COM exception
+; caused by trying to load the iTunes COM library.
+iTunesException=請先關閉 iTunes 並從 Snip 選擇 iTunes 來啟動
+
+######################
+# Output Format Form #
+######################
+
+; This text is displayed as the title of the Output Format Form.
+SetOutputFormatForm=設定輸出格式
+
+; These texts refer to setting how specific output looks when saved to any of
+; the text files.  The $$t, $$a, and $$l variables will be filled in with the
+; track, artist, and album information of the currently playing track.
+SetTrackFormat=歌曲格式 ($$t):
+SetSeparatorFormat=分隔符號格式:
+SetArtistFormat=作者格式 ($$a):
+SetAlbumFormat=專輯格式 ($$l):
+
+; This text is displayed on the buttons within this form.  Clicking the
+; Defaults button will restore the output format settings to their default
+; appearance.  Clicking the Save button will save the user-set appearance.
+ButtonDefaults=預設值
+ButtonSave=儲存
+
+; These will most likely not need to be translated.  However, if your locale
+; uses different dashes or quotation marks then you can alternatively change
+; them here.
+TrackFormat=“$$t”
+SeparatorFormat=―
+ArtistFormat=$$a
+AlbumFormat=$$l
