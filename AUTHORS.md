@@ -40,7 +40,7 @@ Contributors
   * Polish translation
   * VLC file extension filtering
 
-* jingtongtangflee
+* henryolik
   * Czech translation
   
 * Stathis Galazios (nFin1ty)
