@@ -19,7 +19,7 @@ Contributors
 * Volker Königsbüscher
   * German translation
 
-* SirMarksomnian
+* Marks Polakovs (markspolakovs)
   * Unicode WebClient support
   * Updated artwork downloading for Spotify
 
