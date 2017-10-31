@@ -138,5 +138,13 @@ namespace Winter
                 // File is in use... or something.  We can't write so we'll just bail out and hope no one notices.
             }
         }
+
+        /** Report that a song is currently playing.
+         * This sets the current media player as the target for hotkeys.
+         */
+        protected void SomethingIsPlaying()
+        {
+            Globals.CurrentPlayer = this;
+        }
     }
 }

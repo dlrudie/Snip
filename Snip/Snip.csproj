@@ -99,6 +99,7 @@
     <Compile Include="CheckVersion.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="OutputFormat.cs">
       <SubType>Form</SubType>

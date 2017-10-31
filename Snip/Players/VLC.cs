@@ -26,6 +26,8 @@ namespace Winter
 
     internal sealed class VLC : MediaPlayer
     {
+        private string lastTitle = string.Empty;
+        
         public override void Update()
         {
             Process[] processes = Process.GetProcessesByName("vlc");
@@ -77,7 +79,12 @@ namespace Winter
                         }
                     }
 
-                    TextHandler.UpdateText(vlcTitle);
+                    if (vlcTitle != this.lastTitle)
+                    {
+                        this.SomethingIsPlaying();
+                        TextHandler.UpdateText(vlcTitle);
+                        this.lastTitle = vlcTitle;
+                    }
                 }
                 else
                 {

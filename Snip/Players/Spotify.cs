@@ -309,6 +309,8 @@ namespace Winter
                                 this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
                             }
 
+                            this.SomethingIsPlaying();
+
                             // Set the last title to the track id as these are unique values that only change when the track changes
                             this.LastTitle = trackId;
 
@@ -554,6 +556,7 @@ namespace Winter
                     {
                         downloadedJson = jsonWebClient.DownloadString(jsonAddress);
                     }
+
 
                     if (!string.IsNullOrEmpty(downloadedJson))
                     {

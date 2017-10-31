@@ -170,10 +170,12 @@ namespace Winter
                 }
 
                 TextHandler.UpdateText(track.Name, track.Artist, track.Album);
+                this.SomethingIsPlaying();
             }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
                 TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
+                this.SomethingIsPlaying();
             }
         }
 

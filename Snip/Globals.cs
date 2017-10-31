@@ -18,6 +18,9 @@
  */
 #endregion
 
+using System.Collections.Generic;
+using System.Web.UI;
+
 namespace Winter
 {
     using System.Resources;
@@ -48,10 +51,12 @@ namespace Winter
         public static ResourceManager ResourceManager { get; set; }
 
         public static MediaPlayer CurrentPlayer { get; set; }
+        public static List<MediaPlayer> LoadedPlayers { get; set; }
 
         public static NotifyIcon SnipNotifyIcon { get; set; }
 
-        public static MediaPlayerSelection PlayerSelection { get; set; }
+        public static Dictionary<MediaPlayerSelection, bool> PlayerSelection { get; } = new Dictionary<MediaPlayerSelection, bool>();
+
         public static bool SaveSeparateFiles { get; set; }
         public static bool SaveAlbumArtwork { get; set; }
         public static bool KeepSpotifyAlbumArtwork { get; set; }

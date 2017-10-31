@@ -1,4 +1,5 @@
 ﻿#region File Information
+
 /*
  * Copyright (C) 2012-2017 David Rudie
  *
@@ -16,7 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  */
+
 #endregion
+
+using System.Collections.Generic;
 
 namespace Winter
 {
@@ -39,7 +43,9 @@ namespace Winter
 
         public Snip()
         {
-            Globals.ResourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
+            Globals.ResourceManager =
+                ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources",
+                    null);
             Globals.DefaultTrackFormat = Globals.ResourceManager.GetString("TrackFormat");
             Globals.DefaultSeparatorFormat = " " + Globals.ResourceManager.GetString("SeparatorFormat") + " ";
             Globals.DefaultArtistFormat = Globals.ResourceManager.GetString("ArtistFormat");
@@ -59,6 +65,7 @@ namespace Winter
 
             // Create a blank media player so that the initial call to Unload() won't fuck shit up.
             Globals.CurrentPlayer = new MediaPlayer();
+            Globals.LoadedPlayers = new List<MediaPlayer>();
 
             this.LoadSettings();
             this.timerScanMediaPlayer.Enabled = true;
@@ -125,6 +132,7 @@ namespace Winter
         private void Snip_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Save settings automatically when the form is being closed.
+            Console.WriteLine("Form closing - saving settings");
             Settings.Save();
         }
 
@@ -132,35 +140,43 @@ namespace Winter
         {
             Settings.Load();
 
-            switch (Globals.PlayerSelection)
+            // The toggleFoo() methods modify Globals.PlayerSelection, so we must iterate on a copy
+            var clone = Globals.PlayerSelection.Clone();
+            foreach (KeyValuePair<Globals.MediaPlayerSelection, bool> pair in clone)
             {
-                case Globals.MediaPlayerSelection.Spotify:
-                    this.ToggleSpotify();
-                    break;
+                if (pair.Value)
+                {
+                    switch (pair.Key)
+                    {
+                        case Globals.MediaPlayerSelection.Spotify:
+                            this.ToggleSpotify();
+                            break;
 
-                case Globals.MediaPlayerSelection.iTunes:
-                    this.ToggleiTunes();
-                    break;
+                        case Globals.MediaPlayerSelection.iTunes:
+                            this.ToggleiTunes();
+                            break;
 
-                case Globals.MediaPlayerSelection.Winamp:
-                    this.ToggleWinamp();
-                    break;
+                        case Globals.MediaPlayerSelection.Winamp:
+                            this.ToggleWinamp();
+                            break;
 
-                case Globals.MediaPlayerSelection.foobar2000:
-                    this.Togglefoobar2000();
-                    break;
+                        case Globals.MediaPlayerSelection.foobar2000:
+                            this.Togglefoobar2000();
+                            break;
 
-                case Globals.MediaPlayerSelection.VLC:
-                    this.ToggleVLC();
-                    break;
+                        case Globals.MediaPlayerSelection.VLC:
+                            this.ToggleVLC();
+                            break;
 
-                case Globals.MediaPlayerSelection.GPMDP:
-                    this.ToggleGPMDP();
-                    break;
+                        case Globals.MediaPlayerSelection.GPMDP:
+                            this.ToggleGPMDP();
+                            break;
 
-                case Globals.MediaPlayerSelection.QuodLibet:
-                    this.ToggleQuodLibet();
-                    break;
+                        case Globals.MediaPlayerSelection.QuodLibet:
+                            this.ToggleQuodLibet();
+                            break;
+                    }
+                }
             }
 
             this.toolStripMenuItemSaveSeparateFiles.Checked = Globals.SaveSeparateFiles;
@@ -199,14 +215,17 @@ namespace Winter
                 }
 
                 this.keyboardHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(KeyboardHook_KeyPressed);
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemOpenBrackets);    // [
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemCloseBrackets);   // ]
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Oemplus);            // +
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemMinus);           // -
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Enter);              // Enter
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Back);               // Backspace
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M);                  // M
-                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P);                  // P
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt,
+                    Keys.OemOpenBrackets); // [
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt,
+                    Keys.OemCloseBrackets); // ]
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Oemplus); // +
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.OemMinus); // -
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.Enter); // Enter
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt,
+                    Keys.Back); // Backspace
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.M); // M
+                this.keyboardHook.RegisterHotkey(ModifierHookKeys.Control | ModifierHookKeys.Alt, Keys.P); // P
             }
             else
             {
@@ -252,156 +271,212 @@ namespace Winter
 
         private void ToggleSpotify()
         {
-            this.toolStripMenuItemSpotify.Checked = true;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new Spotify();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.Spotify;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("Spotify")));
+            if (this.toolStripMenuItemSpotify.Checked)
+            {
+                // unload
+                var globalSpoti = Globals.LoadedPlayers.Find(x => x is Spotify);
+                if (globalSpoti != null)
+                {
+                    globalSpoti.Unload();
+                    Globals.LoadedPlayers.Remove(globalSpoti);
+                }
+                this.toolStripMenuItemSpotify.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.Spotify] = false;
+            }
+            else
+            {
+                // load
+                var spoti = new Spotify();
+                spoti.Load();
+                Globals.LoadedPlayers.Add(spoti);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("Spotify")));
+                this.toolStripMenuItemSpotify.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.Spotify] = true;
+            }
         }
 
         private void ToggleiTunes()
         {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = true;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new iTunes();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.iTunes;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("iTunes")));
+            if (this.toolStripMenuItemItunes.Checked)
+            {
+                // unload
+                var global = Globals.LoadedPlayers.Find(x => x is iTunes);
+                if (global != null)
+                {
+                    global.Unload();
+                    Globals.LoadedPlayers.Remove(global);
+                }
+                this.toolStripMenuItemItunes.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.iTunes] = false;
+            }
+            else
+            {
+                // load
+                var global = new iTunes();
+                global.Load();
+                Globals.LoadedPlayers.Add(global);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("iTunes")));
+                this.toolStripMenuItemItunes.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.iTunes] = true;
+            }
         }
 
         private void ToggleWinamp()
         {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = true;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new Winamp();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.Winamp;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("Winamp")));
+            if (this.toolStripMenuItemWinamp.Checked)
+            {
+                // unload
+                var global = Globals.LoadedPlayers.Find(x => x is Winamp);
+                if (global != null)
+                {
+                    global.Unload();
+                    Globals.LoadedPlayers.Remove(global);
+                }
+                this.toolStripMenuItemWinamp.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.Winamp] = false;
+            }
+            else
+            {
+                // load
+                var global = new Winamp();
+                global.Load();
+                Globals.LoadedPlayers.Add(global);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("Winamp")));
+                this.toolStripMenuItemWinamp.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.Winamp] = true;
+            }
         }
 
         private void Togglefoobar2000()
         {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = true;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new foobar2000();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.foobar2000;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("foobar2000")));
+            if (this.toolStripMenuItemFoobar2000.Checked)
+            {
+                // unload
+                var global = Globals.LoadedPlayers.Find(x => x is foobar2000);
+                if (global != null)
+                {
+                    global.Unload();
+                    Globals.LoadedPlayers.Remove(global);
+                }
+                this.toolStripMenuItemFoobar2000.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.foobar2000] = false;
+            }
+            else
+            {
+                // load
+                var global = new foobar2000();
+                global.Load();
+                Globals.LoadedPlayers.Add(global);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("foobar2000")));
+                this.toolStripMenuItemFoobar2000.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.foobar2000] = true;
+            }
         }
 
         private void ToggleVLC()
         {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = true;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new VLC();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("VLC")));
+            if (this.toolStripMenuItemVlc.Checked)
+            {
+                // unload
+                var global = Globals.LoadedPlayers.Find(x => x is VLC);
+                if (global != null)
+                {
+                    global.Unload();
+                    Globals.LoadedPlayers.Remove(global);
+                }
+                this.toolStripMenuItemVlc.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.VLC] = false;
+            }
+            else
+            {
+                // load
+                var global = new VLC();
+                global.Load();
+                Globals.LoadedPlayers.Add(global);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("VLC")));
+                this.toolStripMenuItemVlc.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.VLC] = true;
+            }
         }
 
         private void ToggleGPMDP()
         {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = true;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new GPMDP();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.GPMDP;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("GPMDP")));
+            if (this.toolStripMenuItemGPMDP.Checked)
+            {
+                // unload
+                var global = Globals.LoadedPlayers.Find(x => x is GPMDP);
+                if (global != null)
+                {
+                    global.Unload();
+                    Globals.LoadedPlayers.Remove(global);
+                }
+                this.toolStripMenuItemGPMDP.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.GPMDP] = false;
+            }
+            else
+            {
+                // load
+                var global = new GPMDP();
+                global.Load();
+                Globals.LoadedPlayers.Add(global);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("GPMPD")));
+                this.toolStripMenuItemGPMDP.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.GPMDP] = true;
+            }
         }
 
         private void ToggleQuodLibet()
         {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = true;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new QuodLibet();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.QuodLibet;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("QuodLibet")));
+            if (this.toolStripMenuItemQuodLibet.Checked)
+            {
+                // unload
+                var global = Globals.LoadedPlayers.Find(x => x is QuodLibet);
+                if (global != null)
+                {
+                    global.Unload();
+                    Globals.LoadedPlayers.Remove(global);
+                }
+                this.toolStripMenuItemQuodLibet.Checked = false;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.QuodLibet] = false;
+            }
+            else
+            {
+                // load
+                var global = new QuodLibet();
+                global.Load();
+                Globals.LoadedPlayers.Add(global);
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Globals.ResourceManager.GetString("SwitchedToPlayer"),
+                        Globals.ResourceManager.GetString("QuodLibet")));
+                this.toolStripMenuItemQuodLibet.Checked = true;
+                Globals.PlayerSelection[Globals.MediaPlayerSelection.QuodLibet] = true;
+            }
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
@@ -490,6 +565,7 @@ namespace Winter
 
         private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
         {
+            Settings.Save();
             Application.Exit();
         }
 
@@ -498,11 +574,14 @@ namespace Winter
             // Make sure this is set before starting the timer.
             //if (Globals.DebuggingIsEnabled)
             //{
-                //Debug.MeasureMethod(Globals.CurrentPlayer.Update); // Writes a LOT of data
+            //Debug.MeasureMethod(Globals.CurrentPlayer.Update); // Writes a LOT of data
             //}
             //else
             //{
-                Globals.CurrentPlayer.Update();
+            foreach (var player in Globals.LoadedPlayers)
+            {
+                player.Update();
+            }
             //}
         }
 
@@ -532,18 +611,24 @@ namespace Winter
 
             if (registryKey != null)
             {
-                Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", Globals.DefaultTrackFormat), CultureInfo.CurrentCulture);
+                Globals.TrackFormat = Convert.ToString(registryKey.GetValue("Track Format", Globals.DefaultTrackFormat),
+                    CultureInfo.CurrentCulture);
 
-                Globals.SeparatorFormat = Convert.ToString(registryKey.GetValue("Separator Format", Globals.DefaultSeparatorFormat), CultureInfo.CurrentCulture);
+                Globals.SeparatorFormat =
+                    Convert.ToString(registryKey.GetValue("Separator Format", Globals.DefaultSeparatorFormat),
+                        CultureInfo.CurrentCulture);
 
-                Globals.ArtistFormat = Convert.ToString(registryKey.GetValue("Artist Format", Globals.DefaultArtistFormat), CultureInfo.CurrentCulture);
+                Globals.ArtistFormat =
+                    Convert.ToString(registryKey.GetValue("Artist Format", Globals.DefaultArtistFormat),
+                        CultureInfo.CurrentCulture);
 
-                Globals.AlbumFormat = Convert.ToString(registryKey.GetValue("Album Format", Globals.DefaultAlbumFormat), CultureInfo.CurrentCulture);
+                Globals.AlbumFormat = Convert.ToString(registryKey.GetValue("Album Format", Globals.DefaultAlbumFormat),
+                    CultureInfo.CurrentCulture);
 
                 registryKey.Close();
             }
         }
-        
+
         private void AlbumArtworkResolutionCheck(object sender, EventArgs e)
         {
             if (sender == this.toolStripMenuItemSmall)
