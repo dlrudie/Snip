@@ -88,7 +88,9 @@ namespace Winter
                 }
                 else
                 {
+                    this.lastTitle = string.Empty;
                     TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                    this.NothingIsPlaying();
                 }
             }
             else
@@ -103,6 +105,7 @@ namespace Winter
                         CultureInfo.InvariantCulture,
                         Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                         Globals.ResourceManager.GetString("VLC")));
+                this.NothingIsPlaying();
             }
         }
 

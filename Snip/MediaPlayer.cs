@@ -49,6 +49,10 @@ namespace Winter
 
         public bool NotRunning { get; set; }
 
+        private bool _somethingIsPlaying = false;
+
+        public bool IsSomethingPlaying => _somethingIsPlaying;
+
         public bool SavedBlankImage { get; set; }
 
         public IntPtr Handle { get; set; }
@@ -144,7 +148,13 @@ namespace Winter
          */
         protected void SomethingIsPlaying()
         {
+            this._somethingIsPlaying = true;
             Globals.CurrentPlayer = this;
+        }
+
+        protected void NothingIsPlaying()
+        {
+            this._somethingIsPlaying = false;
         }
     }
 }

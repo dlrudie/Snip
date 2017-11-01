@@ -644,6 +644,8 @@ namespace Winter
                 }
 
                 TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                
+                this.NothingIsPlaying();
 
                 this.LastTitle = string.Empty;
 
@@ -672,6 +674,7 @@ namespace Winter
                     CultureInfo.InvariantCulture,
                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                     Globals.ResourceManager.GetString("Spotify")));
+            this.NothingIsPlaying();
         }
 
         private static Uri SelectAlbumArtworkSizeToDownload(dynamic jsonSummary)

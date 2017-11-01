@@ -187,6 +187,7 @@ namespace Winter
             }
 
             TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+            this.NothingIsPlaying();
         }
 
         private void App_OnPlayerQuittingEvent()
@@ -201,6 +202,7 @@ namespace Winter
                     CultureInfo.InvariantCulture,
                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                     Globals.ResourceManager.GetString("iTunes")));
+            this.NothingIsPlaying();
         }
     }
 }

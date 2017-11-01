@@ -69,6 +69,13 @@ namespace Winter
         {
             if (text != lastTextToWrite)
             {
+                // We don't want to write an empty file if something is playing in another player
+                if (text == Globals.ResourceManager.GetString("NoTrackPlaying") &&
+                    Globals.CurrentPlayer.IsSomethingPlaying)
+                {
+                    return;
+                }
+                
                 lastTextToWrite = text;
 
                 SetNotifyIconText(text);

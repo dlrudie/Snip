@@ -77,10 +77,12 @@ namespace Winter
                     }
 
                     TextHandler.UpdateText(quodLibetTitle);
+                    this.SomethingIsPlaying();
                 }
                 else
                 {
                     TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                    this.NothingIsPlaying();
                 }
             }
             else
@@ -95,6 +97,7 @@ namespace Winter
                         CultureInfo.InvariantCulture,
                         Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                         Globals.ResourceManager.GetString("QuodLibet")));
+                this.NothingIsPlaying();
             }
         }
 

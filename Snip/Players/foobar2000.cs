@@ -113,6 +113,7 @@ namespace Winter
                                     CultureInfo.InvariantCulture,
                                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                                     Globals.ResourceManager.GetString("foobar2000")));
+                            this.NothingIsPlaying();
 
                             this.Found = false;
                             this.NotRunning = true;
@@ -133,6 +134,7 @@ namespace Winter
                                 CultureInfo.InvariantCulture,
                                 Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                                 Globals.ResourceManager.GetString("foobar2000")));
+                        this.NothingIsPlaying();
 
                         this.Found = false;
                         this.NotRunning = true;

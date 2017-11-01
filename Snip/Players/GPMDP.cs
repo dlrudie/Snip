@@ -142,6 +142,8 @@ namespace Winter
                             {
                                 this.DownloadGPMDPAlbumArtwork(trackAlbumArt);
                             }
+                            
+                            this.SomethingIsPlaying();
 
                             this.LastTitle = lastTrack;
 
@@ -202,6 +204,8 @@ namespace Winter
                 }
 
                 TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                
+                this.NothingIsPlaying();
 
                 this.LastTitle = string.Empty;
 
