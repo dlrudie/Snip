@@ -298,6 +298,8 @@ namespace Winter
 
                             artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
 
+                            this.SomethingIsPlaying();
+                            
                             TextHandler.UpdateText(
                                 jsonSummary.name.ToString(),
                                 artists,
@@ -309,7 +311,6 @@ namespace Winter
                                 this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
                             }
 
-                            this.SomethingIsPlaying();
 
                             // Set the last title to the track id as these are unique values that only change when the track changes
                             this.LastTitle = trackId;
@@ -643,9 +644,9 @@ namespace Winter
                     }
                 }
 
-                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                
                 this.NothingIsPlaying();
+                
+                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
 
                 this.LastTitle = string.Empty;
 
@@ -669,12 +670,13 @@ namespace Winter
                 }
             }
 
+            this.NothingIsPlaying();
+            
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                     Globals.ResourceManager.GetString("Spotify")));
-            this.NothingIsPlaying();
         }
 
         private static Uri SelectAlbumArtworkSizeToDownload(dynamic jsonSummary)

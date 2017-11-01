@@ -169,13 +169,13 @@ namespace Winter
                     }
                 }
 
-                TextHandler.UpdateText(track.Name, track.Artist, track.Album);
                 this.SomethingIsPlaying();
+                TextHandler.UpdateText(track.Name, track.Artist, track.Album);
             }
             else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
             {
-                TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
                 this.SomethingIsPlaying();
+                TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
             }
         }
 
@@ -186,8 +186,8 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
             this.NothingIsPlaying();
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
         }
 
         private void App_OnPlayerQuittingEvent()
@@ -197,12 +197,12 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
+            this.NothingIsPlaying();
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                     Globals.ResourceManager.GetString("iTunes")));
-            this.NothingIsPlaying();
         }
     }
 }

@@ -76,13 +76,13 @@ namespace Winter
                         }
                     }
 
-                    TextHandler.UpdateText(quodLibetTitle);
                     this.SomethingIsPlaying();
+                    TextHandler.UpdateText(quodLibetTitle);
                 }
                 else
                 {
-                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                     this.NothingIsPlaying();
+                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                 }
             }
             else
@@ -92,12 +92,12 @@ namespace Winter
                     this.SaveBlankImage();
                 }
 
+                this.NothingIsPlaying();
                 TextHandler.UpdateTextAndEmptyFilesMaybe(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                         Globals.ResourceManager.GetString("QuodLibet")));
-                this.NothingIsPlaying();
             }
         }
 

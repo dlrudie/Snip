@@ -55,8 +55,8 @@ namespace Winter
 
                             if (winampTitle.Contains("- Winamp [Stopped]") || winampTitle.Contains("- Winamp [Paused]"))
                             {
-                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                                 this.NothingIsPlaying();
+                                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                             }
                             else
                             {
@@ -77,13 +77,13 @@ namespace Winter
                                     string artist = windowTitle[0].Trim();
                                     string songTitle = windowTitle[1].Trim();
 
-                                    TextHandler.UpdateText(songTitle, artist);
                                     this.SomethingIsPlaying();
+                                    TextHandler.UpdateText(songTitle, artist);
                                 }
                                 else
                                 {
-                                    TextHandler.UpdateText(windowTitle[0].Trim());
                                     this.SomethingIsPlaying();
+                                    TextHandler.UpdateText(windowTitle[0].Trim());
                                 }
                             }
 
@@ -99,14 +99,14 @@ namespace Winter
                                 this.SaveBlankImage();
                             }
 
+                            this.NothingIsPlaying();
+                            
                             TextHandler.UpdateTextAndEmptyFilesMaybe(
                                 string.Format(
                                     CultureInfo.InvariantCulture,
                                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                                     Globals.ResourceManager.GetString("Winamp")));
                             
-                            this.NothingIsPlaying();
-
                             this.Found = false;
                             this.NotRunning = true;
                         }
@@ -121,13 +121,13 @@ namespace Winter
                             this.SaveBlankImage();
                         }
 
+                        this.NothingIsPlaying();
+                        
                         TextHandler.UpdateTextAndEmptyFilesMaybe(
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                                 Globals.ResourceManager.GetString("Winamp")));
-                        
-                        this.NothingIsPlaying();
 
                         this.Found = false;
                         this.NotRunning = true;

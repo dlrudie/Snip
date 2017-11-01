@@ -119,6 +119,8 @@ namespace Winter
                         if (lastTrack != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                         {
                             Globals.RewriteUpdatedOutputFormat = false;
+                            
+                            this.SomethingIsPlaying();
 
                             if (!string.IsNullOrEmpty(trackTitle) && !string.IsNullOrEmpty(trackArtist) && !string.IsNullOrEmpty(trackAlbum))
                             {
@@ -143,8 +145,6 @@ namespace Winter
                                 this.DownloadGPMDPAlbumArtwork(trackAlbumArt);
                             }
                             
-                            this.SomethingIsPlaying();
-
                             this.LastTitle = lastTrack;
 
                             this.gpmdpReset = false;
@@ -202,10 +202,11 @@ namespace Winter
                         this.SaveBlankImage();
                     }
                 }
+                
+                this.NothingIsPlaying();
 
                 TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
                 
-                this.NothingIsPlaying();
 
                 this.LastTitle = string.Empty;
 
