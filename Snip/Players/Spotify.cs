@@ -262,19 +262,17 @@ namespace Winter
                     }
                     else
                     {                        
-                        if (!LocalTrackUpdateText(jsonSummary))
+                        if (!TryUpdateTextFromSpotifyData(jsonSummary))
                         {
-                            SpotifyTrackUpdateText(jsonSummary);
+                            TryUpdateTextFromLocalData(jsonSummary);
                         }
                     }
                 }
             }
         }
 
-        private bool LocalTrackUpdateText(dynamic jsonSummary)
+        private bool TryUpdateTextFromLocalData(dynamic jsonSummary)
         {
-            // Local tracks have limited information available, and it can't be
-            // fetched thru the Spotify API.
             if (jsonSummary.track.track_type.ToString() == "local")
             {
                 var trackId = jsonSummary.track.track_resource.uri;
@@ -296,7 +294,7 @@ namespace Winter
             return false;
         }
 
-        private void SpotifyTrackUpdateText(dynamic jsonSummary)
+        private bool TryUpdateTextFromSpotifyData(dynamic jsonSummary)
         {
             string fullTrackId = jsonSummary.track.track_resource.uri.ToString();
             string trackId = fullTrackId.Substring(fullTrackId.LastIndexOf(':') + 1); // + 1 to not include :
@@ -322,34 +320,43 @@ namespace Winter
                         SpotifyAddressContactType.API);
                 }
 
-                jsonSummary = SimpleJson.DeserializeObject(json);
-
-                // If there are multiple artists we want to join all of them together for display
-                string artists = string.Empty;
-
-                foreach (dynamic artist in jsonSummary.artists)
+                try
                 {
-                    artists += artist.name.ToString() + ", ";
+                    jsonSummary = SimpleJson.DeserializeObject(json);
+
+                    // If there are multiple artists we want to join all of them together for display
+                    string artists = string.Empty;
+
+                    foreach (dynamic artist in jsonSummary.artists)
+                    {
+                        artists += artist.name.ToString() + ", ";
+                    }
+
+                    artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
+
+                    TextHandler.UpdateText(
+                        jsonSummary.name.ToString(),
+                        artists,
+                        jsonSummary.album.name.ToString(),
+                        jsonSummary.id.ToString());
+
+                    if (Globals.SaveAlbumArtwork)
+                    {
+                        this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
+                    }
+
+                    // Set the last title to the track id as these are unique values that only change when the track changes
+                    this.LastTitle = trackId;
+
+                    this.snipReset = false;
                 }
-
-                artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
-
-                TextHandler.UpdateText(
-                    jsonSummary.name.ToString(),
-                    artists,
-                    jsonSummary.album.name.ToString(),
-                    jsonSummary.id.ToString());
-
-                if (Globals.SaveAlbumArtwork)
+                catch (Exception ex)
                 {
-                    this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
+                    return false;
                 }
-
-                // Set the last title to the track id as these are unique values that only change when the track changes
-                this.LastTitle = trackId;
-
-                this.snipReset = false;
             }
+
+            return true;
         }
 
         private void DetectSpotifyWebHelperPort()
@@ -588,14 +595,7 @@ namespace Winter
                         downloadedJson = jsonWebClient.DownloadString(jsonAddress);
                     }
 
-                    if (!string.IsNullOrEmpty(downloadedJson))
-                    {
-                        return downloadedJson;
-                    }
-                    else
-                    {
-                        return string.Empty;
-                    }
+                    return downloadedJson ?? string.Empty;
                 }
                 catch (WebException)
                 {
