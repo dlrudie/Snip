@@ -262,8 +262,11 @@ namespace Winter
                     }
                     else
                     {
-                        if (jsonSummary.track.track_type == "ad")
+                        string trackType = jsonSummary.track.track_type.ToString();
+
+                        if (trackType == "ad")
                         {
+                            // Consider supporting Spotify and subscribing
                             this.ResetSnipSinceSpotifyIsNotPlaying();
                         }
                         else
