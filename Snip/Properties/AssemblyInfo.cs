@@ -1,6 +1,6 @@
 ﻿#region File Information
 /*
- * Copyright (C) 2012-2017 David Rudie
+ * Copyright (C) 2012-2018 David Rudie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("David Rudie")]
 [assembly: AssemblyProduct("Snip")]
-[assembly: AssemblyCopyright("Copyright © David Rudie 2012-2017")]
+[assembly: AssemblyCopyright("Copyright © David Rudie 2012-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
