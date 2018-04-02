@@ -200,6 +200,7 @@
     <Content Include="Resources\Strings.txt" />
     <Content Include="Resources\Strings.fr-FR.txt" />
     <Content Include="Resources\Strings.nl-NL.txt" />
+    <Content Include="Resources\Strings.zh-TW.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Strings.de-AT.txt" />
