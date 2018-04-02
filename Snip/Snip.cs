@@ -124,7 +124,8 @@ namespace Winter
 
         private void Snip_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Save settings automatically when the form is being closed.
+            // Empty file and save settings automatically when the form is being closed.
+            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
             Settings.Save();
         }
 
