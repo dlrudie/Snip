@@ -39,10 +39,12 @@ namespace Winter
             {
                 this.iTunesApplication = new iTunesApp();
 
-                this.iTunesApplication.OnPlayerPlayEvent += new _IiTunesEvents_OnPlayerPlayEventEventHandler(this.App_OnPlayerPlayEvent);
-                this.iTunesApplication.OnPlayerPlayingTrackChangedEvent += new _IiTunesEvents_OnPlayerPlayingTrackChangedEventEventHandler(this.App_OnPlayerPlayingTrackChangedEvent);
-                this.iTunesApplication.OnPlayerStopEvent += new _IiTunesEvents_OnPlayerStopEventEventHandler(this.App_OnPlayerStopEvent);
-                this.iTunesApplication.OnQuittingEvent += new _IiTunesEvents_OnQuittingEventEventHandler(this.App_OnPlayerQuittingEvent);
+                  // Apple seem to have broken their own events. Removed until we can find a permanent solution.
+
+//                this.iTunesApplication.OnPlayerPlayEvent += new _IiTunesEvents_OnPlayerPlayEventEventHandler(this.App_OnPlayerPlayEvent);
+//                this.iTunesApplication.OnPlayerPlayingTrackChangedEvent += new _IiTunesEvents_OnPlayerPlayingTrackChangedEventEventHandler(this.App_OnPlayerPlayingTrackChangedEvent);
+//                this.iTunesApplication.OnPlayerStopEvent += new _IiTunesEvents_OnPlayerStopEventEventHandler(this.App_OnPlayerStopEvent);
+//                this.iTunesApplication.OnQuittingEvent += new _IiTunesEvents_OnQuittingEventEventHandler(this.App_OnPlayerQuittingEvent);
             }
             catch (System.Runtime.InteropServices.COMException comException)
             {
@@ -56,12 +58,63 @@ namespace Winter
 
             if (this.iTunesApplication != null)
             {
-                this.iTunesApplication.OnPlayerPlayEvent -= this.App_OnPlayerPlayEvent;
-                this.iTunesApplication.OnPlayerPlayingTrackChangedEvent -= this.App_OnPlayerPlayingTrackChangedEvent;
-                this.iTunesApplication.OnPlayerStopEvent -= this.App_OnPlayerStopEvent;
-                this.iTunesApplication.OnQuittingEvent -= this.App_OnPlayerQuittingEvent;
+//                this.iTunesApplication.OnPlayerPlayEvent -= this.App_OnPlayerPlayEvent;
+//                this.iTunesApplication.OnPlayerPlayingTrackChangedEvent -= this.App_OnPlayerPlayingTrackChangedEvent;
+//                this.iTunesApplication.OnPlayerStopEvent -= this.App_OnPlayerStopEvent;
+//                this.iTunesApplication.OnQuittingEvent -= this.App_OnPlayerQuittingEvent;
 
                 this.iTunesApplication = null;
+            }
+        }
+
+        public override void Update()
+        {
+            if (this.iTunesApplication != null)
+            {
+                if (this.iTunesApplication.PlayerState != ITPlayerState.ITPlayerStateStopped)
+                {
+                    IITTrack track = this.iTunesApplication.CurrentTrack;
+
+                    if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) &&
+                        string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
+                    {
+                        if (Globals.SaveAlbumArtwork)
+                        {
+                            IITArtworkCollection artworkCollection = track.Artwork;
+
+                            if (artworkCollection.Count > 0)
+                            {
+                                IITArtwork artwork = artworkCollection[1];
+
+                                artwork.SaveArtworkToFile(this.DefaultArtworkFilePath);
+                            }
+                            else
+                            {
+                                this.SaveBlankImage();
+                            }
+                        }
+
+                        TextHandler.UpdateText(track.Name, track.Artist, track.Album);
+                    }
+                    else if (string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) &&
+                             string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
+                    {
+                        TextHandler.UpdateText(track.Name);
+                    }
+                    else if (!string.IsNullOrEmpty(this.iTunesApplication.CurrentStreamTitle))
+                    {
+                        TextHandler.UpdateText(this.iTunesApplication.CurrentStreamTitle);
+                    }
+                }
+                else
+                {
+                    if (Globals.SaveAlbumArtwork)
+                    {
+                        this.SaveBlankImage();
+                    }
+
+                    TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                }
             }
         }
 
@@ -113,6 +166,7 @@ namespace Winter
             this.iTunesApplication.Stop();
         }
 
+        #region Unused due to broken events
         private void App_OnPlayerPlayEvent(object sender)
         {
             IITTrack track = this.iTunesApplication.CurrentTrack;
@@ -200,5 +254,6 @@ namespace Winter
                     Globals.ResourceManager.GetString("PlayerIsNotRunning"),
                     Globals.ResourceManager.GetString("iTunes")));
         }
+        #endregion
     }
 }
