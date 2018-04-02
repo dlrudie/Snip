@@ -172,13 +172,6 @@
             this.toolStripMenuItemVlc.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemVlc.Text = Globals.ResourceManager.GetString("VLC");
             this.toolStripMenuItemVlc.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            // 
-            // toolStripMenuItemQuodLibet
-            // 
-            this.toolStripMenuItemQuodLibet.Name = "toolStripMenuItemQuodLibet";
-            this.toolStripMenuItemQuodLibet.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemQuodLibet.Text = Globals.ResourceManager.GetString("QuodLibet");
-            this.toolStripMenuItemQuodLibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
             //
             // toolStripMenuItemGPMDP
             //
@@ -186,6 +179,13 @@
             this.toolStripMenuItemGPMDP.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemGPMDP.Text = Globals.ResourceManager.GetString("GPMDP");
             this.toolStripMenuItemGPMDP.Click += new System.EventHandler(this.PlayerSelectionCheck);
+            // 
+            // toolStripMenuItemQuodLibet
+            // 
+            this.toolStripMenuItemQuodLibet.Name = "toolStripMenuItemQuodLibet";
+            this.toolStripMenuItemQuodLibet.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemQuodLibet.Text = Globals.ResourceManager.GetString("QuodLibet");
+            this.toolStripMenuItemQuodLibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
             // 
             // toolStripSeparator
             // 
