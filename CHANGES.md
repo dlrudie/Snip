@@ -1,5 +1,16 @@
 CHANGES
 =======
+**v6.9.5 (2018-Apr-01):**
+* Updated copyright to 2018.
+* Renamed quodlibet to Quod Libet.
+* Moved Quod Libet in the menu.
+* Snip is now 64-bit only.
+* Snip now erases Snip.txt on exit.
+* If an ad is playing in Spotify it will empty the text file.
+* Removed excess strings from resource files.
+* Removed "tiny" size from artwork as Spotify stopped supporting it.
+* Spotify port detection code is now threaded so Snip will no longer freeze.
+
 **v6.9.1 (2017-Jul-06):**
 * Czech translation corrections by jingtongtangflee.
 * Snip will now loop through various ports to find the correct port to
