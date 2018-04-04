@@ -117,15 +117,20 @@ namespace Winter
 
         public static void UpdateText(string title, string artist)
         {
-            UpdateText(title, artist, string.Empty, string.Empty);
+            UpdateText(title, artist, string.Empty, string.Empty, string.Empty);
         }
 
         public static void UpdateText(string title, string artist, string album)
         {
-            UpdateText(title, artist, album, string.Empty);
+            UpdateText(title, artist, album, string.Empty, string.Empty);
         }
 
         public static void UpdateText(string title, string artist, string album, string trackId)
+        {
+            UpdateText(title, artist, album, trackId, string.Empty);
+        }
+
+        public static void UpdateText(string title, string artist, string album, string trackId, string json)
         {
             string output = Globals.TrackFormat + Globals.SeparatorFormat + Globals.ArtistFormat;
 
@@ -200,6 +205,7 @@ namespace Winter
                     }
 
                     File.WriteAllText(@Application.StartupPath + @"\Snip_TrackId.txt", trackId);
+                    File.WriteAllText(@Application.StartupPath + @"\Snip_Metadata.json", json);
                 }
 
                 // If saving track history is enabled, append that information to a separate file.

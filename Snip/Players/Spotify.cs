@@ -311,7 +311,8 @@ namespace Winter
                                     jsonSummary.name.ToString(),
                                     artists,
                                     jsonSummary.album.name.ToString(),
-                                    jsonSummary.id.ToString());
+                                    jsonSummary.id.ToString(),
+                                    jsonSummary.ToString());
 
                                 if (Globals.SaveAlbumArtwork)
                                 {
