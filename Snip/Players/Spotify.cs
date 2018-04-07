@@ -236,6 +236,9 @@ namespace Winter
             }
             else
             {
+                // Let the user know that we're searching for SpotifyWebHelper.
+                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("LocatingSpotifyWebHelper"));
+
                 this.DetectSpotifyWebHelperPort();
             }
         }

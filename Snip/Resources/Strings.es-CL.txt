@@ -37,6 +37,10 @@ PlayerIsNotRunning={0} no se está ejecutando
 ; selected media file or when the user stops/pauses a playing track.
 NoTrackPlaying=No hay canción escuchándose
 
+; This text is displayed while Snip is trying to locate the SpotifyWebHelper
+; service to connect to.
+LocatingSpotifyWebHelper=Attempting to Locate SpotifyWebHelper
+
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will open up the "Set Output Format" form where the user can customize how
 ; the text will look when saved to any of the text files.
