@@ -331,7 +331,7 @@ namespace Winter
                                 }
 
                                 // This shouldn't happen... but you never know.
-                                if (json != string.Empty)
+                                if (!string.IsNullOrEmpty(json))
                                 {
                                     jsonSummary = SimpleJson.DeserializeObject(json);
 
