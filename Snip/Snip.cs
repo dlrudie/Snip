@@ -40,10 +40,14 @@ namespace Winter
         public Snip()
         {
             Globals.ResourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
-            Globals.DefaultTrackFormat = Globals.ResourceManager.GetString("TrackFormat");
-            Globals.DefaultSeparatorFormat = " " + Globals.ResourceManager.GetString("SeparatorFormat") + " ";
-            Globals.DefaultArtistFormat = Globals.ResourceManager.GetString("ArtistFormat");
-            Globals.DefaultAlbumFormat = Globals.ResourceManager.GetString("AlbumFormat");
+
+            // Immediately set all of the localization
+            SetLocalizedMessages();
+
+            Globals.DefaultTrackFormat = LocalizedMessages.TrackFormat;
+            Globals.DefaultSeparatorFormat = " " + LocalizedMessages.SeparatorFormat + " ";
+            Globals.DefaultArtistFormat = LocalizedMessages.ArtistFormat;
+            Globals.DefaultAlbumFormat = LocalizedMessages.AlbumFormat;
 
             this.InitializeComponent();
 
@@ -68,7 +72,7 @@ namespace Winter
 
             if (CheckVersion.IsNewVersionAvailable())
             {
-                this.toolStripMenuItemSnipVersion.Text = Globals.ResourceManager.GetString("NewVersionAvailable");
+                this.toolStripMenuItemSnipVersion.Text = LocalizedMessages.NewVersionAvailable;
                 this.toolStripMenuItemSnipVersion.Enabled = true;
                 this.toolStripMenuItemSnipVersion.Click += ToolStripMenuItemSnipVersion_Click;
             }
@@ -77,6 +81,49 @@ namespace Winter
         #endregion
 
         #region Methods
+
+        private static void SetLocalizedMessages()
+        {
+            LocalizedMessages.SnipForm = Globals.ResourceManager.GetString("SnipForm");
+            LocalizedMessages.NewVersionAvailable = Globals.ResourceManager.GetString("NewVersionAvailable");
+            LocalizedMessages.Spotify = Globals.ResourceManager.GetString("Spotify");
+            LocalizedMessages.iTunes = Globals.ResourceManager.GetString("iTunes");
+            LocalizedMessages.Winamp = Globals.ResourceManager.GetString("Winamp");
+            LocalizedMessages.foobar2000 = Globals.ResourceManager.GetString("foobar2000");
+            LocalizedMessages.VLC = Globals.ResourceManager.GetString("VLC");
+            LocalizedMessages.GPMDP = Globals.ResourceManager.GetString("GPMDP");
+            LocalizedMessages.QuodLibet = Globals.ResourceManager.GetString("QuodLibet");
+            LocalizedMessages.WindowsMediaPlayer = Globals.ResourceManager.GetString("WindowsMediaPlayer");
+            LocalizedMessages.SwitchedToPlayer = Globals.ResourceManager.GetString("SwitchedToPlayer");
+            LocalizedMessages.PlayerIsNotRunning = Globals.ResourceManager.GetString("PlayerIsNotRunning");
+            LocalizedMessages.NoTrackPlaying = Globals.ResourceManager.GetString("NoTrackPlaying");
+            LocalizedMessages.LocatingSpotifyWebHelper = Globals.ResourceManager.GetString("LocatingSpotifyWebHelper");
+            LocalizedMessages.SetOutputFormat = Globals.ResourceManager.GetString("SetOutputFormat");
+            LocalizedMessages.SaveInformationSeparately = Globals.ResourceManager.GetString("SaveInformationSeparately");
+            LocalizedMessages.SaveAlbumArtwork = Globals.ResourceManager.GetString("SaveAlbumArtwork");
+            LocalizedMessages.KeepSpotifyAlbumArtwork = Globals.ResourceManager.GetString("KeepSpotifyAlbumArtwork");
+            LocalizedMessages.ImageResolutionSmall = Globals.ResourceManager.GetString("ImageResolutionSmall");
+            LocalizedMessages.ImageResolutionMedium = Globals.ResourceManager.GetString("ImageResolutionMedium");
+            LocalizedMessages.ImageResolutionLarge = Globals.ResourceManager.GetString("ImageResolutionLarge");
+            LocalizedMessages.CacheSpotifyMetadata = Globals.ResourceManager.GetString("CacheSpotifyMetadata");
+            LocalizedMessages.SaveTrackHistory = Globals.ResourceManager.GetString("SaveTrackHistory");
+            LocalizedMessages.DisplayTrackPopup = Globals.ResourceManager.GetString("DisplayTrackPopup");
+            LocalizedMessages.EmptyFile = Globals.ResourceManager.GetString("EmptyFile");
+            LocalizedMessages.EnableHotkeys = Globals.ResourceManager.GetString("EnableHotkeys");
+            LocalizedMessages.ExitApplication = Globals.ResourceManager.GetString("ExitApplication");
+            LocalizedMessages.iTunesException = Globals.ResourceManager.GetString("iTunesException");
+            LocalizedMessages.SetOutputFormatForm = Globals.ResourceManager.GetString("SetOutputFormatForm");
+            LocalizedMessages.SetTrackFormat = Globals.ResourceManager.GetString("SetTrackFormat");
+            LocalizedMessages.SetSeparatorFormat = Globals.ResourceManager.GetString("SetSeparatorFormat");
+            LocalizedMessages.SetArtistFormat = Globals.ResourceManager.GetString("SetArtistFormat");
+            LocalizedMessages.SetAlbumFormat = Globals.ResourceManager.GetString("SetAlbumFormat");
+            LocalizedMessages.ButtonDefaults = Globals.ResourceManager.GetString("ButtonDefaults");
+            LocalizedMessages.ButtonSave = Globals.ResourceManager.GetString("ButtonSave");
+            LocalizedMessages.TrackFormat = Globals.ResourceManager.GetString("TrackFormat");
+            LocalizedMessages.SeparatorFormat = Globals.ResourceManager.GetString("SeparatorFormat");
+            LocalizedMessages.ArtistFormat = Globals.ResourceManager.GetString("ArtistFormat");
+            LocalizedMessages.AlbumFormat = Globals.ResourceManager.GetString("AlbumFormat");
+        }
 
         private void KeyboardHook_KeyPressed(object sender, KeyPressedEventArgs e)
         {
@@ -125,7 +172,7 @@ namespace Winter
         private void Snip_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Empty file and save settings automatically when the form is being closed.
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
             Settings.Save();
         }
 
@@ -269,8 +316,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("Spotify")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.Spotify));
         }
 
         private void ToggleiTunes()
@@ -291,8 +338,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("iTunes")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.iTunes));
         }
 
         private void ToggleWinamp()
@@ -313,8 +360,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("Winamp")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.Winamp));
         }
 
         private void Togglefoobar2000()
@@ -335,8 +382,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("foobar2000")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.foobar2000));
         }
 
         private void ToggleVLC()
@@ -357,8 +404,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("VLC")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.VLC));
         }
 
         private void ToggleGPMDP()
@@ -379,8 +426,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("GPMDP")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.GPMDP));
         }
 
         private void ToggleQuodLibet()
@@ -401,8 +448,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("SwitchedToPlayer"),
-                    Globals.ResourceManager.GetString("QuodLibet")));
+                    LocalizedMessages.SwitchedToPlayer,
+                    LocalizedMessages.QuodLibet));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)

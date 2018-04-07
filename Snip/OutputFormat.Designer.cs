@@ -46,7 +46,7 @@
             this.labelTrackFormat.Name = "labelTrackFormat";
             this.labelTrackFormat.Size = new System.Drawing.Size(254, 13);
             this.labelTrackFormat.TabIndex = 0;
-            this.labelTrackFormat.Text = this.resourceManager.GetString("SetTrackFormat");
+            this.labelTrackFormat.Text = LocalizedMessages.SetTrackFormat;
             // 
             // textBoxTrackFormat
             // 
@@ -54,7 +54,7 @@
             this.textBoxTrackFormat.Name = "textBoxTrackFormat";
             this.textBoxTrackFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxTrackFormat.TabIndex = 1;
-            this.textBoxTrackFormat.Text = this.resourceManager.GetString("TrackFormat");
+            this.textBoxTrackFormat.Text = LocalizedMessages.TrackFormat;
             // 
             // labelSeparatorFormat
             // 
@@ -62,7 +62,7 @@
             this.labelSeparatorFormat.Name = "labelSeparatorFormat";
             this.labelSeparatorFormat.Size = new System.Drawing.Size(254, 13);
             this.labelSeparatorFormat.TabIndex = 2;
-            this.labelSeparatorFormat.Text = this.resourceManager.GetString("SetSeparatorFormat");
+            this.labelSeparatorFormat.Text = LocalizedMessages.SetSeparatorFormat;
             // 
             // textBoxSeparatorFormat
             // 
@@ -70,7 +70,7 @@
             this.textBoxSeparatorFormat.Name = "textBoxSeparatorFormat";
             this.textBoxSeparatorFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxSeparatorFormat.TabIndex = 3;
-            this.textBoxSeparatorFormat.Text = this.resourceManager.GetString("SeparatorFormat");
+            this.textBoxSeparatorFormat.Text = LocalizedMessages.SeparatorFormat;
             // 
             // labelArtistFormat
             // 
@@ -78,7 +78,7 @@
             this.labelArtistFormat.Name = "labelArtistFormat";
             this.labelArtistFormat.Size = new System.Drawing.Size(254, 13);
             this.labelArtistFormat.TabIndex = 4;
-            this.labelArtistFormat.Text = this.resourceManager.GetString("SetArtistFormat");
+            this.labelArtistFormat.Text = LocalizedMessages.SetArtistFormat;
             // 
             // textBoxArtistFormat
             // 
@@ -86,7 +86,7 @@
             this.textBoxArtistFormat.Name = "textBoxArtistFormat";
             this.textBoxArtistFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxArtistFormat.TabIndex = 5;
-            this.textBoxArtistFormat.Text = this.resourceManager.GetString("ArtistFormat");
+            this.textBoxArtistFormat.Text = LocalizedMessages.ArtistFormat;
             // 
             // buttonDefaults
             // 
@@ -94,7 +94,7 @@
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(122, 23);
             this.buttonDefaults.TabIndex = 8;
-            this.buttonDefaults.Text = this.resourceManager.GetString("ButtonDefaults");
+            this.buttonDefaults.Text = LocalizedMessages.ButtonDefaults;
             this.buttonDefaults.UseVisualStyleBackColor = true;
             this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
             // 
@@ -104,7 +104,7 @@
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(122, 23);
             this.buttonSave.TabIndex = 9;
-            this.buttonSave.Text = this.resourceManager.GetString("ButtonSave");
+            this.buttonSave.Text = LocalizedMessages.ButtonSave;
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
@@ -114,7 +114,7 @@
             this.labelAlbumFormat.Name = "labelAlbumFormat";
             this.labelAlbumFormat.Size = new System.Drawing.Size(254, 13);
             this.labelAlbumFormat.TabIndex = 6;
-            this.labelAlbumFormat.Text = this.resourceManager.GetString("SetAlbumFormat");
+            this.labelAlbumFormat.Text = LocalizedMessages.SetAlbumFormat;
             // 
             // textBoxAlbumFormat
             // 
@@ -122,7 +122,7 @@
             this.textBoxAlbumFormat.Name = "textBoxAlbumFormat";
             this.textBoxAlbumFormat.Size = new System.Drawing.Size(254, 20);
             this.textBoxAlbumFormat.TabIndex = 7;
-            this.textBoxAlbumFormat.Text = this.resourceManager.GetString("AlbumFormat");
+            this.textBoxAlbumFormat.Text = LocalizedMessages.AlbumFormat;
             // 
             // OutputFormat
             // 
@@ -144,7 +144,7 @@
             this.MinimizeBox = false;
             this.Name = "OutputFormat";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = this.resourceManager.GetString("SetOutputFormat");
+            this.Text = LocalizedMessages.SetOutputFormat;
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -46,7 +46,7 @@ namespace Winter
             }
             catch (System.Runtime.InteropServices.COMException comException)
             {
-                MessageBox.Show(Globals.ResourceManager.GetString("iTunesException") + "\n\n" + comException.Message, Globals.ResourceManager.GetString("SnipForm"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LocalizedMessages.iTunesException + "\n\n" + comException.Message, LocalizedMessages.SnipForm, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -184,7 +184,7 @@ namespace Winter
                 this.SaveBlankImage();
             }
 
-            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+            TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
         }
 
         private void App_OnPlayerQuittingEvent()
@@ -197,8 +197,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
-                    Globals.ResourceManager.GetString("iTunes")));
+                    LocalizedMessages.PlayerIsNotRunning,
+                    LocalizedMessages.iTunes));
         }
     }
 }

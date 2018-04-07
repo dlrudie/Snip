@@ -23,7 +23,6 @@ namespace Winter
     using System;
     using System.Globalization;
     using System.Reflection;
-    using System.Resources;
     using System.Windows.Forms;
     using Microsoft.Win32;
 
@@ -33,8 +32,6 @@ namespace Winter
         private string separatorFormat;
         private string artistFormat;
         private string albumFormat;
-
-        private ResourceManager resourceManager = ResourceManager.CreateFileBasedResourceManager("Strings", Application.StartupPath + @"/Resources", null);
 
         public OutputFormat()
         {

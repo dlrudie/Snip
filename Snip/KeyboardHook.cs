@@ -99,7 +99,7 @@ namespace Winter
                             "application and will be skipped:\n\n{0}, {1}",
                             modifier.ToString("G"),
                             key.ToString()),
-                        Globals.ResourceManager.GetString("SnipForm"),
+                        LocalizedMessages.SnipForm,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                 }

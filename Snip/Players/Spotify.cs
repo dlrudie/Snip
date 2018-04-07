@@ -237,7 +237,7 @@ namespace Winter
             else
             {
                 // Let the user know that we're searching for SpotifyWebHelper.
-                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("LocatingSpotifyWebHelper"));
+                TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.LocatingSpotifyWebHelper);
 
                 this.DetectSpotifyWebHelperPort();
             }
@@ -690,7 +690,7 @@ namespace Winter
                     }
                 }
 
-                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
 
                 this.LastTitle = string.Empty;
 
@@ -717,8 +717,8 @@ namespace Winter
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Globals.ResourceManager.GetString("PlayerIsNotRunning"),
-                    Globals.ResourceManager.GetString("Spotify")));
+                    LocalizedMessages.PlayerIsNotRunning,
+                    LocalizedMessages.Spotify));
         }
 
         private static Uri SelectAlbumArtworkSizeToDownload(dynamic jsonSummary)

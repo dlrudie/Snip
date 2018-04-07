@@ -201,7 +201,7 @@ namespace Winter
                     }
                 }
 
-                TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
 
                 this.LastTitle = string.Empty;
 
