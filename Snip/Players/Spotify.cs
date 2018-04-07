@@ -272,8 +272,40 @@ namespace Winter
                             // Consider supporting Spotify and subscribing
                             this.ResetSnipSinceSpotifyIsNotPlaying();
                         }
+                        else if (trackType == "local")
+                        {
+                            string fullTrackId = jsonSummary.track.track_resource.uri.ToString();
+                            string trackId = fullTrackId.Substring(fullTrackId.LastIndexOf(':') + 1); // + 1 to not include :
+
+                            // Only update if the title has changed or the user updates how the output format should look
+                            if (trackId != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
+                            {
+                                Globals.RewriteUpdatedOutputFormat = false;
+
+                                string trackName = jsonSummary.track.track_resource.name.ToString();
+                                string artistName = jsonSummary.track.artist_resource.name.ToString();
+
+                                if (!string.IsNullOrEmpty(artistName))
+                                {
+                                    // If there is a valid ID3 tag the artist should be set
+                                    TextHandler.UpdateText(
+                                            trackName,
+                                            artistName);
+                                }
+                                else
+                                {
+                                    // If no ID3 tag exists then the track name defaults to the filename
+                                    TextHandler.UpdateText(trackName);
+                                }
+
+                                // Set the last title to the track id as these are unique values that only change when the track changes
+                                this.LastTitle = trackId;
+
+                                this.snipReset = false;
+                            }
+                        }
                         else
-                        { 
+                        {
                             string fullTrackId = jsonSummary.track.track_resource.uri.ToString();
                             string trackId = fullTrackId.Substring(fullTrackId.LastIndexOf(':') + 1); // + 1 to not include :
 
@@ -298,34 +330,38 @@ namespace Winter
                                         SpotifyAddressContactType.API);
                                 }
 
-                                jsonSummary = SimpleJson.DeserializeObject(json);
-
-                                // If there are multiple artists we want to join all of them together for display
-                                string artists = string.Empty;
-
-                                foreach (dynamic artist in jsonSummary.artists)
+                                // This shouldn't happen... but you never know.
+                                if (json != string.Empty)
                                 {
-                                    artists += artist.name.ToString() + ", ";
+                                    jsonSummary = SimpleJson.DeserializeObject(json);
+
+                                    // If there are multiple artists we want to join all of them together for display
+                                    string artists = string.Empty;
+
+                                    foreach (dynamic artist in jsonSummary.artists)
+                                    {
+                                        artists += artist.name.ToString() + ", ";
+                                    }
+
+                                    artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
+
+                                    TextHandler.UpdateText(
+                                        jsonSummary.name.ToString(),
+                                        artists,
+                                        jsonSummary.album.name.ToString(),
+                                        jsonSummary.id.ToString(),
+                                        jsonSummary.ToString());
+
+                                    if (Globals.SaveAlbumArtwork)
+                                    {
+                                        this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
+                                    }
+
+                                    // Set the last title to the track id as these are unique values that only change when the track changes
+                                    this.LastTitle = trackId;
+
+                                    this.snipReset = false;
                                 }
-
-                                artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
-
-                                TextHandler.UpdateText(
-                                    jsonSummary.name.ToString(),
-                                    artists,
-                                    jsonSummary.album.name.ToString(),
-                                    jsonSummary.id.ToString(),
-                                    jsonSummary.ToString());
-
-                                if (Globals.SaveAlbumArtwork)
-                                {
-                                    this.DownloadSpotifyAlbumArtwork(jsonSummary.album);
-                                }
-
-                                // Set the last title to the track id as these are unique values that only change when the track changes
-                                this.LastTitle = trackId;
-
-                                this.snipReset = false;
                             }
                         }
                     }
