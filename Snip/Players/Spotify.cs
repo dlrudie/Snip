@@ -414,7 +414,7 @@ namespace Winter
         {
             if (!this.spotifyWindowFound)
             {
-                this.Handle = UnsafeNativeMethods.FindWindow("SpotifyMainWindow", null);
+                this.Handle = UnsafeNativeMethods.FindWindow("Chrome_WidgetWin_0", null);
                 if (this.Handle != IntPtr.Zero && this.Handle != null)
                 {
                     this.spotifyWindowFound = true;
