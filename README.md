@@ -30,12 +30,13 @@ and `Snip_History.txt` (track history).
 
 SUPPORTED FEATURES FOR PLAYERS
 ------------------------------
-* **Spotify:** Artist, Track, Album, Artwork
-* **iTunes:** Artist, Track, Album, Artwork
+* **Spotify:** Artist, Track, Album, Artwork, Output Formatting
+* **iTunes:** Artist, Track, Album, Artwork, Output Formatting
 * **Winamp:** Artist, Track
 * **foobar2000:** Artist, Track
 * **VLC:** Nothing (It uses whatever the titlebar says)
-* **Google Play Music Desktop Player:** Artist, Track, Album, Artwork
+* **Google Play Music Desktop Player:** Artist, Track, Album, Artwork, Output
+    Formatting
 * **Quod Libet:** Nothing (It uses whatever the titlebar says)
 
 WINAMP
