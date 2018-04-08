@@ -171,8 +171,9 @@ namespace Winter
 
         private void Snip_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Empty file and save settings automatically when the form is being closed.
+            // Empty file, clear artwork and save settings automatically when the form is being closed.
             TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
+            Globals.CurrentPlayer.SaveBlankImage();
             Settings.Save();
         }
 
