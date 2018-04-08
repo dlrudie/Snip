@@ -216,20 +216,7 @@ namespace Winter
             this.toolStripMenuItemSaveAlbumArtwork.Checked = Globals.SaveAlbumArtwork;
             this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = Globals.KeepSpotifyAlbumArtwork;
 
-            switch (Globals.ArtworkResolution)
-            {
-                case Globals.AlbumArtworkResolution.Small:
-                    this.ToggleArtworkSmall();
-                    break;
-
-                case Globals.AlbumArtworkResolution.Medium:
-                    this.ToggleArtworkMedium();
-                    break;
-
-                case Globals.AlbumArtworkResolution.Large:
-                    this.ToggleArtworkLarge();
-                    break;
-            }
+            this.ToggleArtwork(Globals.ArtworkResolution);
 
             this.toolStripMenuItemCacheSpotifyMetadata.Checked = Globals.CacheSpotifyMetadata;
             this.toolStripMenuItemSaveHistory.Checked = Globals.SaveHistory;
@@ -549,43 +536,24 @@ namespace Winter
         {
             if (sender == this.toolStripMenuItemSmall)
             {
-                this.ToggleArtworkSmall();
+                this.ToggleArtwork(Globals.AlbumArtworkResolution.Small);
             }
             else if (sender == this.toolStripMenuItemMedium)
             {
-                this.ToggleArtworkMedium();
+                this.ToggleArtwork(Globals.AlbumArtworkResolution.Medium);
             }
             else if (sender == this.toolStripMenuItemLarge)
             {
-                this.ToggleArtworkLarge();
+                this.ToggleArtwork(Globals.AlbumArtworkResolution.Large);
             }
         }
 
-        private void ToggleArtworkSmall()
+        private void ToggleArtwork(Globals.AlbumArtworkResolution artworkResolution)
         {
-            this.toolStripMenuItemSmall.Checked = true;
-            this.toolStripMenuItemMedium.Checked = false;
-            this.toolStripMenuItemLarge.Checked = false;
-
-            Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Small;
-        }
-
-        private void ToggleArtworkMedium()
-        {
-            this.toolStripMenuItemSmall.Checked = false;
-            this.toolStripMenuItemMedium.Checked = true;
-            this.toolStripMenuItemLarge.Checked = false;
-
-            Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Medium;
-        }
-
-        private void ToggleArtworkLarge()
-        {
-            this.toolStripMenuItemSmall.Checked = false;
-            this.toolStripMenuItemMedium.Checked = false;
-            this.toolStripMenuItemLarge.Checked = true;
-
-            Globals.ArtworkResolution = Globals.AlbumArtworkResolution.Large;
+            this.toolStripMenuItemSmall.Checked  = artworkResolution == Globals.AlbumArtworkResolution.Small;
+            this.toolStripMenuItemMedium.Checked = artworkResolution == Globals.AlbumArtworkResolution.Medium;
+            this.toolStripMenuItemLarge.Checked  = artworkResolution == Globals.AlbumArtworkResolution.Large;
+            Globals.ArtworkResolution = artworkResolution;
         }
 
         private void ToolStripMenuItemEmptyFileIfNoTrackPlaying_Click(object sender, EventArgs e)
