@@ -181,36 +181,7 @@ namespace Winter
         {
             Settings.Load();
 
-            switch (Globals.PlayerSelection)
-            {
-                case Globals.MediaPlayerSelection.Spotify:
-                    this.ToggleSpotify();
-                    break;
-
-                case Globals.MediaPlayerSelection.iTunes:
-                    this.ToggleiTunes();
-                    break;
-
-                case Globals.MediaPlayerSelection.Winamp:
-                    this.ToggleWinamp();
-                    break;
-
-                case Globals.MediaPlayerSelection.foobar2000:
-                    this.Togglefoobar2000();
-                    break;
-
-                case Globals.MediaPlayerSelection.VLC:
-                    this.ToggleVLC();
-                    break;
-
-                case Globals.MediaPlayerSelection.GPMDP:
-                    this.ToggleGPMDP();
-                    break;
-
-                case Globals.MediaPlayerSelection.QuodLibet:
-                    this.ToggleQuodLibet();
-                    break;
-            }
+            this.TogglePlayer(Globals.PlayerSelection);
 
             this.toolStripMenuItemSaveSeparateFiles.Checked = Globals.SaveSeparateFiles;
             this.toolStripMenuItemSaveAlbumArtwork.Checked = Globals.SaveAlbumArtwork;
@@ -258,186 +229,89 @@ namespace Winter
         {
             if (sender == this.toolStripMenuItemSpotify)
             {
-                this.ToggleSpotify();
+                this.TogglePlayer(Globals.MediaPlayerSelection.Spotify);
             }
             else if (sender == this.toolStripMenuItemItunes)
             {
-                this.ToggleiTunes();
+                this.TogglePlayer(Globals.MediaPlayerSelection.iTunes);
             }
             else if (sender == this.toolStripMenuItemWinamp)
             {
-                this.ToggleWinamp();
+                this.TogglePlayer(Globals.MediaPlayerSelection.Winamp);
             }
             else if (sender == this.toolStripMenuItemFoobar2000)
             {
-                this.Togglefoobar2000();
+                this.TogglePlayer(Globals.MediaPlayerSelection.foobar2000);
             }
             else if (sender == this.toolStripMenuItemVlc)
             {
-                this.ToggleVLC();
+                this.TogglePlayer(Globals.MediaPlayerSelection.VLC);
             }
             else if (sender == this.toolStripMenuItemGPMDP)
             {
-                this.ToggleGPMDP();
+                this.TogglePlayer(Globals.MediaPlayerSelection.GPMDP);
             }
             else if (sender == this.toolStripMenuItemQuodLibet)
             {
-                this.ToggleQuodLibet();
+                this.TogglePlayer(Globals.MediaPlayerSelection.QuodLibet);
             }
         }
 
-        private void ToggleSpotify()
+        private void TogglePlayer(Globals.MediaPlayerSelection player)
         {
-            this.toolStripMenuItemSpotify.Checked = true;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
+            this.toolStripMenuItemSpotify.Checked    = player == Globals.MediaPlayerSelection.Spotify;
+            this.toolStripMenuItemItunes.Checked     = player == Globals.MediaPlayerSelection.iTunes;
+            this.toolStripMenuItemWinamp.Checked     = player == Globals.MediaPlayerSelection.Winamp;
+            this.toolStripMenuItemFoobar2000.Checked = player == Globals.MediaPlayerSelection.foobar2000;
+            this.toolStripMenuItemVlc.Checked        = player == Globals.MediaPlayerSelection.VLC;
+            this.toolStripMenuItemGPMDP.Checked      = player == Globals.MediaPlayerSelection.GPMDP;
+            this.toolStripMenuItemQuodLibet.Checked  = player == Globals.MediaPlayerSelection.QuodLibet;
 
             Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new Spotify();
+            string playerName = string.Empty;
+
+            switch (player)
+            {
+                case Globals.MediaPlayerSelection.Spotify:
+                    Globals.CurrentPlayer = new Spotify();
+                    playerName = LocalizedMessages.Spotify;
+                    break;
+                case Globals.MediaPlayerSelection.iTunes:
+                    Globals.CurrentPlayer = new iTunes();
+                    playerName = LocalizedMessages.iTunes;
+                    break;
+                case Globals.MediaPlayerSelection.Winamp:
+                    Globals.CurrentPlayer = new Winamp();
+                    playerName = LocalizedMessages.Winamp;
+                    break;
+                case Globals.MediaPlayerSelection.foobar2000:
+                    Globals.CurrentPlayer = new foobar2000();
+                    playerName = LocalizedMessages.foobar2000;
+                    break;
+                case Globals.MediaPlayerSelection.VLC:
+                    Globals.CurrentPlayer = new VLC();
+                    playerName = LocalizedMessages.VLC;
+                    break;
+                case Globals.MediaPlayerSelection.GPMDP:
+                    Globals.CurrentPlayer = new GPMDP();
+                    playerName = LocalizedMessages.GPMDP;
+                    break;
+                case Globals.MediaPlayerSelection.QuodLibet:
+                    Globals.CurrentPlayer = new QuodLibet();
+                    playerName = LocalizedMessages.QuodLibet;
+                    break;
+                default:
+                    break;
+            }
+
             Globals.CurrentPlayer.Load();
 
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.Spotify;
+            Globals.PlayerSelection = player;
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.Spotify));
-        }
-
-        private void ToggleiTunes()
-        {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = true;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new iTunes();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.iTunes;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.iTunes));
-        }
-
-        private void ToggleWinamp()
-        {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = true;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new Winamp();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.Winamp;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.Winamp));
-        }
-
-        private void Togglefoobar2000()
-        {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = true;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new foobar2000();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.foobar2000;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.foobar2000));
-        }
-
-        private void ToggleVLC()
-        {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = true;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new VLC();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.VLC;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.VLC));
-        }
-
-        private void ToggleGPMDP()
-        {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = true;
-            this.toolStripMenuItemQuodLibet.Checked = false;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new GPMDP();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.GPMDP;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.GPMDP));
-        }
-
-        private void ToggleQuodLibet()
-        {
-            this.toolStripMenuItemSpotify.Checked = false;
-            this.toolStripMenuItemItunes.Checked = false;
-            this.toolStripMenuItemWinamp.Checked = false;
-            this.toolStripMenuItemFoobar2000.Checked = false;
-            this.toolStripMenuItemVlc.Checked = false;
-            this.toolStripMenuItemGPMDP.Checked = false;
-            this.toolStripMenuItemQuodLibet.Checked = true;
-
-            Globals.CurrentPlayer.Unload();
-            Globals.CurrentPlayer = new QuodLibet();
-            Globals.CurrentPlayer.Load();
-
-            Globals.PlayerSelection = Globals.MediaPlayerSelection.QuodLibet;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    LocalizedMessages.QuodLibet));
+                    playerName));
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
