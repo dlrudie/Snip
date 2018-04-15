@@ -454,84 +454,42 @@ namespace Winter
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemSaveSeparateFiles.Checked)
-            {
-                this.toolStripMenuItemSaveSeparateFiles.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemSaveSeparateFiles.Checked = true;
-            }
+            this.toolStripMenuItemSaveSeparateFiles.Checked = !this.toolStripMenuItemSaveSeparateFiles.Checked;
 
             Globals.SaveSeparateFiles = this.toolStripMenuItemSaveSeparateFiles.Checked;
         }
 
         private void ToolStripMenuItemSaveAlbumArtwork_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemSaveAlbumArtwork.Checked)
-            {
-                this.toolStripMenuItemSaveAlbumArtwork.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemSaveAlbumArtwork.Checked = true;
-            }
+            this.toolStripMenuItemSaveAlbumArtwork.Checked = !this.toolStripMenuItemSaveAlbumArtwork.Checked;
 
             Globals.SaveAlbumArtwork = this.toolStripMenuItemSaveAlbumArtwork.Checked;
         }
 
         private void ToolStripMenuItemKeepSpotifyAlbumArtwork_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked)
-            {
-                this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = true;
-            }
+            this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked = !this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked;
 
             Globals.KeepSpotifyAlbumArtwork = this.toolStripMenuItemKeepSpotifyAlbumArtwork.Checked;
         }
 
         private void ToolStripMenuItemCacheSpotifyMetadata_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemCacheSpotifyMetadata.Checked)
-            {
-                this.toolStripMenuItemCacheSpotifyMetadata.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemCacheSpotifyMetadata.Checked = true;
-            }
+            this.toolStripMenuItemCacheSpotifyMetadata.Checked = !this.toolStripMenuItemCacheSpotifyMetadata.Checked;
 
             Globals.CacheSpotifyMetadata = this.toolStripMenuItemCacheSpotifyMetadata.Checked;
         }
 
         private void ToolStripMenuItemSaveHistory_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemSaveHistory.Checked)
-            {
-                this.toolStripMenuItemSaveHistory.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemSaveHistory.Checked = true;
-            }
+            this.toolStripMenuItemSaveHistory.Checked = !this.toolStripMenuItemSaveHistory.Checked;
 
             Globals.SaveHistory = this.toolStripMenuItemSaveHistory.Checked;
         }
 
         private void ToolStripMenuItemDisplayTrackPopup_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemDisplayTrackPopup.Checked)
-            {
-                this.toolStripMenuItemDisplayTrackPopup.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemDisplayTrackPopup.Checked = true;
-            }
+            this.toolStripMenuItemDisplayTrackPopup.Checked = !this.toolStripMenuItemDisplayTrackPopup.Checked;
 
             Globals.DisplayTrackPopup = this.toolStripMenuItemDisplayTrackPopup.Checked;
         }
@@ -637,30 +595,15 @@ namespace Winter
 
         private void ToolStripMenuItemEmptyFileIfNoTrackPlaying_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked)
-            {
-                this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = false;
-            }
-            else
-            {
-                this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = true;
-            }
+            this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked = !this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked;
 
             Globals.EmptyFileIfNoTrackPlaying = this.toolStripMenuItemEmptyFileIfNoTrackPlaying.Checked;
         }
 
         private void ToolStripMenuItemEnableHotkeys_Click(object sender, EventArgs e)
         {
-            if (this.toolStripMenuItemEnableHotkeys.Checked)
-            {
-                this.toolStripMenuItemEnableHotkeys.Checked = false;
-                this.ToggleHotkeys();
-            }
-            else
-            {
-                this.toolStripMenuItemEnableHotkeys.Checked = true;
-                this.ToggleHotkeys();
-            }
+            this.toolStripMenuItemEnableHotkeys.Checked = !this.toolStripMenuItemEnableHotkeys.Checked;
+            this.ToggleHotkeys();
 
             Globals.EnableHotkeys = this.toolStripMenuItemEnableHotkeys.Checked;
         }
