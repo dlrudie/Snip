@@ -37,7 +37,6 @@ namespace Winter
     {
         #region Fields
 
-        private Timer updateOAuthTokenTimer;
         private Timer updateAuthorizationTokenTimer;
         private Timer updateSpotifyTrackTimer;
 
@@ -91,7 +90,6 @@ namespace Winter
             }
             this.authorizationToken = string.Empty;
             this.authorizationTokenExpiration = 0;
-            this.updateOAuthTokenTimer.Stop();
             this.updateAuthorizationTokenTimer.Stop();
             this.updateSpotifyTrackTimer.Stop();
             this.Handle = IntPtr.Zero;
@@ -111,12 +109,6 @@ namespace Winter
             {
                 this.updateAuthorizationTokenTimer.Dispose();
                 this.updateAuthorizationTokenTimer = null;
-            }
-
-            if (this.updateOAuthTokenTimer != null)
-            {
-                this.updateOAuthTokenTimer.Dispose();
-                this.updateOAuthTokenTimer = null;
             }
         }
 
