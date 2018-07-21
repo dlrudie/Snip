@@ -100,17 +100,16 @@ namespace Winter
             
             // This is the main timer that will gather all of the information from Spotify
             // Set to a second so it updates frequently but not ridiculously
-            this.updateSpotifyTrackTimer = new Timer(1000);
-            this.updateSpotifyTrackTimer.Elapsed += this.UpdateSpotifyTrackTimer_Elapsed;
-            this.updateSpotifyTrackTimer.AutoReset = true;
-            this.updateSpotifyTrackTimer.Enabled = true;
+            this.contactSpotifyLocalServerTimer= new Timer(1000);
+            this.contactSpotifyLocalServerTimer.Elapsed += this.ContactSpotifyLocalServerTimer_Elapsed;
+            this.contactSpotifyLocalServerTimer.AutoReset = true;
+            this.contactSpotifyLocalServerTimer.Enabled = true;
         }
 
         public override void Unload()
         {
             base.Unload();
             this.snipReset = false;
-            this.spotifyWindowFound = false;
             this.authorizationToken = string.Empty;
             this.authorizationTokenExpiration = 0;
             this.spotifyPort = 0;
