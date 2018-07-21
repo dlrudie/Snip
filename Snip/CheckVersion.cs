@@ -65,6 +65,8 @@ namespace Winter
         {
             using (WebClient webClient = new WebClient())
             {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 try
                 {
                     webClient.Encoding = System.Text.Encoding.UTF8;
