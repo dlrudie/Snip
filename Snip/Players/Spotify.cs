@@ -28,11 +28,11 @@ namespace Winter
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Net;
     using System.Text;
-    using System.Threading;
     using System.Timers;
     using System.Windows.Forms;
     using SimpleJson;
@@ -44,14 +44,18 @@ namespace Winter
         #region Fields
 
         private Timer updateOAuthTokenTimer;
-        private Timer updateCSRFTokenTimer;
         private Timer updateAuthorizationTokenTimer;
         private Timer contactSpotifyLocalServerTimer;
         
         private string authorizationToken = string.Empty;
         private double authorizationTokenExpiration = 0;
 
-        private bool spotifyWindowFound = false;
+        private string exeName = "spotify";
+        private string moduleName = "chrome_elf.dll";
+        private int processId = 0;
+        private int processIdLast = 0;
+        private int moduleBaseAddress = 0;
+        private int moduleLength = 0;
 
         private bool snipReset = false;
 
@@ -96,10 +100,10 @@ namespace Winter
             
             // This is the main timer that will gather all of the information from Spotify
             // Set to a second so it updates frequently but not ridiculously
-            this.contactSpotifyLocalServerTimer = new Timer(1000);
-            this.contactSpotifyLocalServerTimer.Elapsed += this.ContactSpotifyLocalServerTimer_Elapsed;
-            this.contactSpotifyLocalServerTimer.AutoReset = true;
-            this.contactSpotifyLocalServerTimer.Enabled = true;
+            this.updateSpotifyTrackTimer = new Timer(1000);
+            this.updateSpotifyTrackTimer.Elapsed += this.UpdateSpotifyTrackTimer_Elapsed;
+            this.updateSpotifyTrackTimer.AutoReset = true;
+            this.updateSpotifyTrackTimer.Enabled = true;
         }
 
         public override void Unload()
@@ -231,14 +235,6 @@ namespace Winter
                             jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", ApplicationKeys.Spotify));
                             break;
 
-                        case SpotifyAddressContactType.CSRF:
-                            jsonWebClient.Headers.Add("Origin", "https://open.spotify.com");
-                            break;
-
-                        case SpotifyAddressContactType.Status:
-                            jsonWebClient.Headers.Add("Origin", "https://open.spotify.com");
-                            break;
-
                         case SpotifyAddressContactType.API:
                             jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Bearer {0}", this.authorizationToken));
                             break;
@@ -295,32 +291,6 @@ namespace Winter
 
         private void ResetSnipSinceSpotifyIsNotPlaying()
         {
-            if (!this.snipReset)
-            {
-                // Prevent writing a blank image if we already did
-                if (!this.SavedBlankImage)
-                {
-                    if (Globals.SaveAlbumArtwork)
-                    {
-                        this.SaveBlankImage();
-                    }
-                }
-
-                TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
-
-                this.LastTitle = string.Empty;
-
-                this.snipReset = true;
-            }
-        }
-
-        private void ResetSnipSinceSpotifyIsNotRunning()
-        {
-            if (this.spotifyWindowFound)
-            {
-                this.spotifyWindowFound = false;
-            }
-
             // Prevent writing a blank image if we already did
             if (!this.SavedBlankImage)
             {
@@ -329,6 +299,27 @@ namespace Winter
                     this.SaveBlankImage();
                 }
             }
+
+            TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
+
+            this.LastTitle = string.Empty;
+        }
+
+        private void ResetSnipSinceSpotifyIsNotRunning()
+        {
+            // Prevent writing a blank image if we already did
+            if (!this.SavedBlankImage)
+            {
+                if (Globals.SaveAlbumArtwork)
+                {
+                    this.SaveBlankImage();
+                }
+            }
+
+            this.Handle = IntPtr.Zero;
+            this.processId = 0;
+            this.moduleBaseAddress = 0;
+            this.moduleLength = 0;
 
             TextHandler.UpdateTextAndEmptyFilesMaybe(
                 string.Format(
@@ -410,8 +401,6 @@ namespace Winter
         private enum SpotifyAddressContactType
         {
             Authorization,
-            CSRF,
-            Status,
             API,
             Default
         }

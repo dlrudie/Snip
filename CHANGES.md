@@ -1,5 +1,16 @@
 CHANGES
 =======
+**v6.10.0 (2018-Jul-21):**
+* When enabling save separate files Snip will now save Spotify metadata to
+    Snip_Metadata.json.
+* #255 <https://github.com/dlrudie/Snip/issues/255> Fixed Spotify hotkeys.
+* Cleaned up localization code internally.
+* #199 <https://github.com/dlrudie/Snip/issues/199> Snip can now be run
+    multiple times. I'm not sure how this will work but have at it.
+* Changed Spotify back to AnyCPU from 64-bit.
+* #299 <https://github.com/dlrudie/Snip/issues/299> Fixes Spotify not
+    working since Spotify shut down their desktop API.
+
 **v6.9.5 (2018-Apr-01):**
 * Updated copyright to 2018.
 * Renamed quodlibet to Quod Libet.

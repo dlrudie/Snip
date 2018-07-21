@@ -32,31 +32,31 @@ namespace Winter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            bool isNewProcess = false;
+            //bool isNewProcess = false;
 
-            Mutex mutex = null;
+            //Mutex mutex = null;
 
-            try
-            {
-                mutex = new Mutex(true, Application.ProductName, out isNewProcess);
+            //try
+            //{
+                //mutex = new Mutex(true, Application.ProductName, out isNewProcess);
 
-                if (isNewProcess)
-                {
+                //if (isNewProcess)
+                //{
                     Application.Run(new Snip());
-                    mutex.ReleaseMutex();
-                }
-                // else
-                // {
-                //     MessageBox.Show("Another instance of " + Application.ProductName + " is already running.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // }
-            }
-            finally
-            {
-                if (mutex != null)
-                {
-                    mutex.Close();
-                }
-            }
+                    //mutex.ReleaseMutex();
+                //}
+                //// else
+                //// {
+                ////     MessageBox.Show("Another instance of " + Application.ProductName + " is already running.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //// }
+            //}
+            //finally
+            //{
+                //if (mutex != null)
+                //{
+                    //mutex.Close();
+                //}
+            //}
         }
     }
 }
