@@ -116,6 +116,15 @@ Note
 Not all hotkeys work between Spotify, iTunes, Winamp, foobar2000, VLC, and
 Google Play Music Desktop Player.
 
+Contribute
+==========
+
+Requirements
+------------
+
+* Mircosoft Visual Studio 2017 / Jetbrains Rider
+* iTunes installed
+
 DONATIONS
 =========
 Snip is free; however, I've received a lot of requests from people wishing
