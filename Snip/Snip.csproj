@@ -113,6 +113,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiHelper.cs" />
     <Compile Include="ApplicationKeys.cs" />
     <Compile Include="AssemblyInformation.cs" />
     <Compile Include="CheckVersion.cs" />
@@ -134,6 +135,8 @@
     <Compile Include="Players\VLC.cs" />
     <Compile Include="Players\Winamp.cs" />
     <Compile Include="Players\QuodLibet.cs" />
+    <Compile Include="ProcessFunctions.cs" />
+    <Compile Include="ProcessMemoryChunk.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
