@@ -1,6 +1,11 @@
 CHANGES
 =======
-**v6.10.0 (2018-Jul-22):**
+**v6.10.1 (2018-Jul-22):**
+* #304 <https://github.com/dlrudie/Snip/issues/299> Snip will now require
+    administrator access upon launching.
+* Fixed version update checking not working.
+
+**v6.10.0 (2018-Jul-21):**
 * When enabling save separate files Snip will now save Spotify metadata to
     Snip_Metadata.json.
 * #255 <https://github.com/dlrudie/Snip/issues/255> Fixed Spotify hotkeys.
@@ -10,9 +15,6 @@ CHANGES
 * Changed Spotify back to AnyCPU from 64-bit.
 * #299 <https://github.com/dlrudie/Snip/issues/299> Fixes Spotify not
     working since Spotify shut down their desktop API.
-* #304 <https://github.com/dlrudie/Snip/issues/299> Snip will now require
-    administrator access upon launching.
-* Fixed version update checking not working.
 
 **v6.9.5 (2018-Apr-01):**
 * Updated copyright to 2018.
