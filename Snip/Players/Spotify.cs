@@ -48,9 +48,7 @@ namespace Winter
         
         private string authorizationToken = string.Empty;
         private double authorizationTokenExpiration = 0;
-
-        private string exeName = "spotify";
-        private string moduleName = "chrome_elf.dll";
+        
         private int processId = 0;
         private int processIdLast = 0;
         private int moduleBaseAddress = 0;
@@ -141,24 +139,25 @@ namespace Winter
                     if (fullTrackId != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                     {
                         Globals.RewriteUpdatedOutputFormat = false;
-                            // If there are multiple artists we want to join all of them together for display
-                            var artists = string.Join(", ", trackInformation.Item.Artists.Select(x => x.Name));
+                        
+                        // If there are multiple artists we want to join all of them together for display
+                        var artists = string.Join(", ", trackInformation.Item.Artists.Select(x => x.Name));
 
-                            TextHandler.UpdateText(
-                                trackInformation.Item.Name,
-                                artists,
-                                trackInformation.Item.Album.Name,
-                                trackInformation.Item.Id);
+                        TextHandler.UpdateText(
+                            trackInformation.Item.Name,
+                            artists,
+                            trackInformation.Item.Album.Name,
+                            trackInformation.Item.Id);
 
-                            if (Globals.SaveAlbumArtwork)
-                            {
-                                this.DownloadSpotifyAlbumArtwork(trackInformation.Item.Album);
-                            }
+                        if (Globals.SaveAlbumArtwork)
+                        {
+                            this.DownloadSpotifyAlbumArtwork(trackInformation.Item.Album);
+                        }
 
-                            // Set the last title to the track id as these are unique values that only change when the track changes
-                            this.LastTitle = trackInformation.Item.Id;
+                        // Set the last title to the track id as these are unique values that only change when the track changes
+                        this.LastTitle = trackInformation.Item.Id;
 
-                            this.snipReset = false;
+                        this.snipReset = false;
                     }
                 }
             }
@@ -209,65 +208,6 @@ namespace Winter
                     {
                         this.SaveBlankImage();
                     }
-                }
-            }
-        }
-
-        private string DownloadJson(string jsonAddress, SpotifyAddressContactType spotifyAddressContactType)
-        {
-            using (WebClientWithShortTimeout jsonWebClient = new WebClientWithShortTimeout())
-            {
-                try
-                {
-                    // Authorization uses POST instead of GET
-                    bool usePostMethodInsteadOfGet = false;
-                    string postParameters = string.Empty;
-
-                    // Modify HTTP headers based on what's being contacted
-                    switch (spotifyAddressContactType)
-                    {
-                        case SpotifyAddressContactType.Authorization:
-                            usePostMethodInsteadOfGet = true;
-                            postParameters = "grant_type=client_credentials";
-                            jsonWebClient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                            jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", ApplicationKeys.Spotify));
-                            break;
-
-                        case SpotifyAddressContactType.API:
-                            jsonWebClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Bearer {0}", this.authorizationToken));
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    // Let's be respectful and identify ourself
-                    jsonWebClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
-
-                    jsonWebClient.Encoding = Encoding.UTF8;
-
-                    string downloadedJson = string.Empty;
-                    if (usePostMethodInsteadOfGet)
-                    {
-                        downloadedJson = jsonWebClient.UploadString(jsonAddress, "POST", postParameters);
-                    }
-                    else
-                    {
-                        downloadedJson = jsonWebClient.DownloadString(jsonAddress);
-                    }
-
-                    if (!string.IsNullOrEmpty(downloadedJson))
-                    {
-                        return downloadedJson;
-                    }
-                    else
-                    {
-                        return string.Empty;
-                    }
-                }
-                catch (WebException)
-                {
-                    return string.Empty;
                 }
             }
         }
