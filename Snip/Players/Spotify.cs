@@ -43,7 +43,6 @@ namespace Winter
     {
         #region Fields
 
-        private Timer updateOAuthTokenTimer;
         private Timer updateAuthorizationTokenTimer;
         private Timer contactSpotifyLocalServerTimer;
         

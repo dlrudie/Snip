@@ -1,5 +1,10 @@
 CHANGES
 =======
+**v6.10.1 (2018-Jul-22):**
+* #304 <https://github.com/dlrudie/Snip/issues/299> Snip will now require
+    administrator access upon launching.
+* Fixed version update checking not working.
+
 **v6.10.0 (2018-Jul-21):**
 * When enabling save separate files Snip will now save Spotify metadata to
     Snip_Metadata.json.
