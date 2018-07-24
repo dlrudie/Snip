@@ -166,8 +166,6 @@ namespace Winter
                 // 14 is the offset where the trackId begins, trackId is 22 chars long
                 trackIdInBytes = ProcessFunctions.ReadMemory(this.Handle, (IntPtr)addressOfTrackId + 14, 22);
 
-                string trackId = Encoding.Default.GetString(trackIdInBytes);
-
                 if (windowTitle == "Spotify")
                 {
                     // Because we search for this first there's a brief moment on startup where it may display
@@ -176,6 +174,8 @@ namespace Winter
                 }
                 else
                 {
+                    string trackId = Encoding.Default.GetString(trackIdInBytes);
+
                     // Only update if the title has changed or the user updates how the output format should look
                     if (trackId != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                     {
@@ -237,7 +237,7 @@ namespace Winter
             if (this.processId <= 0 || this.processId != this.processIdLast)
             {
                 int someOtherProcessId = ProcessFunctions.GetProcessId(this.exeName);
-                this.processId = ProcessFunctions.GetParentProcessId(someOtherProcessId);
+                this.processId = ProcessFunctions.GetParentProcessId(someOtherProcessId, this.exeName);
 
                 if (this.processId > 0)
                 {

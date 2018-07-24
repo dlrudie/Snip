@@ -52,7 +52,7 @@ namespace Winter
         }
 
         // https://www.rhyous.com/2010/04/30/how-to-get-the-parent-process-that-launched-a-c-application/
-        public static int GetParentProcessId(int processId)
+        public static int GetParentProcessId(int processId, string exeName)
         {
             int parentProcessId = 0;
 
@@ -78,7 +78,13 @@ namespace Winter
                 {
                     if (processId == oProcInfo.ProcessId)
                     {
-                        parentProcessId = (int)oProcInfo.ParentProcessId;
+                        Process parentProcess = Process.GetProcessById((int)oProcInfo.ParentProcessId);
+
+                        if (parentProcess.ProcessName.Equals(exeName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            parentProcessId = (int)oProcInfo.ParentProcessId;
+                        }
+                        
                     }
                 }
                 while (parentProcessId == 0 && UnsafeNativeMethods.Process32Next(oHnd, ref oProcInfo));
