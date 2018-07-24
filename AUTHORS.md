@@ -58,3 +58,4 @@ Contributors
 * David (GenesisFR)
   * Determine if Spotify is playing an ad and empty files
   * Empty Snip.txt on exit
+  * Refactored Settings.cs and Snip.cs
