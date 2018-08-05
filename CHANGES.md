@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v6.10.2 (2018-Jul-24):**
+* Merged pull request #267 from GenesisFR, which refactors a lot of code and
+    clears out artwork when Snip is exited.
+* #306 <https://github.com/dlrudie/Snip/issues/306> Snip now checks the
+    parent process to make sure it's actually Spotify.
+
 **v6.10.1 (2018-Jul-22):**
 * #304 <https://github.com/dlrudie/Snip/issues/299> Snip will now require
     administrator access upon launching.
