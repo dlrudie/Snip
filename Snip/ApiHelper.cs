@@ -23,6 +23,7 @@ namespace ManagedWindowsFunctions
     using System;
     using System.ComponentModel;
     using System.Runtime.InteropServices;
+    using static Winter.UnsafeNativeMethods;
 
     /// <summary>
     /// Helper class that contains static methods useful for API programming. This
@@ -62,6 +63,26 @@ namespace ManagedWindowsFunctions
             }
 
             return returnValue;
+        }
+
+        /// <summary>
+        /// Retrieves a list of windows associated with a process.
+        /// </summary>
+        /// <param name="process">The process ID.</param>
+        /// <returns>An IntPtr list for a process.</returns>
+        public static IntPtr[] GetProcessWindows(int process)
+        {
+            IntPtr[] apRet = new IntPtr[256];
+            int iCount = 0;
+            IntPtr pLast = IntPtr.Zero;
+            do
+            {
+                pLast = FindWindowEx(IntPtr.Zero, pLast, null, null);
+                GetWindowThreadProcessId(pLast, out int iProcess);
+                if (iProcess == process) apRet[iCount++] = pLast;
+            } while (pLast != IntPtr.Zero);
+            Array.Resize(ref apRet, iCount);
+            return apRet;
         }
     }
 }

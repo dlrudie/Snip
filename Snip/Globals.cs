@@ -95,7 +95,8 @@ namespace Winter
             VLC = 4,
             GPMDP = 5,
             QuodLibet = 6,
-            WindowsMediaPlayer = 7
+            WindowsMediaPlayer = 7,
+            YouTube = 8
         }
 
         public enum MediaCommand : int

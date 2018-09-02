@@ -18,6 +18,8 @@
  */
 #endregion
 
+using Winter.Players;
+
 namespace Winter
 {
     using System;
@@ -93,6 +95,7 @@ namespace Winter
             LocalizedMessages.VLC = Globals.ResourceManager.GetString("VLC");
             LocalizedMessages.GPMDP = Globals.ResourceManager.GetString("GPMDP");
             LocalizedMessages.QuodLibet = Globals.ResourceManager.GetString("QuodLibet");
+            LocalizedMessages.YouTube = Globals.ResourceManager.GetString("YouTube");
             LocalizedMessages.WindowsMediaPlayer = Globals.ResourceManager.GetString("WindowsMediaPlayer");
             LocalizedMessages.SwitchedToPlayer = Globals.ResourceManager.GetString("SwitchedToPlayer");
             LocalizedMessages.PlayerIsNotRunning = Globals.ResourceManager.GetString("PlayerIsNotRunning");
@@ -255,6 +258,10 @@ namespace Winter
             {
                 this.TogglePlayer(Globals.MediaPlayerSelection.QuodLibet);
             }
+            else if (sender == this.toolStripMenuItemYouTube)
+            {
+                this.TogglePlayer(Globals.MediaPlayerSelection.YouTube);
+            }
         }
 
         private void TogglePlayer(Globals.MediaPlayerSelection player)
@@ -266,6 +273,7 @@ namespace Winter
             this.toolStripMenuItemVlc.Checked        = player == Globals.MediaPlayerSelection.VLC;
             this.toolStripMenuItemGPMDP.Checked      = player == Globals.MediaPlayerSelection.GPMDP;
             this.toolStripMenuItemQuodLibet.Checked  = player == Globals.MediaPlayerSelection.QuodLibet;
+            this.toolStripMenuItemYouTube.Checked    = player == Globals.MediaPlayerSelection.YouTube;
 
             Globals.CurrentPlayer.Unload();
             string playerName = string.Empty;
@@ -276,10 +284,10 @@ namespace Winter
                     Globals.CurrentPlayer = new Spotify();
                     playerName = LocalizedMessages.Spotify;
                     break;
-                case Globals.MediaPlayerSelection.iTunes:
-                    Globals.CurrentPlayer = new iTunes();
-                    playerName = LocalizedMessages.iTunes;
-                    break;
+                //case Globals.MediaPlayerSelection.iTunes:
+                //    Globals.CurrentPlayer = new iTunes();
+                //    playerName = LocalizedMessages.iTunes;
+                //    break;
                 case Globals.MediaPlayerSelection.Winamp:
                     Globals.CurrentPlayer = new Winamp();
                     playerName = LocalizedMessages.Winamp;
@@ -299,6 +307,10 @@ namespace Winter
                 case Globals.MediaPlayerSelection.QuodLibet:
                     Globals.CurrentPlayer = new QuodLibet();
                     playerName = LocalizedMessages.QuodLibet;
+                    break;
+                case Globals.MediaPlayerSelection.YouTube:
+                    Globals.CurrentPlayer = new YouTube();
+                    playerName = LocalizedMessages.YouTube;
                     break;
                 default:
                     break;

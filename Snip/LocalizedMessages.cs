@@ -30,6 +30,7 @@ namespace Winter
         public static string foobar2000 { get; set; }
         public static string VLC { get; set; }
         public static string GPMDP { get; set; }
+        public static string YouTube { get; set; }
         public static string QuodLibet { get; set; }
         public static string WindowsMediaPlayer { get; set; }
         public static string SwitchedToPlayer { get; set; }

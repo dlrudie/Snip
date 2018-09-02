@@ -75,6 +75,18 @@ namespace Winter
             [In] IntPtr wParam,
             [In] IntPtr lParam);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindowEx(
+            [In] IntPtr parentWindow,
+            [In] IntPtr previousChildWindow,
+            [In] string windowClass,
+            [In] string windowTitle);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr GetWindowThreadProcessId(
+            [In] IntPtr window,
+            [Out] out int process);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool IsWow64Process(
@@ -124,5 +136,7 @@ namespace Winter
             [Out] byte[] buffer,
             [In] IntPtr size,
             [Out] IntPtr bytesRead);
+
+
     }
 }

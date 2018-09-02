@@ -20,6 +20,7 @@ VLC=VLC
 GPMDP=GPMDP
 QuodLibet=Quod Libet
 WindowsMediaPlayer=Windows Media Player
+YouTube=YouTube
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.

@@ -13,6 +13,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVlc;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGPMDP;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemQuodLibet;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemYouTube;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -75,6 +76,7 @@
             this.toolStripMenuItemVlc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGPMDP = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemQuodLibet = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemYouTube = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -113,6 +115,7 @@
             this.toolStripMenuItemVlc,
             this.toolStripMenuItemGPMDP,
             this.toolStripMenuItemQuodLibet,
+            this.toolStripMenuItemYouTube,
             this.toolStripSeparator1,
             this.toolStripMenuItemSetFormat,
             this.toolStripSeparator2,
@@ -186,6 +189,13 @@
             this.toolStripMenuItemQuodLibet.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemQuodLibet.Text = LocalizedMessages.QuodLibet;
             this.toolStripMenuItemQuodLibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
+            // 
+            // toolStripMenuItemYouTube
+            // 
+            this.toolStripMenuItemYouTube.Name = "toolStripMenuItemYouTube";
+            this.toolStripMenuItemYouTube.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemYouTube.Text = LocalizedMessages.YouTube;
+            this.toolStripMenuItemYouTube.Click += new System.EventHandler(this.PlayerSelectionCheck);
             // 
             // toolStripSeparator
             // 
