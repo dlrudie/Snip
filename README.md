@@ -16,6 +16,7 @@ It supports the following media players:
 * [VLC](http://www.videolan.org/vlc/)
 * [Google Play Music Desktop Player](https://www.googleplaymusicdesktopplayer.com/)
 * [Quod Libet](https://quodlibet.readthedocs.io/)
+* [YouTube (Chrome)](https://www.youtube.com/)
 
 If you choose to use iTunes, Snip will automatically launch it. (This
 is the behavior of the COM API and there's nothing I can do about it.) If you
@@ -38,6 +39,7 @@ SUPPORTED FEATURES FOR PLAYERS
 * **Google Play Music Desktop Player:** Artist, Track, Album, Artwork, Output
     Formatting
 * **Quod Libet:** Nothing (It uses whatever the titlebar says)
+* **YouTube (Chrome):** Artist, Track
 
 WINAMP
 ======
@@ -94,6 +96,13 @@ QUOD LIBET
 Snip looks for the window class "quodlibet" to determine if Quod Libet is
 running.  Once the window is found it will just read the titlebar and output
 the text in it.
+
+YOUTUBE (CHROME)
+==========
+Snip looks for Chrome tabs with audio playing and associated with YouTube. 
+It will take the first window it finds and will try to extract the artist 
+and track. If this cannot be done it will use the entire 
+YouTube video title.
 
 GOOGLE PLAY MUSIC DESKTOP PLAYER
 ================================
