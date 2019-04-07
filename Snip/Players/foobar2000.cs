@@ -74,7 +74,7 @@ namespace Winter
                                 // Winamp window titles look like "[%album artist% - ]['['%album%[ CD%discnumber%][ #%tracknumber%]']' ]%title%[ '//' %track artist%]".
                                 // Require that the user use ATF and replace the format with something like:
                                 // %artist% – %title%
-                                string windowTitleFull = System.Text.RegularExpressions.Regex.Replace(foobar2000Title, @"\s+\[foobar2000.+\]", string.Empty);
+                                string windowTitleFull = System.Text.RegularExpressions.Regex.Replace(foobar2000Title, @"\s+\[foobar2000+\]", string.Empty);
                                 string[] windowTitle = windowTitleFull.Split('–');
 
                                 // Album artwork not supported by foobar2000
