@@ -166,7 +166,7 @@ namespace Winter
                 // 14 is the offset where the trackId begins, trackId is 22 chars long
                 trackIdInBytes = ProcessFunctions.ReadMemory(this.Handle, (IntPtr)addressOfTrackId + 14, 22);
 
-                if (windowTitle == "Spotify")
+                if (windowTitle == "Spotify Premium" || windowTitle == "Spotify Free" || windowTitle == "Spotify")
                 {
                     // Because we search for this first there's a brief moment on startup where it may display
                     // that no track is playing before it states that Spotify is not running.
