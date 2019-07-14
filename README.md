@@ -1,6 +1,6 @@
 SNIP
 ====
-Copyright 2012-2018 David Rudie <d.rudie@gmail.com>
+Copyright 2012-2019 David Rudie <d.rudie@gmail.com>
 Project Page: [Snip](https://github.com/dlrudie/Snip)
 
 ABOUT
