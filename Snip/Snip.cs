@@ -87,17 +87,10 @@ namespace Winter
             LocalizedMessages.SnipForm = Globals.ResourceManager.GetString("SnipForm");
             LocalizedMessages.NewVersionAvailable = Globals.ResourceManager.GetString("NewVersionAvailable");
             LocalizedMessages.Spotify = Globals.ResourceManager.GetString("Spotify");
-            LocalizedMessages.iTunes = Globals.ResourceManager.GetString("iTunes");
-            LocalizedMessages.Winamp = Globals.ResourceManager.GetString("Winamp");
-            LocalizedMessages.foobar2000 = Globals.ResourceManager.GetString("foobar2000");
-            LocalizedMessages.VLC = Globals.ResourceManager.GetString("VLC");
-            LocalizedMessages.GPMDP = Globals.ResourceManager.GetString("GPMDP");
-            LocalizedMessages.QuodLibet = Globals.ResourceManager.GetString("QuodLibet");
-            LocalizedMessages.WindowsMediaPlayer = Globals.ResourceManager.GetString("WindowsMediaPlayer");
+            LocalizedMessages.Itunes = Globals.ResourceManager.GetString("Itunes");
             LocalizedMessages.SwitchedToPlayer = Globals.ResourceManager.GetString("SwitchedToPlayer");
             LocalizedMessages.PlayerIsNotRunning = Globals.ResourceManager.GetString("PlayerIsNotRunning");
             LocalizedMessages.NoTrackPlaying = Globals.ResourceManager.GetString("NoTrackPlaying");
-            LocalizedMessages.LocatingSpotifyWebHelper = Globals.ResourceManager.GetString("LocatingSpotifyWebHelper");
             LocalizedMessages.SetOutputFormat = Globals.ResourceManager.GetString("SetOutputFormat");
             LocalizedMessages.SaveInformationSeparately = Globals.ResourceManager.GetString("SaveInformationSeparately");
             LocalizedMessages.SaveAlbumArtwork = Globals.ResourceManager.GetString("SaveAlbumArtwork");
@@ -111,7 +104,7 @@ namespace Winter
             LocalizedMessages.EmptyFile = Globals.ResourceManager.GetString("EmptyFile");
             LocalizedMessages.EnableHotkeys = Globals.ResourceManager.GetString("EnableHotkeys");
             LocalizedMessages.ExitApplication = Globals.ResourceManager.GetString("ExitApplication");
-            LocalizedMessages.iTunesException = Globals.ResourceManager.GetString("iTunesException");
+            LocalizedMessages.ItunesException = Globals.ResourceManager.GetString("ItunesException");
             LocalizedMessages.SetOutputFormatForm = Globals.ResourceManager.GetString("SetOutputFormatForm");
             LocalizedMessages.SetTrackFormat = Globals.ResourceManager.GetString("SetTrackFormat");
             LocalizedMessages.SetSeparatorFormat = Globals.ResourceManager.GetString("SetSeparatorFormat");
@@ -233,39 +226,14 @@ namespace Winter
             }
             else if (sender == this.toolStripMenuItemItunes)
             {
-                this.TogglePlayer(Globals.MediaPlayerSelection.iTunes);
-            }
-            else if (sender == this.toolStripMenuItemWinamp)
-            {
-                this.TogglePlayer(Globals.MediaPlayerSelection.Winamp);
-            }
-            else if (sender == this.toolStripMenuItemFoobar2000)
-            {
-                this.TogglePlayer(Globals.MediaPlayerSelection.foobar2000);
-            }
-            else if (sender == this.toolStripMenuItemVlc)
-            {
-                this.TogglePlayer(Globals.MediaPlayerSelection.VLC);
-            }
-            else if (sender == this.toolStripMenuItemGPMDP)
-            {
-                this.TogglePlayer(Globals.MediaPlayerSelection.GPMDP);
-            }
-            else if (sender == this.toolStripMenuItemQuodLibet)
-            {
-                this.TogglePlayer(Globals.MediaPlayerSelection.QuodLibet);
+                this.TogglePlayer(Globals.MediaPlayerSelection.Itunes);
             }
         }
 
         private void TogglePlayer(Globals.MediaPlayerSelection player)
         {
             this.toolStripMenuItemSpotify.Checked    = player == Globals.MediaPlayerSelection.Spotify;
-            this.toolStripMenuItemItunes.Checked     = player == Globals.MediaPlayerSelection.iTunes;
-            this.toolStripMenuItemWinamp.Checked     = player == Globals.MediaPlayerSelection.Winamp;
-            this.toolStripMenuItemFoobar2000.Checked = player == Globals.MediaPlayerSelection.foobar2000;
-            this.toolStripMenuItemVlc.Checked        = player == Globals.MediaPlayerSelection.VLC;
-            this.toolStripMenuItemGPMDP.Checked      = player == Globals.MediaPlayerSelection.GPMDP;
-            this.toolStripMenuItemQuodLibet.Checked  = player == Globals.MediaPlayerSelection.QuodLibet;
+            this.toolStripMenuItemItunes.Checked     = player == Globals.MediaPlayerSelection.Itunes;
 
             Globals.CurrentPlayer.Unload();
             string playerName = string.Empty;
@@ -276,29 +244,9 @@ namespace Winter
                     Globals.CurrentPlayer = new Spotify();
                     playerName = LocalizedMessages.Spotify;
                     break;
-                case Globals.MediaPlayerSelection.iTunes:
-                    Globals.CurrentPlayer = new iTunes();
-                    playerName = LocalizedMessages.iTunes;
-                    break;
-                case Globals.MediaPlayerSelection.Winamp:
-                    Globals.CurrentPlayer = new Winamp();
-                    playerName = LocalizedMessages.Winamp;
-                    break;
-                case Globals.MediaPlayerSelection.foobar2000:
-                    Globals.CurrentPlayer = new foobar2000();
-                    playerName = LocalizedMessages.foobar2000;
-                    break;
-                case Globals.MediaPlayerSelection.VLC:
-                    Globals.CurrentPlayer = new VLC();
-                    playerName = LocalizedMessages.VLC;
-                    break;
-                case Globals.MediaPlayerSelection.GPMDP:
-                    Globals.CurrentPlayer = new GPMDP();
-                    playerName = LocalizedMessages.GPMDP;
-                    break;
-                case Globals.MediaPlayerSelection.QuodLibet:
-                    Globals.CurrentPlayer = new QuodLibet();
-                    playerName = LocalizedMessages.QuodLibet;
+                case Globals.MediaPlayerSelection.Itunes:
+                    Globals.CurrentPlayer = new Itunes();
+                    playerName = LocalizedMessages.Itunes;
                     break;
                 default:
                     break;
@@ -360,11 +308,11 @@ namespace Winter
             // Make sure this is set before starting the timer.
             //if (Globals.DebuggingIsEnabled)
             //{
-                //Debug.MeasureMethod(Globals.CurrentPlayer.Update); // Writes a LOT of data
+            //Debug.MeasureMethod(Globals.CurrentPlayer.Update); // Writes a LOT of data
             //}
             //else
             //{
-                Globals.CurrentPlayer.Update();
+            Globals.CurrentPlayer.Update();
             //}
         }
 

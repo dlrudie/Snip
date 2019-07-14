@@ -13,13 +13,7 @@ NewVersionAvailable=Ny version tilgængelig!
 ; Supported media players.  These probably don't need translated unless they
 ; actually have a different name in other countries.
 Spotify=Spotify
-iTunes=iTunes
-Winamp=Winamp
-foobar2000=foobar2000
-VLC=VLC
-GPMDP=GPMDP
-QuodLibet=Quod Libet
-WindowsMediaPlayer=Windows Media Player
+Itunes=iTunes
 
 ; This text is saved to the Snip.txt file when the user switches media players
 ; from the right-click context menu.
@@ -36,10 +30,6 @@ PlayerIsNotRunning={0} køre ikke i øjeblikket
 ; This text is saved to the Snip.txt file when no track is playing in the
 ; selected media file or when the user stops/pauses a playing track.
 NoTrackPlaying=Ingen sang afspilles i øjeblikket
-
-; This text is displayed while Snip is trying to locate the SpotifyWebHelper
-; service to connect to.
-LocatingSpotifyWebHelper=Attempting to Locate SpotifyWebHelper
 
 ; This text is displayed on the right-click context menu and, when clicked,
 ; will open up the "Set Output Format" form where the user can customize how
@@ -101,7 +91,7 @@ ExitApplication=Afslut
 
 ; This text is displayed in a MessageBox pop-up when there is a COM exception
 ; caused by trying to load the iTunes COM library.
-iTunesException=Luk venligst iTunes og vælg iTunes fra Snips menu igen.
+ItunesException=Luk venligst iTunes og vælg iTunes fra Snips menu igen.
 
 ######################
 # Output Format Form #

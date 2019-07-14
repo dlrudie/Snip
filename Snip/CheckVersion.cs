@@ -42,9 +42,8 @@ namespace Winter
                     var latestVersionOnGithub = jsonSummary.tag_name.ToString().Replace("v", string.Empty);
 
                     Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                    Version latestVersion = null;
 
-                    Version.TryParse(latestVersionOnGithub, out latestVersion);
+                    Version.TryParse(latestVersionOnGithub, out Version latestVersion);
 
                     int comparison = latestVersion.CompareTo(currentVersion);
 

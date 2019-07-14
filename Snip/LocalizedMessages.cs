@@ -25,17 +25,10 @@ namespace Winter
         public static string SnipForm { get; set; }
         public static string NewVersionAvailable { get; set; }
         public static string Spotify { get; set; }
-        public static string iTunes { get; set; }
-        public static string Winamp { get; set; }
-        public static string foobar2000 { get; set; }
-        public static string VLC { get; set; }
-        public static string GPMDP { get; set; }
-        public static string QuodLibet { get; set; }
-        public static string WindowsMediaPlayer { get; set; }
+        public static string Itunes { get; set; }
         public static string SwitchedToPlayer { get; set; }
         public static string PlayerIsNotRunning { get; set; }
         public static string NoTrackPlaying { get; set; }
-        public static string LocatingSpotifyWebHelper { get; set; }
         public static string SetOutputFormat { get; set; }
         public static string SaveInformationSeparately { get; set; }
         public static string SaveAlbumArtwork { get; set; }
@@ -49,7 +42,7 @@ namespace Winter
         public static string EmptyFile { get; set; }
         public static string EnableHotkeys { get; set; }
         public static string ExitApplication { get; set; }
-        public static string iTunesException { get; set; }
+        public static string ItunesException { get; set; }
         public static string SetOutputFormatForm { get; set; }
         public static string SetTrackFormat { get; set; }
         public static string SetSeparatorFormat { get; set; }

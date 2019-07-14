@@ -89,13 +89,7 @@ namespace Winter
         public enum MediaPlayerSelection : int
         {
             Spotify = 0,
-            iTunes = 1,
-            Winamp = 2,
-            foobar2000 = 3,
-            VLC = 4,
-            GPMDP = 5,
-            QuodLibet = 6,
-            WindowsMediaPlayer = 7
+            Itunes = 1
         }
 
         public enum MediaCommand : int

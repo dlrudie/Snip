@@ -8,11 +8,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpotify;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemItunes;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWinamp;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFoobar2000;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVlc;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGPMDP;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemQuodLibet;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetFormat;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -70,11 +65,6 @@
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSpotify = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemItunes = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemWinamp = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemFoobar2000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemVlc = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemGPMDP = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemQuodLibet = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -108,11 +98,6 @@
             this.toolStripSeparator,
             this.toolStripMenuItemSpotify,
             this.toolStripMenuItemItunes,
-            this.toolStripMenuItemWinamp,
-            this.toolStripMenuItemFoobar2000,
-            this.toolStripMenuItemVlc,
-            this.toolStripMenuItemGPMDP,
-            this.toolStripMenuItemQuodLibet,
             this.toolStripSeparator1,
             this.toolStripMenuItemSetFormat,
             this.toolStripSeparator2,
@@ -149,43 +134,8 @@
             // 
             this.toolStripMenuItemItunes.Name = "toolStripMenuItemItunes";
             this.toolStripMenuItemItunes.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemItunes.Text = LocalizedMessages.iTunes;
+            this.toolStripMenuItemItunes.Text = LocalizedMessages.Itunes;
             this.toolStripMenuItemItunes.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            // 
-            // toolStripMenuItemWinamp
-            // 
-            this.toolStripMenuItemWinamp.Name = "toolStripMenuItemWinamp";
-            this.toolStripMenuItemWinamp.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemWinamp.Text = LocalizedMessages.Winamp;
-            this.toolStripMenuItemWinamp.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            // 
-            // toolStripMenuItemFoobar2000
-            // 
-            this.toolStripMenuItemFoobar2000.Name = "toolStripMenuItemFoobar2000";
-            this.toolStripMenuItemFoobar2000.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemFoobar2000.Text = LocalizedMessages.foobar2000;
-            this.toolStripMenuItemFoobar2000.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            // 
-            // toolStripMenuItemVlc
-            // 
-            this.toolStripMenuItemVlc.Name = "toolStripMenuItemVlc";
-            this.toolStripMenuItemVlc.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemVlc.Text = LocalizedMessages.VLC;
-            this.toolStripMenuItemVlc.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            //
-            // toolStripMenuItemGPMDP
-            //
-            this.toolStripMenuItemGPMDP.Name = "toolStripMenuItemGPMDP";
-            this.toolStripMenuItemGPMDP.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemGPMDP.Text = LocalizedMessages.GPMDP;
-            this.toolStripMenuItemGPMDP.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            // 
-            // toolStripMenuItemQuodLibet
-            // 
-            this.toolStripMenuItemQuodLibet.Name = "toolStripMenuItemQuodLibet";
-            this.toolStripMenuItemQuodLibet.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemQuodLibet.Text = LocalizedMessages.QuodLibet;
-            this.toolStripMenuItemQuodLibet.Click += new System.EventHandler(this.PlayerSelectionCheck);
             // 
             // toolStripSeparator
             // 
