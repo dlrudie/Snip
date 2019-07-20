@@ -40,7 +40,7 @@ namespace Winter
 
         private string authorizationAddress = "https://accounts.spotify.com/authorize";
 
-        private string scopes = "user-read-currently-playing user-read-playback-state";
+        private string scopes = "user-read-currently-playing user-modify-playback-state";
         private string responseType = "code"; // Required by API
         private string callbackAddress = "http://localhost:10597/";
 
@@ -445,6 +445,8 @@ namespace Winter
 
         private void ResetSnipSinceSpotifyIsNotPlaying()
         {
+            this.lastTrackId = string.Empty;
+
             // Prevent writing a blank image if we already did
             if (!this.SavedBlankImage)
             {
@@ -484,41 +486,86 @@ namespace Winter
             return new Uri(imageUrl);
         }
 
+        private void SpotifyPlayerControl(SpotifyPlayerControlType controlType)
+        {
+            try
+            {
+                using (WebClientWithShortTimeout webClient = new WebClientWithShortTimeout())
+                {
+                    string urlAddress = "https://api.spotify.com/v1/me/player/";
+                    string methodType = string.Empty;
+
+                    switch (controlType)
+                    {
+                        case SpotifyPlayerControlType.Play:
+                            urlAddress += "play";
+                            methodType = "PUT";
+                            break;
+                        case SpotifyPlayerControlType.Pause:
+                            urlAddress += "pause";
+                            methodType = "PUT";
+                            break;
+                        case SpotifyPlayerControlType.NextTrack:
+                            urlAddress += "next";
+                            methodType = "POST";
+                            break;
+                        case SpotifyPlayerControlType.PreviousTrack:
+                            urlAddress += "previous";
+                            methodType = "POST";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    webClient.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Bearer {0}", this.authorizationToken));
+                    webClient.Headers.Add("User-Agent", "Snip/" + AssemblyInformation.AssemblyVersion);
+                    webClient.Encoding = Encoding.UTF8;
+
+                    webClient.UploadString(urlAddress, methodType, string.Empty);
+                }
+            }
+            catch
+            {
+                // If you send a request to pause the track, or play the track, when it is already paused or playing
+                // it will send a 403 Forbidden. This will silently ignore the exception.
+            }
+        }
+
         #endregion
 
         #region Player Control Methods
 
         public override void ChangeToNextTrack()
         {
+            this.SpotifyPlayerControl(SpotifyPlayerControlType.NextTrack);
         }
 
         public override void ChangeToPreviousTrack()
         {
-        }
-
-        public override void IncreasePlayerVolume()
-        {
-        }
-
-        public override void DecreasePlayerVolume()
-        {
-        }
-
-        public override void MutePlayerAudio()
-        {
+            this.SpotifyPlayerControl(SpotifyPlayerControlType.PreviousTrack);
         }
 
         public override void PlayOrPauseTrack()
         {
+            this.SpotifyPlayerControl(SpotifyPlayerControlType.Play);
         }
 
-        public override void StopTrack()
+        public override void PauseTrack()
         {
+            this.SpotifyPlayerControl(SpotifyPlayerControlType.Pause);
         }
 
         #endregion
 
         #region Enumerations
+
+        private enum SpotifyPlayerControlType
+        {
+            NextTrack,
+            PreviousTrack,
+            Pause,
+            Play
+        }
 
         private enum SpotifyAddressContactType
         {
