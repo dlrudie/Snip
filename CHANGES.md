@@ -1,5 +1,16 @@
 CHANGES
 =======
+**v7.0.0 (2019-Jul-20):**
+* Brought Spotify code up to date. You will have to authorize your account.
+* Removed all media player support except Spotify and iTunes. (I don't have
+    the time to maintain all of the code for all of the media players. I'm
+	sorry about that. Perhaps with a rewrite I can make Snip modular and
+	other people can maintain their own plugins.)
+* Polished up code some and removed a lot of unused code.
+* Tested against iTunes 12.9.5.7 (non-Windows Store version).
+* Tested against Spotify 1.1.10.540.gfcf0430f (non-Windows Store version.)
+* Project is now built with Visual Studio 2019 (previous was 2017).
+
 **v6.10.2 (2018-Jul-24):**
 * Merged pull request #267 from GenesisFR, which refactors a lot of code and
     clears out artwork when Snip is exited.
