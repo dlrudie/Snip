@@ -27,12 +27,12 @@ HOTKEYS
 =======
 * **Next Track:** Ctrl, Alt, ]
 * **Previous Track:** Ctrl, Alt, [
-* **Volume Up:** Ctrl, Alt, +
-* **Volume Down:** Ctrl, Alt, -
-* **Mute Track:** Ctrl, Alt, M
+* **Volume Up:** Ctrl, Alt, + (iTunes Only)
+* **Volume Down:** Ctrl, Alt, - (iTunes Only)
+* **Mute Track:** Ctrl, Alt, M (iTunes Only)
 * **Pause Track:** Ctrl, Alt, P
-* **Play/Pause Track:** Ctrl, Alt, Enter
-* **Stop Track:** Ctrl, Alt, Backspace
+* **Play/Pause Track:** Ctrl, Alt, Enter (Pause iTunes Only)
+* **Stop Track:** Ctrl, Alt, Backspace (iTunes Only)
 
 DONATIONS
 =========
