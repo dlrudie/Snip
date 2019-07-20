@@ -33,6 +33,7 @@ namespace Winter
 
         private delegate void Router(object arg);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions")]
         public override void Load()
         {
             try
