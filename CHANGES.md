@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v7.0.1 (2019-Jul-24):**
+* Reduced the API call rate from 1 second to 5 seconds. There may be up to a
+    five second delay when a track changes before Snip detects it but it
+    will significantly reduce the amount of API calls happening.
+* Implemented API call retry when rate limit exceeded.
+
 **v7.0.0 (2019-Jul-20):**
 * Brought Spotify code up to date. You will have to authorize your account.
 * Removed all media player support except Spotify and iTunes. (I don't have
