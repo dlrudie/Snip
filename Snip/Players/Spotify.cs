@@ -54,6 +54,9 @@ namespace Winter
 
         private string lastTrackId = string.Empty;
 
+        private double updateAuthorizationTokenDefaultInterval = 1000;
+        private double updateSpotifyTrackInformationDefaultInterval = 5000;
+
         #endregion
 
         #region Methods
@@ -66,15 +69,15 @@ namespace Winter
 
             // Set up the authorization token
             // Default to 1 second in the event the token fails to be obtained
-            this.updateAuthorizationToken = new Timer(1000);
+            this.updateAuthorizationToken = new Timer(updateAuthorizationTokenDefaultInterval);
             this.updateAuthorizationToken.Elapsed += this.UpdateAuthorizationToken_Elapsed;
             this.updateAuthorizationToken.AutoReset = true;
             this.updateAuthorizationToken.Enabled = true;
             this.UpdateAuthorizationToken_Elapsed(null, null); // Get initial token
 
             // This is the main timer that will gather all of the information from Spotify
-            // Set to 1 second so it updates frequently but not ridiculously
-            this.updateSpotifyTrackInformation = new Timer(1000);
+            // Set to 3 second so it updates frequently but not ridiculously
+            this.updateSpotifyTrackInformation = new Timer(updateSpotifyTrackInformationDefaultInterval);
             this.updateSpotifyTrackInformation.Elapsed += this.UpdateSpotifyTrackInformation_Elapsed;
             this.updateSpotifyTrackInformation.AutoReset = true;
             this.updateSpotifyTrackInformation.Enabled = true;
@@ -261,6 +264,13 @@ namespace Winter
                 {
                     this.ResetSnipSinceSpotifyIsNotPlaying();
                 }
+
+                // Reset timer after it was potentially changed by rate limit
+                // Since we should only reach this point if valid JSON was obtained this means
+                // that the timer shouldn't reset unless there was a success.
+                this.updateSpotifyTrackInformation.Enabled = false;
+                this.updateSpotifyTrackInformation.Interval = updateSpotifyTrackInformationDefaultInterval;
+                this.updateSpotifyTrackInformation.Enabled = true;
             }
         }
 
@@ -380,8 +390,22 @@ namespace Winter
                         return string.Empty;
                     }
                 }
-                catch (WebException)
+                catch (WebException webException)
                 {
+                    WebResponse webResponse = webException.Response;
+                    WebHeaderCollection webHeaderCollection = webResponse.Headers;
+
+                    for (int i = 0; i < webHeaderCollection.Count; i++)
+                    {
+                        if (webHeaderCollection.GetKey(i).ToLower() == "retry-after")
+                        {
+                            // Set the timer to the retry seconds. Plus 1 for safety.
+                            this.updateSpotifyTrackInformation.Enabled = false;
+                            this.updateSpotifyTrackInformation.Interval = (Double.Parse(webHeaderCollection.Get(i) + 1)) * 1000;
+                            this.updateSpotifyTrackInformation.Enabled = true;
+                        }
+                    }
+
                     return string.Empty;
                 }
             }
