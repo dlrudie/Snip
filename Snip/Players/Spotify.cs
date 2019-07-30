@@ -125,56 +125,58 @@ namespace Winter
                         this.scopes
                         ));
 
-                HttpListener callbackListener = new HttpListener();
-                callbackListener.Prefixes.Add(this.callbackAddress);
-                callbackListener.Start();
-
-                // block for now since authorization is absolutely required
-                // eventually swap this to non-blocking (BeginGetContext)
-                HttpListenerContext context = callbackListener.GetContext();
-                HttpListenerRequest request = context.Request;
-                HttpListenerResponse response = context.Response;
-
-                NameValueCollection nameValueCollection = request.QueryString;
-
-                string callbackHtmlStart = "<!doctype html><html lang=en><head><meta charset=utf-8><style>html, body { height: 100%; margin: 0; padding: 0; } body { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); } div.wrapper { display: table; table-layout: fixed; width: 100%; height: 90%; } div.container { display: table-cell; vertical-align: middle; } div.centered { font-family: Arial, Helvetica, sans-serif; font-size: 1em; font-weight: normal; text-align: center; }</style><title>Snip</title></head><body><div class=wrapper><div class=container><div class=centered>";
-                string callbackHtmlEnd = "</div></div></div></body></html>";
-
-                string outputString = string.Empty;
-
-                foreach (string keyValue in nameValueCollection.AllKeys)
+                using (HttpListener callbackListener = new HttpListener())
                 {
-                    switch (keyValue)
+                    callbackListener.Prefixes.Add(this.callbackAddress);
+                    callbackListener.Start();
+
+                    // block for now since authorization is absolutely required
+                    // eventually swap this to non-blocking (BeginGetContext)
+                    HttpListenerContext context = callbackListener.GetContext();
+                    HttpListenerRequest request = context.Request;
+                    HttpListenerResponse response = context.Response;
+
+                    NameValueCollection nameValueCollection = request.QueryString;
+
+                    string callbackHtmlStart = "<!doctype html><html lang=en><head><meta charset=utf-8><style>html, body { height: 100%; margin: 0; padding: 0; } body { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); } div.wrapper { display: table; table-layout: fixed; width: 100%; height: 90%; } div.container { display: table-cell; vertical-align: middle; } div.centered { font-family: Arial, Helvetica, sans-serif; font-size: 1em; font-weight: normal; text-align: center; }</style><title>Snip</title></head><body><div class=wrapper><div class=container><div class=centered>";
+                    string callbackHtmlEnd = "</div></div></div></body></html>";
+
+                    string outputString = string.Empty;
+
+                    foreach (string keyValue in nameValueCollection.AllKeys)
                     {
-                        case "error":
-                            outputString = string.Format(
-                                CultureInfo.InvariantCulture,
-                                "{0}{1}{2}",
-                                callbackHtmlStart,
-                                "Well... you denied Snip access. Snip cannot work with Spotify until you grant access. To grant access relaunch Snip. Thank you.",
-                                callbackHtmlEnd);
-                            break;
-                        case "code":
-                            outputString = string.Format(
-                                CultureInfo.InvariantCulture,
-                                "{0}{1}{2}",
-                                callbackHtmlStart,
-                                "Snip successfully authorized with Spotify. You may close this window now.",
-                                callbackHtmlEnd);
-                            this.authorizationCode = nameValueCollection[keyValue];
-                            break;
-                        default:
-                            break;
+                        switch (keyValue)
+                        {
+                            case "error":
+                                outputString = string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "{0}{1}{2}",
+                                    callbackHtmlStart,
+                                    "Well... you denied Snip access. Snip cannot work with Spotify until you grant access. To grant access relaunch Snip. Thank you.",
+                                    callbackHtmlEnd);
+                                break;
+                            case "code":
+                                outputString = string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "{0}{1}{2}",
+                                    callbackHtmlStart,
+                                    "Snip successfully authorized with Spotify. You may close this window now.",
+                                    callbackHtmlEnd);
+                                this.authorizationCode = nameValueCollection[keyValue];
+                                break;
+                            default:
+                                break;
+                        }
                     }
+
+                    byte[] buffer = Encoding.UTF8.GetBytes(outputString);
+                    response.ContentLength64 = buffer.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    output.Close();
+
+                    callbackListener.Stop();
                 }
-
-                byte[] buffer = Encoding.UTF8.GetBytes(outputString);
-                response.ContentLength64 = buffer.Length;
-                Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-                output.Close();
-
-                callbackListener.Stop();
             }
             catch
             {
@@ -217,13 +219,13 @@ namespace Winter
         private void UpdateSpotifyTrackInformation_Elapsed(object sender, ElapsedEventArgs e)
         {
             Process[] processes = Process.GetProcessesByName("spotify");
-            foreach (Process spotifyProcess in processes)
+            foreach (Process localSpotifyProcess in processes)
             {
                 // There's probably a better way to do this but for the sake of getting this going this will work
                 // Spotify creates a lot of processes... but only one is actually going to have text in the window title.
-                if (spotifyProcess.MainWindowTitle.Length > 0)
+                if (localSpotifyProcess.MainWindowTitle.Length > 0)
                 {
-                    this.spotifyProcess = spotifyProcess;
+                    this.spotifyProcess = localSpotifyProcess;
                 }
             }
 
@@ -426,11 +428,11 @@ namespace Winter
 
                     for (int i = 0; i < webHeaderCollection.Count; i++)
                     {
-                        if (webHeaderCollection.GetKey(i).ToLower() == "retry-after")
+                        if (webHeaderCollection.GetKey(i).ToUpperInvariant() == "RETRY-AFTER")
                         {
                             // Set the timer to the retry seconds. Plus 1 for safety.
                             this.updateSpotifyTrackInformation.Enabled = false;
-                            this.updateSpotifyTrackInformation.Interval = (Double.Parse(webHeaderCollection.Get(i) + 1)) * 1000;
+                            this.updateSpotifyTrackInformation.Interval = (Double.Parse(webHeaderCollection.Get(i) + 1, CultureInfo.InvariantCulture)) * 1000;
                             this.updateSpotifyTrackInformation.Enabled = true;
                         }
                     }
