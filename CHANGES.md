@@ -1,5 +1,13 @@
 CHANGES
 =======
+**v7.0.2 (2019-Jul-29):**
+* Changed timer from 5 seconds back to 1 second. However Snip now uses the
+    titlebar of Spotify to determine when tracks change and will only
+    fetch new data when the titlebar changes. This ultimately cuts down on
+    API calls significantly.
+* Fixed issue where podcasts and non-track information would crash Snip.
+    Spotify does not provide any data on podcasts unfortunately.
+
 **v7.0.1 (2019-Jul-24):**
 * Reduced the API call rate from 1 second to 5 seconds. There may be up to a
     five second delay when a track changes before Snip detects it but it
