@@ -254,36 +254,47 @@ namespace Winter
                         {
                             dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
 
-                            bool isPlaying = (bool)jsonSummary.is_playing;
-                            string trackId = (string)jsonSummary.item.id;
+                            string currentlyPlayingType = (string)jsonSummary.currently_playing_type;
 
-                            if (isPlaying)
+                            // Spotify does not provide any detailed information for anything other than actual songs.
+                            // Podcasts have types of "episode" but do not contain any useful data unfortunately.
+                            if (currentlyPlayingType == "track")
                             {
-                                if (Globals.CacheSpotifyMetadata)
+                                bool isPlaying = (bool)jsonSummary.is_playing;
+                                string trackId = (string)jsonSummary.item.id;
+
+                                if (isPlaying)
                                 {
-                                    downloadedJson = this.ReadCachedJson(trackId);
+                                    if (Globals.CacheSpotifyMetadata)
+                                    {
+                                        downloadedJson = this.ReadCachedJson(trackId);
+                                    }
+
+                                    // If there are multiple artists we want to join all of them together for display
+                                    string artists = string.Empty;
+
+                                    foreach (dynamic artist in jsonSummary.item.artists)
+                                    {
+                                        artists += artist.name.ToString() + ", ";
+                                    }
+
+                                    artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
+
+                                    TextHandler.UpdateText(
+                                        jsonSummary.item.name.ToString(),
+                                        artists,
+                                        jsonSummary.item.album.name.ToString(),
+                                        trackId,
+                                        downloadedJson);
+
+                                    if (Globals.SaveAlbumArtwork)
+                                    {
+                                        this.DownloadSpotifyAlbumArtwork(jsonSummary.item.album);
+                                    }
                                 }
-
-                                // If there are multiple artists we want to join all of them together for display
-                                string artists = string.Empty;
-
-                                foreach (dynamic artist in jsonSummary.item.artists)
+                                else
                                 {
-                                    artists += artist.name.ToString() + ", ";
-                                }
-
-                                artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
-
-                                TextHandler.UpdateText(
-                                    jsonSummary.item.name.ToString(),
-                                    artists,
-                                    jsonSummary.item.album.name.ToString(),
-                                    trackId,
-                                    downloadedJson);
-
-                                if (Globals.SaveAlbumArtwork)
-                                {
-                                    this.DownloadSpotifyAlbumArtwork(jsonSummary.item.album);
+                                    this.ResetSnipSinceSpotifyIsNotPlaying();
                                 }
                             }
                             else
@@ -508,7 +519,7 @@ namespace Winter
                     this.SaveBlankImage();
                 }
             }
-
+            this.spotifyProcess = null;
             TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
         }
 
