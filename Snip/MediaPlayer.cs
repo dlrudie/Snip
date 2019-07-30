@@ -45,6 +45,8 @@ namespace Winter
 
         public bool SavedBlankImage { get; set; }
 
+        public string LastTitle { get; set; }
+
         public string DefaultArtworkFilePath
         {
             get
@@ -64,6 +66,7 @@ namespace Winter
         public virtual void Unload()
         {
             this.SaveBlankImage();
+            this.LastTitle = string.Empty;
         }
 
         public virtual void ChangeToNextTrack()
