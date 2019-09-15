@@ -27,18 +27,17 @@ VARIABLES
 =========
 There are a handful of variables you can use within the Output Settings.
 
+These variables only affect the output of Snip.txt itself.
+
 * $$t = Track Title
 * $$ut = TRACK TITLE
 * $$lt = track title
-
 * $$a = Track Artist
 * $$ua = TRACK ARTIST
 * $$la = track artist
-
 * $$l = Track Album
 * $$ul = TRACK ALBUM
 * $$ll = track album
-
 * $$i = Spotify track ID
 * $$n = New line
 
