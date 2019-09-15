@@ -1,5 +1,11 @@
 CHANGES
 =======
+**v7.0.5 (2019-Sep-15):**
+* Made Spotify detection substantially better. Due to Windows API limits
+    you cannot get the main window handle from a process minimized to the
+    system tray. With this version Snip will only need to see the Spotify
+    window one time and it will work from then on until you restart Spotify.
+
 **v7.0.2 (2019-Jul-29):**
 * Changed timer from 5 seconds back to 1 second. However Snip now uses the
     titlebar of Spotify to determine when tracks change and will only
