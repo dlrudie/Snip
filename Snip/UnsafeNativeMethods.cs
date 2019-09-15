@@ -22,6 +22,7 @@ namespace Winter
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Text;
 
     internal static class UnsafeNativeMethods
     {
@@ -46,5 +47,17 @@ namespace Winter
             [In] uint message,
             [In] IntPtr wParam,
             [In] IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        internal static extern int GetClassName(
+            [In] IntPtr windowHandle,
+            [Out] StringBuilder className,
+            [In] int maxCount);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        internal static extern int GetWindowText(
+            [In] IntPtr windowHandle,
+            [Out] StringBuilder windowText,
+            [In] int maxCount);
     }
 }

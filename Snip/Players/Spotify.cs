@@ -52,7 +52,8 @@ namespace Winter
         private Timer updateAuthorizationToken;
         private Timer updateSpotifyTrackInformation;
 
-        private Process spotifyProcess = null;
+        private bool spotifyRunning = false;
+        private IntPtr spotifyHandle = IntPtr.Zero;
 
         private double updateAuthorizationTokenDefaultInterval = 1000;
         private double updateSpotifyTrackInformationDefaultInterval = 1000;
@@ -92,7 +93,7 @@ namespace Winter
             this.refreshToken = string.Empty;
             this.updateAuthorizationToken.Stop();
             this.updateSpotifyTrackInformation.Stop();
-            this.spotifyProcess = null;
+            this.spotifyHandle = IntPtr.Zero;
         }
 
         public void Dispose()
@@ -218,100 +219,137 @@ namespace Winter
 
         private void UpdateSpotifyTrackInformation_Elapsed(object sender, ElapsedEventArgs e)
         {
+            // Get a list of all spotify.exe processes
             Process[] processes = Process.GetProcessesByName("spotify");
-            foreach (Process localSpotifyProcess in processes)
+
+            // Array must be greater than 0 to continue (as in a process was successfully found)
+            if (processes.Length > 0)
             {
-                // There's probably a better way to do this but for the sake of getting this going this will work
-                // Spotify creates a lot of processes... but only one is actually going to have text in the window title.
-                if (localSpotifyProcess.MainWindowTitle.Length > 0)
+                // We know Spotify is running at least
+                this.spotifyRunning = true;
+
+                // Only loop through and get the process handle if it's not set
+                if (this.spotifyHandle == IntPtr.Zero)
                 {
-                    this.spotifyProcess = localSpotifyProcess;
+                    // Loop through all processes that matched spotify.exe
+                    foreach (Process localSpotifyProcess in processes)
+                    {
+                        StringBuilder className = new StringBuilder(64);
+
+                        UnsafeNativeMethods.GetClassName(localSpotifyProcess.MainWindowHandle, className, className.Capacity);
+
+                        string classNameText = className.ToString();
+
+                        // Spotify's main window that has the song name in the titlebar uses the Chrome_WidgetWin_0 class
+                        // We also need to verify that the titlebar has something in it due to multiple processes sharing the same class
+                        // From everything I've seen the titlebar will _always_ have at least some text
+                        if (classNameText == "Chrome_WidgetWin_0" && localSpotifyProcess.MainWindowTitle.Length > 0)
+                        {
+                            this.spotifyHandle = localSpotifyProcess.MainWindowHandle;
+                        }
+                    }
                 }
             }
-
-            string spotifyTitle = this.spotifyProcess.MainWindowTitle;
-
-            if (spotifyTitle.Length > 0)
+            else
             {
-                if (spotifyTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
+                this.ResetSnipSinceSpotifyIsNotPlaying();
+            }
+
+            if (this.spotifyRunning == true && this.spotifyHandle != IntPtr.Zero)
+            {
+                // We'll limit the window title string to 256 characters
+                // The length really doesn't matter since we're just storing what appears and comparing it
+                // Even if it gets cut off it should compare well up to 256 characters
+                StringBuilder stringBuilder = new StringBuilder(256);
+
+                // Get the window title of Spotify and store it in stringBuilder
+                UnsafeNativeMethods.GetWindowText(this.spotifyHandle, stringBuilder, stringBuilder.Capacity);
+
+                // Convert the StringBuilder to a regular string
+                string spotifyTitle = stringBuilder.ToString();
+
+                if (spotifyTitle.Length > 0)
                 {
-                    Globals.RewriteUpdatedOutputFormat = false;
-
-                    if (spotifyTitle == "Spotify" || spotifyTitle == "Spotify Free" || spotifyTitle == "Spotify Premium")
+                    if (spotifyTitle != this.LastTitle || Globals.RewriteUpdatedOutputFormat)
                     {
-                        if (Globals.SaveAlbumArtwork)
+                        Globals.RewriteUpdatedOutputFormat = false;
+
+                        if (spotifyTitle == "Spotify" || spotifyTitle == "Spotify Free" || spotifyTitle == "Spotify Premium")
                         {
-                            this.SaveBlankImage();
-                        }
-
-                        TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
-                    }
-                    else
-                    {
-                        string downloadedJson = this.DownloadJson("https://api.spotify.com/v1/me/player/currently-playing", SpotifyAddressContactType.API);
-
-                        if (!string.IsNullOrEmpty(downloadedJson))
-                        {
-                            dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
-
-                            string currentlyPlayingType = (string)jsonSummary.currently_playing_type;
-
-                            // Spotify does not provide any detailed information for anything other than actual songs.
-                            // Podcasts have types of "episode" but do not contain any useful data unfortunately.
-                            if (currentlyPlayingType == "track")
+                            if (Globals.SaveAlbumArtwork)
                             {
-                                bool isPlaying = (bool)jsonSummary.is_playing;
-                                string trackId = (string)jsonSummary.item.id;
+                                this.SaveBlankImage();
+                            }
 
-                                if (isPlaying)
+                            TextHandler.UpdateTextAndEmptyFilesMaybe(Globals.ResourceManager.GetString("NoTrackPlaying"));
+                        }
+                        else
+                        {
+                            string downloadedJson = this.DownloadJson("https://api.spotify.com/v1/me/player/currently-playing", SpotifyAddressContactType.API);
+
+                            if (!string.IsNullOrEmpty(downloadedJson))
+                            {
+                                dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
+
+                                string currentlyPlayingType = (string)jsonSummary.currently_playing_type;
+
+                                // Spotify does not provide any detailed information for anything other than actual songs.
+                                // Podcasts have types of "episode" but do not contain any useful data unfortunately.
+                                if (currentlyPlayingType == "track")
                                 {
-                                    if (Globals.CacheSpotifyMetadata)
+                                    bool isPlaying = (bool)jsonSummary.is_playing;
+                                    string trackId = (string)jsonSummary.item.id;
+
+                                    if (isPlaying)
                                     {
-                                        downloadedJson = this.ReadCachedJson(trackId);
+                                        if (Globals.CacheSpotifyMetadata)
+                                        {
+                                            downloadedJson = this.ReadCachedJson(trackId);
+                                        }
+
+                                        // If there are multiple artists we want to join all of them together for display
+                                        string artists = string.Empty;
+
+                                        foreach (dynamic artist in jsonSummary.item.artists)
+                                        {
+                                            artists += artist.name.ToString() + ", ";
+                                        }
+
+                                        artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
+
+                                        TextHandler.UpdateText(
+                                            jsonSummary.item.name.ToString(),
+                                            artists,
+                                            jsonSummary.item.album.name.ToString(),
+                                            trackId,
+                                            downloadedJson);
+
+                                        if (Globals.SaveAlbumArtwork)
+                                        {
+                                            this.DownloadSpotifyAlbumArtwork(jsonSummary.item.album);
+                                        }
                                     }
-
-                                    // If there are multiple artists we want to join all of them together for display
-                                    string artists = string.Empty;
-
-                                    foreach (dynamic artist in jsonSummary.item.artists)
+                                    else
                                     {
-                                        artists += artist.name.ToString() + ", ";
-                                    }
-
-                                    artists = artists.Substring(0, artists.LastIndexOf(',')); // Removes last comma
-
-                                    TextHandler.UpdateText(
-                                        jsonSummary.item.name.ToString(),
-                                        artists,
-                                        jsonSummary.item.album.name.ToString(),
-                                        trackId,
-                                        downloadedJson);
-
-                                    if (Globals.SaveAlbumArtwork)
-                                    {
-                                        this.DownloadSpotifyAlbumArtwork(jsonSummary.item.album);
+                                        this.ResetSnipSinceSpotifyIsNotPlaying();
                                     }
                                 }
                                 else
                                 {
                                     this.ResetSnipSinceSpotifyIsNotPlaying();
                                 }
-                            }
-                            else
-                            {
-                                this.ResetSnipSinceSpotifyIsNotPlaying();
-                            }
 
-                            // Reset timer after it was potentially changed by rate limit
-                            // Since we should only reach this point if valid JSON was obtained this means
-                            // that the timer shouldn't reset unless there was a success.
-                            this.updateSpotifyTrackInformation.Enabled = false;
-                            this.updateSpotifyTrackInformation.Interval = updateSpotifyTrackInformationDefaultInterval;
-                            this.updateSpotifyTrackInformation.Enabled = true;
+                                // Reset timer after it was potentially changed by rate limit
+                                // Since we should only reach this point if valid JSON was obtained this means
+                                // that the timer shouldn't reset unless there was a success.
+                                this.updateSpotifyTrackInformation.Enabled = false;
+                                this.updateSpotifyTrackInformation.Interval = updateSpotifyTrackInformationDefaultInterval;
+                                this.updateSpotifyTrackInformation.Enabled = true;
+                            }
                         }
-                    }
 
-                    this.LastTitle = spotifyTitle;
+                        this.LastTitle = spotifyTitle;
+                    }
                 }
             }
         }
@@ -519,7 +557,10 @@ namespace Winter
                     this.SaveBlankImage();
                 }
             }
-            this.spotifyProcess = null;
+
+            this.spotifyRunning = false;
+            this.spotifyHandle = IntPtr.Zero;
+
             TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoTrackPlaying);
         }
 
