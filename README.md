@@ -23,6 +23,25 @@ same folder as `Snip.exe`.  If you choose to save information to separate files,
 the files will be called `Snip_Artist.txt`, `Snip_Track.txt`, `Snip_Album.txt`, 
 and `Snip_History.txt` (track history).
 
+VARIABLES
+=========
+There are a handful of variables you can use within the Output Settings.
+
+* $$t = Track Title
+* $$ut = TRACK TITLE
+* $$lt = track title
+
+* $$a = Track Artist
+* $$ua = TRACK ARTIST
+* $$la = track artist
+
+* $$l = Track Album
+* $$ul = TRACK ALBUM
+* $$ll = track album
+
+* $$i = Spotify track ID
+* $$n = New line
+
 HOTKEYS
 =======
 * **Next Track:** Ctrl, Alt, ]
