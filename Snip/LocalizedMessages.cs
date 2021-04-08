@@ -1,6 +1,6 @@
 ﻿#region File Information
 /*
- * Copyright (C) 2018-2019 David Rudie
+ * Copyright (C) 2018-2021 David Rudie
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
