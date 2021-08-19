@@ -1,6 +1,6 @@
 SNIP
 ====
-Copyright 2012-2021 David Rudie <d.rudie@gmail.com>
+Copyright 2012-2021 David Rudie <d.rudie@gmail.com>\
 Project Page: [Snip](https://github.com/dlrudie/Snip)
 
 ABOUT
@@ -54,6 +54,11 @@ HOTKEYS
 
 DONATIONS
 =========
-Snip is free; however, I've received a lot of requests from people wishing
-to donate. If you'd like to donate it's entirely up to you. You may donate
-here: [PayPal](https://paypal.me/thedopefish)
+Snip is free and always will be. However, if you'd like to support Snip
+donations are always greatly appreciated and all donations will go right
+back into making Snip even better. Thank you!
+* [PayPal](https://paypal.me/thedopefish)
+* ETH: 0x9f65813778F8Cc0fc1579923b64115998961A127
+* CRO: cro1950wnv6fv3xzsk5xlsud7peru9lhlcpwsuhhxp
+* BTC: bc1q38htzqlz7w42am8846mvxdza9nl45z3np8p7uv
+* Want to send a different coin? Let me know.
