@@ -21,12 +21,16 @@
 namespace Winter
 {
     using System.Globalization;
-    using System.Windows.Forms;
+	using System.Threading.Tasks;
+	using System.Windows.Forms;
     using iTunesLib;
 
     internal sealed class Itunes : MediaPlayer
     {
         private iTunesApp ItunesApplication = null;
+
+        // This will count the number of times the state changed. Used to retry getting Album Art.
+        private int StateVersion;
  
         // This will hold the volume prior to it being muted and restored from it.
         private int muteVolume = 0;
@@ -118,13 +122,17 @@ namespace Winter
             this.ItunesApplication.Stop();
         }
 
-        private void App_OnPlayerPlayEvent(object sender)
+        // Sometimes, iTunes will not reurn the Album Art timely, so retrying will avoid keeping an empty album art.
+        private async Task UpdateAlbumArtAsync(int version, IITTrack track)
         {
-            IITTrack track = this.ItunesApplication.CurrentTrack;
+            // Retry for up to 5sec
+            const int retryCount = 50;
+            int i = 0;
+            const int retryDelay = 100;
 
-            if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.ItunesApplication.CurrentStreamTitle))
+            while (version == StateVersion && i++ < retryCount)
             {
-                if (Globals.SaveAlbumArtwork)
+                try
                 {
                     IITArtworkCollection artworkCollection = track.Artwork;
 
@@ -133,14 +141,37 @@ namespace Winter
                         IITArtwork artwork = artworkCollection[1];
 
                         artwork.SaveArtworkToFile(this.DefaultArtworkFilePath);
-                    }
-                    else
-                    {
-                        this.SaveBlankImage();
+
+                        return;
                     }
                 }
+                catch
+                {
+                }
+
+                if (i == 0)
+                {
+                    // Clear the image on the first fail, so that it works if there is no album art at all.
+                    this.SaveBlankImage();
+                }
+
+                await Task.Delay(retryDelay);
+            }
+        }
+
+        private async void App_OnPlayerPlayEvent(object sender)
+        {
+            int currentVersion = ++StateVersion;
+
+            IITTrack track = this.ItunesApplication.CurrentTrack;
+
+            if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.ItunesApplication.CurrentStreamTitle))
+            {
+                Task updateAlbumTask = Globals.SaveAlbumArtwork ? UpdateAlbumArtAsync(currentVersion, track) : Task.CompletedTask;
 
                 TextHandler.UpdateText(track.Name, track.Artist, track.Album);
+
+                await updateAlbumTask;
             }
             else if (string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.ItunesApplication.CurrentStreamTitle))
             {
@@ -152,29 +183,19 @@ namespace Winter
             }
         }
 
-        private void App_OnPlayerPlayingTrackChangedEvent(object sender)
+        private async void App_OnPlayerPlayingTrackChangedEvent(object sender)
         {
+            int currentVersion = ++StateVersion;
+
             IITTrack track = this.ItunesApplication.CurrentTrack;
 
             if (!string.IsNullOrEmpty(track.Artist) && !string.IsNullOrEmpty(track.Name) && string.IsNullOrEmpty(this.ItunesApplication.CurrentStreamTitle))
             {
-                if (Globals.SaveAlbumArtwork)
-                {
-                    try
-                    {
-                        IITArtworkCollection artworkCollection = track.Artwork;
-                        IITArtwork artwork = artworkCollection[1];
-
-                        artwork.SaveArtworkToFile(this.DefaultArtworkFilePath);
-                    }
-                    catch
-                    {
-                        this.SaveBlankImage();
-                        throw;
-                    }
-                }
+                Task updateAlbumTask = Globals.SaveAlbumArtwork ? UpdateAlbumArtAsync(currentVersion, track) : Task.CompletedTask;
 
                 TextHandler.UpdateText(track.Name, track.Artist, track.Album);
+
+                await updateAlbumTask;
             }
             else if (!string.IsNullOrEmpty(this.ItunesApplication.CurrentStreamTitle))
             {
@@ -184,6 +205,7 @@ namespace Winter
 
         private void App_OnPlayerStopEvent(object o)
         {
+            ++StateVersion;
             if (Globals.SaveAlbumArtwork)
             {
                 this.SaveBlankImage();
@@ -194,6 +216,8 @@ namespace Winter
 
         private void App_OnPlayerQuittingEvent()
         {
+            ++StateVersion;
+
             if (Globals.SaveAlbumArtwork)
             {
                 this.SaveBlankImage();
