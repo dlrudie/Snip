@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 set sourceDir=%~1
 set targetDir=%~2
 
-set resgenPath="C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\resgen.exe"
+set resgenPath="C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\resgen.exe"
 
 set fileToResgen[0]="%sourceDir%Resources\Strings"
 set fileToResgen[1]="%sourceDir%Resources\Strings.de-AT"
