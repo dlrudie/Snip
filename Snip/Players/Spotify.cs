@@ -40,8 +40,10 @@ namespace Winter
 
         private string authorizationAddress = "https://accounts.spotify.com/authorize";
 
-        private string scopes = "user-read-currently-playing user-modify-playback-state";
+        private string scopes = "user-read-playback-state user-read-currently-playing user-modify-playback-state";
         private string responseType = "code"; // Required by API
+        private HttpListener httpListener;
+        private bool httpListenerStop;
         private string callbackAddress = "http://localhost:10597/";
 
         private string authorizationCode = string.Empty;
@@ -111,7 +113,7 @@ namespace Winter
             }
         }
 
-        private void AuthorizeSnip()
+        private async void AuthorizeSnip()
         {
             try
             {
@@ -126,16 +128,33 @@ namespace Winter
                         this.scopes
                         ));
 
-                using (HttpListener callbackListener = new HttpListener())
+                this.httpListener = new HttpListener();
+                this.httpListener.Prefixes.Add(this.callbackAddress);
+
+                this.httpListener.Start();
+
+                while (!this.httpListenerStop)
                 {
-                    callbackListener.Prefixes.Add(this.callbackAddress);
-                    callbackListener.Start();
+                    HttpListenerContext httpListenerContext = null;
+
+                    try
+                    {
+                        httpListenerContext = await this.httpListener.GetContextAsync();
+                    }
+                    catch (HttpListenerException exception)
+                    {
+                        if (exception.ErrorCode == 995)
+                            return;
+                    }
+
+                    if (httpListenerContext == null)
+                        continue;
 
                     // block for now since authorization is absolutely required
                     // eventually swap this to non-blocking (BeginGetContext)
-                    HttpListenerContext context = callbackListener.GetContext();
-                    HttpListenerRequest request = context.Request;
-                    HttpListenerResponse response = context.Response;
+                    //HttpListenerContext context = callbackListener.GetContext();
+                    HttpListenerRequest request = httpListenerContext.Request;
+                    HttpListenerResponse response = httpListenerContext.Response;
 
                     NameValueCollection nameValueCollection = request.QueryString;
 
@@ -175,14 +194,18 @@ namespace Winter
                     Stream output = response.OutputStream;
                     output.Write(buffer, 0, buffer.Length);
                     output.Close();
-
-                    callbackListener.Stop();
                 }
             }
             catch
             {
                 // add error checking
             }
+        }
+
+        private void HttpListenerStop()
+        {
+            this.httpListenerStop = true;
+            this.httpListener.Stop();
         }
 
         private void UpdateAuthorizationToken_Elapsed(object sender, ElapsedEventArgs e)
