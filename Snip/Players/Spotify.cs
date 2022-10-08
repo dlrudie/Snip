@@ -249,14 +249,30 @@ namespace Winter
                 if (currentlyPlayingType == "track")
                 {
                     bool isPlaying = (bool)jsonSummary.is_playing;
+                    bool isLocal = (bool)jsonSummary.item.is_local;
+
                     string trackId = (string)jsonSummary.item.id;
+                    string uri = (string)jsonSummary.item.uri;
+
+                    string comparison;
+
+                    // Use the track ID for comparison if it's from Spotify
+                    // Otherwise use the uri as it's unique to the local file
+                    if (isLocal)
+                    {
+                        comparison = uri;
+                    }
+                    else
+                    {
+                        comparison = trackId;
+                    }
 
                     // Check if anything is even playing
                     if (isPlaying)
                     {
                         // If something is playing, check if we need to do anything else by comparing the track ID
                         // to the track ID from the last update.
-                        if (this.LastTitle != trackId)
+                        if (this.LastTitle != comparison)
                         {
                             // The track ID is different so we can continue
 
@@ -264,7 +280,11 @@ namespace Winter
                             // the cache instead of downloading it again.
                             if (Globals.CacheSpotifyMetadata)
                             {
-                                downloadedJson = this.ReadCachedJson(trackId);
+                                // Skip if local, there is no metadata
+                                if (!isLocal)
+                                {
+                                    downloadedJson = this.ReadCachedJson(trackId);
+                                }
                             }
 
                             // If there are multiple artists we want to join all of them together for display
@@ -285,15 +305,24 @@ namespace Winter
                                 trackId,
                                 downloadedJson);
 
+
                             // If we're saving artwork let's do that now
                             if (Globals.SaveAlbumArtwork)
                             {
-                                this.DownloadSpotifyAlbumArtwork(jsonSummary.item.album);
+                                // Skip if local, no artwork supported yet
+                                if (!isLocal)
+                                {
+                                    this.DownloadSpotifyAlbumArtwork(jsonSummary.item.album);
+                                }
+                                else
+                                {
+                                    this.SaveBlankImage();
+                                }
                             }
 
                             // Update LastTitle to reflect the current track ID
                             // We compare this the next time this method gets called
-                            this.LastTitle = trackId;
+                            this.LastTitle = comparison;
                         }
                     }
                     else
