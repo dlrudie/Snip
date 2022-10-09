@@ -345,6 +345,11 @@ namespace Winter
                 this.updateSpotifyTrackInformation.Interval = updateSpotifyTrackInformationDefaultInterval;
                 this.updateSpotifyTrackInformation.Enabled = true;
             }
+            else
+            {
+                // If the downloaded JSON is null or empty it's likely because there's no player running
+                this.ResetSnipSinceSpotifyIsNotPlaying();
+            }
         }
 
         private void DownloadSpotifyAlbumArtwork(dynamic jsonSummary)
