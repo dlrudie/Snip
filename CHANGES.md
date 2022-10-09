@@ -1,5 +1,22 @@
 CHANGES
 =======
+**v8.0.0 (2022-Oct-08):**
+* Improved callback handler for Spotify authentication. It should work much
+    more reliably and consistent.
+* Removed local Spotify player detection completely. Snip now relies on all
+    information provided by the web API. This allows much more reliable and
+    accurate detection of what's playing. Additionally, a benefit of this
+    is that you can play Spotify from any device or computer and Snip will
+    detect it.
+* Local songs in Spotify will display their information correctly. However,
+    album artwork is not supported by the Spotify API and will not work.
+* Added a blank "No Player" option before Spotify and iTunes. This allows
+    Snip to run without requiring you to sign into Spotify first. This is
+    useful for users only wishing to use it for iTunes. After initial
+    launch right-click on the tray icon and choose your player. NOTE:
+    After selecting player if you switch between players multiple times
+    Snip will not detect updates anymore.
+
 **v7.0.5 (2019-Sep-15):**
 * Made Spotify detection substantially better. Due to Windows API limits
     you cannot get the main window handle from a process minimized to the
