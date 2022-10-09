@@ -39,13 +39,5 @@ namespace Winter
         internal static extern bool UnregisterHotKey(
             [In] [Optional] IntPtr windowHandle,
             [In] int id);
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern IntPtr SendMessage(
-            [In] IntPtr windowHandle,
-            [In] uint message,
-            [In] IntPtr wParam,
-            [In] IntPtr lParam);
     }
 }
