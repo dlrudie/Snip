@@ -234,42 +234,43 @@ namespace Winter
         }
 
         private void UpdateSpotifyTrackInformation_Elapsed(object sender, ElapsedEventArgs e)
-        {            
+        {
             string downloadedJson = this.DownloadJson("https://api.spotify.com/v1/me/player/currently-playing", SpotifyAddressContactType.API);
 
             if (!string.IsNullOrEmpty(downloadedJson))
             {
                 dynamic jsonSummary = SimpleJson.DeserializeObject(downloadedJson);
 
-                // track, episode, ad, unknown
-                string currentlyPlayingType = (string)jsonSummary.currently_playing_type;
+                bool isPlaying = (bool)jsonSummary.is_playing;
 
-                // Spotify does not provide any detailed information for anything other than actual songs.
-                // Podcasts have types of "episode" but do not contain any useful data unfortunately.
-                if (currentlyPlayingType == "track")
+                // Check if anything is even playing
+                if (isPlaying)
                 {
-                    bool isPlaying = (bool)jsonSummary.is_playing;
-                    bool isLocal = (bool)jsonSummary.item.is_local;
+                    // track, episode, ad, unknown
+                    string currentlyPlayingType = (string)jsonSummary.currently_playing_type;
 
-                    string trackId = (string)jsonSummary.item.id;
-                    string uri = (string)jsonSummary.item.uri;
-
-                    string comparison;
-
-                    // Use the track ID for comparison if it's from Spotify
-                    // Otherwise use the uri as it's unique to the local file
-                    if (isLocal)
+                    // Spotify does not provide any detailed information for anything other than actual songs.
+                    // Podcasts have types of "episode" but do not contain any useful data unfortunately.
+                    if (currentlyPlayingType == "track")
                     {
-                        comparison = uri;
-                    }
-                    else
-                    {
-                        comparison = trackId;
-                    }
+                        bool isLocal = (bool)jsonSummary.item.is_local;
 
-                    // Check if anything is even playing
-                    if (isPlaying)
-                    {
+                        string trackId = (string)jsonSummary.item.id;
+                        string uri = (string)jsonSummary.item.uri;
+
+                        string comparison;
+
+                        // Use the track ID for comparison if it's from Spotify
+                        // Otherwise use the uri as it's unique to the local file
+                        if (isLocal)
+                        {
+                            comparison = uri;
+                        }
+                        else
+                        {
+                            comparison = trackId;
+                        }
+
                         // If something is playing, check if we need to do anything else by comparing the track ID
                         // to the track ID from the last update.
                         if (this.LastTitle != comparison)
