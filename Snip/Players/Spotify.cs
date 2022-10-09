@@ -328,13 +328,13 @@ namespace Winter
                     }
                     else
                     {
-                        // If nothing is playing let's reset everything
+                        // It's not a track so let's reset
                         this.ResetSnipSinceSpotifyIsNotPlaying();
                     }
                 }
                 else
                 {
-                    // It's not a track so let's reset
+                    // If nothing is playing let's reset everything
                     this.ResetSnipSinceSpotifyIsNotPlaying();
                 }
 
