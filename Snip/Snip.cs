@@ -86,6 +86,7 @@ namespace Winter
         {
             LocalizedMessages.SnipForm = Globals.ResourceManager.GetString("SnipForm");
             LocalizedMessages.NewVersionAvailable = Globals.ResourceManager.GetString("NewVersionAvailable");
+            LocalizedMessages.NoPlayer = Globals.ResourceManager.GetString("NoPlayer");
             LocalizedMessages.Spotify = Globals.ResourceManager.GetString("Spotify");
             LocalizedMessages.Itunes = Globals.ResourceManager.GetString("Itunes");
             LocalizedMessages.SwitchedToPlayer = Globals.ResourceManager.GetString("SwitchedToPlayer");
@@ -220,7 +221,11 @@ namespace Winter
 
         private void PlayerSelectionCheck(object sender, EventArgs e)
         {
-            if (sender == this.toolStripMenuItemSpotify)
+            if (sender == this.toolStripMenuItemNoPlayer)
+            {
+                this.TogglePlayer(Globals.MediaPlayerSelection.NoPlayer);
+            }
+            else if (sender == this.toolStripMenuItemSpotify)
             {
                 this.TogglePlayer(Globals.MediaPlayerSelection.Spotify);
             }
@@ -232,6 +237,7 @@ namespace Winter
 
         private void TogglePlayer(Globals.MediaPlayerSelection player)
         {
+            this.toolStripMenuItemNoPlayer.Checked   = player == Globals.MediaPlayerSelection.NoPlayer;
             this.toolStripMenuItemSpotify.Checked    = player == Globals.MediaPlayerSelection.Spotify;
             this.toolStripMenuItemItunes.Checked     = player == Globals.MediaPlayerSelection.Itunes;
 
@@ -240,6 +246,10 @@ namespace Winter
 
             switch (player)
             {
+                case Globals.MediaPlayerSelection.NoPlayer:
+                    Globals.CurrentPlayer = new NoPlayer();
+                    playerName = LocalizedMessages.NoPlayer;
+                    break;
                 case Globals.MediaPlayerSelection.Spotify:
                     Globals.CurrentPlayer = new Spotify();
                     playerName = LocalizedMessages.Spotify;
@@ -255,11 +265,19 @@ namespace Winter
             Globals.CurrentPlayer.Load();
 
             Globals.PlayerSelection = player;
-            TextHandler.UpdateTextAndEmptyFilesMaybe(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    LocalizedMessages.SwitchedToPlayer,
-                    playerName));
+
+            if (playerName == LocalizedMessages.NoPlayer)
+            {
+                TextHandler.UpdateTextAndEmptyFilesMaybe(LocalizedMessages.NoPlayer);
+            }
+            else
+            {
+                TextHandler.UpdateTextAndEmptyFilesMaybe(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        LocalizedMessages.SwitchedToPlayer,
+                        playerName));
+            }
         }
 
         private void ToolStripMenuItemSaveSeparateFiles_Click(object sender, EventArgs e)

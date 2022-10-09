@@ -10,8 +10,8 @@ SnipForm=Snip
 ; Let's sound excited!
 NewVersionAvailable=Je k dispozici nová verze!
 
-; Supported media players.  These probably don't need translated unless they
-; actually have a different name in other countries.
+; Supported media players.
+NoPlayer=No Player Selected
 Spotify=Spotify
 Itunes=iTunes
 

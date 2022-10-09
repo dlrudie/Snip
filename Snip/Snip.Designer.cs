@@ -6,6 +6,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSnipVersion;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNoPlayer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpotify;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemItunes;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -63,6 +64,7 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSnipVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemNoPlayer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSpotify = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemItunes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -96,6 +98,7 @@
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemSnipVersion,
             this.toolStripSeparator,
+            this.toolStripMenuItemNoPlayer,
             this.toolStripMenuItemSpotify,
             this.toolStripMenuItemItunes,
             this.toolStripSeparator1,
@@ -121,10 +124,17 @@
             this.toolStripMenuItemSnipVersion.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemSnipVersion.Text = LocalizedMessages.SnipForm + AssemblyInformation.AssemblyShorterVersion;
             // 
+            // toolStripMenuItemNoPlayer
+            // 
+            this.toolStripMenuItemNoPlayer.Checked = true;
+            this.toolStripMenuItemNoPlayer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemNoPlayer.Name = "toolStripMenuItemNoPlayer";
+            this.toolStripMenuItemNoPlayer.Size = new System.Drawing.Size(67, 22);
+            this.toolStripMenuItemNoPlayer.Text = LocalizedMessages.NoPlayer;
+            this.toolStripMenuItemNoPlayer.Click += new System.EventHandler(this.PlayerSelectionCheck);
+            // 
             // toolStripMenuItemSpotify
             // 
-            this.toolStripMenuItemSpotify.Checked = true;
-            this.toolStripMenuItemSpotify.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemSpotify.Name = "toolStripMenuItemSpotify";
             this.toolStripMenuItemSpotify.Size = new System.Drawing.Size(67, 22);
             this.toolStripMenuItemSpotify.Text = LocalizedMessages.Spotify;

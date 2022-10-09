@@ -61,7 +61,7 @@ namespace Winter
 
             if (registryKey != null)
             {
-                Globals.PlayerSelection             = (Globals.MediaPlayerSelection)registryKey.GetValue("Player", Globals.MediaPlayerSelection.Spotify);
+                Globals.PlayerSelection             = (Globals.MediaPlayerSelection)registryKey.GetValue("Player", Globals.MediaPlayerSelection.NoPlayer);
                 Globals.SaveSeparateFiles           = Convert.ToBoolean(registryKey.GetValue("Save Separate Files", false), CultureInfo.InvariantCulture);
                 Globals.SaveAlbumArtwork            = Convert.ToBoolean(registryKey.GetValue("Save Album Artwork", false), CultureInfo.InvariantCulture);
                 Globals.KeepSpotifyAlbumArtwork     = Convert.ToBoolean(registryKey.GetValue("Keep Spotify Album Artwork", false), CultureInfo.InvariantCulture);
@@ -80,7 +80,7 @@ namespace Winter
             }
             else
             {
-                Globals.PlayerSelection             = Globals.MediaPlayerSelection.Spotify;
+                Globals.PlayerSelection             = Globals.MediaPlayerSelection.NoPlayer;
                 Globals.SaveSeparateFiles           = false;
                 Globals.SaveAlbumArtwork            = false;
                 Globals.KeepSpotifyAlbumArtwork     = false;
