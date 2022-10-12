@@ -277,8 +277,12 @@ namespace Winter
                         {
                             // The track ID is different so we can continue
 
+
                             // If the track ID matches something we've already cached, let's pull that data from
                             // the cache instead of downloading it again.
+                            
+                            /* This is pointless at the moment since you get all of the metadata when checking
+                             * if anything is playing already anyway.
                             if (Globals.CacheSpotifyMetadata)
                             {
                                 // Skip if local, there is no metadata
@@ -287,6 +291,7 @@ namespace Winter
                                     downloadedJson = this.ReadCachedJson(trackId);
                                 }
                             }
+                            */
 
                             // If there are multiple artists we want to join all of them together for display
                             string artists = string.Empty;
