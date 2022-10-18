@@ -1,5 +1,12 @@
 CHANGES
 =======
+**v8.0.1 (2022-Oct-18):**
+* Increased API polling from 1s to 2s. Track changes may reflect slightly
+    slower. This change was made due to Snip getting rate limited by
+    Spotify.
+* Changed it so that if Snip does hit the rate limit that it won't reset and
+    cause duplicate entries in the history file.
+
 **v8.0.0 (2022-Oct-08):**
 * Improved callback handler for Spotify authentication. It should work much
     more reliably and consistent.
