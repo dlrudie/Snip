@@ -55,7 +55,9 @@ namespace Winter
         private Timer updateSpotifyTrackInformation;
 
         private double updateAuthorizationTokenDefaultInterval = 1000;
-        private double updateSpotifyTrackInformationDefaultInterval = 1000;
+        private double updateSpotifyTrackInformationDefaultInterval = 2000;
+
+        private bool rateLimited = false;
 
         #endregion
 
@@ -349,11 +351,20 @@ namespace Winter
                 this.updateSpotifyTrackInformation.Enabled = false;
                 this.updateSpotifyTrackInformation.Interval = updateSpotifyTrackInformationDefaultInterval;
                 this.updateSpotifyTrackInformation.Enabled = true;
+                this.rateLimited = false;
             }
             else
             {
-                // If the downloaded JSON is null or empty it's likely because there's no player running
-                this.ResetSnipSinceSpotifyIsNotPlaying();
+                if (this.rateLimited)
+                {
+                    // If we are rate limited let's just not update or do anything yet. Once there is a successful update
+                    // then the information will update accordingly.
+                }
+                else
+                {
+                    // If the downloaded JSON is null or empty it's likely because there's no player running
+                    this.ResetSnipSinceSpotifyIsNotPlaying();
+                }
             }
         }
 
@@ -482,6 +493,8 @@ namespace Winter
                     {
                         if (webHeaderCollection.GetKey(i).ToUpperInvariant() == "RETRY-AFTER")
                         {
+                            this.rateLimited = true;
+
                             // Set the timer to the retry seconds. Plus 1 for safety.
                             this.updateSpotifyTrackInformation.Enabled = false;
                             this.updateSpotifyTrackInformation.Interval = (Double.Parse(webHeaderCollection.Get(i) + 1, CultureInfo.InvariantCulture)) * 1000;
