@@ -44,7 +44,7 @@ namespace Winter
         private string responseType = "code"; // Required by API
         private HttpListener httpListener;
         private bool httpListenerStop;
-        private string callbackAddress = "http://127.0.0.1:10597/";
+        private string callbackAddress = "http://localhost:10597/";
 
         private string authorizationCode = string.Empty;
         private string authorizationToken = string.Empty;
