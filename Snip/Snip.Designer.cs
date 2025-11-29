@@ -140,13 +140,6 @@
             this.toolStripMenuItemSpotify.Text = LocalizedMessages.Spotify;
             this.toolStripMenuItemSpotify.Click += new System.EventHandler(this.PlayerSelectionCheck);
             // 
-            // toolStripMenuItemItunes
-            // 
-            this.toolStripMenuItemItunes.Name = "toolStripMenuItemItunes";
-            this.toolStripMenuItemItunes.Size = new System.Drawing.Size(67, 22);
-            this.toolStripMenuItemItunes.Text = LocalizedMessages.Itunes;
-            this.toolStripMenuItemItunes.Click += new System.EventHandler(this.PlayerSelectionCheck);
-            // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
