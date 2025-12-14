@@ -1,5 +1,10 @@
 CHANGES
 =======
+**v8.0.2 (2025-Dec-14):**
+* Merged pull request #544 from VRC-messeth, which updates the redirect
+    URI from localhost to 127.0.0.1 to comply with Spotify's API changes.
+* Fixed donation link in README.
+
 **v8.0.1 (2022-Oct-18):**
 * Increased API polling from 1s to 2s. Track changes may reflect slightly
     slower. This change was made due to Snip getting rate limited by
